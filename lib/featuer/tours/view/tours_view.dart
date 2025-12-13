@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/featuer/tours/data/model/get_all_tours_model.dart';
-import 'package:flutter_application_1/featuer/tours/data/repo/tours_repository.dart';
-import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
-import 'package:flutter_application_1/featuer/tours/manager/tours_state.dart';
+import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_color.dart';
+import '../data/model/get_all_tours_model.dart';
+import '../data/repo/tours_repository.dart';
+import '../manager/tours_cubit.dart';
+import '../manager/tours_state.dart';
 import 'widgets/tour_card.dart';
 
 class ToursView extends StatelessWidget {
@@ -24,6 +25,24 @@ class ToursView extends StatelessWidget {
             child: Column(
               children: [
                 SizedBox(height: 16.h),
+
+                // --- ADDED SEARCH BAR HERE ---
+                Builder(
+                  builder: (context) {
+                    return ReusableSearchBar(
+                      hintText: "Search tours (e.g. Cairo, Luxury...)",
+                      useDebounce: true,
+                      onFilterTap: () {},
+                      onSearchChanged: (value) {
+                        ToursCubit.get(context).searchLocalTours(value);
+                      },
+                    );
+                  },
+                ),
+
+                // -----------------------------
+                SizedBox(height: 16.h),
+
                 Expanded(
                   child: BlocBuilder<ToursCubit, ToursState>(
                     builder: (context, state) {
@@ -48,6 +67,11 @@ class ToursView extends StatelessWidget {
                       } else if (state is ToursError) {
                         return Center(child: Text(state.message));
                       } else if (state is ToursSuccess) {
+                        // Handle empty result
+                        if (state.tours.isEmpty) {
+                          return const Center(child: Text("No tours found."));
+                        }
+
                         return GridView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: state.tours.length,

@@ -21,7 +21,7 @@ class CustomDrawer extends StatelessWidget {
         },
       ),
       DrawerItemModel(
-        title: "الطيران",
+        title: "حجز الطيران",
         icon: FontAwesomeIcons.planeDeparture,
         onTap: () {
           Navigator.pushNamed(context, Routes.bookFlightView);
@@ -46,6 +46,13 @@ class CustomDrawer extends StatelessWidget {
         icon: Icons.call,
         onTap: () {
           Navigator.pushNamed(context, Routes.contactUsView);
+        },
+      ),
+      DrawerItemModel(
+        title: "الملف الشخصي",
+        icon: FontAwesomeIcons.user,
+        onTap: () {
+          Navigator.pushNamed(context, Routes.profileView);
         },
       ),
     ];

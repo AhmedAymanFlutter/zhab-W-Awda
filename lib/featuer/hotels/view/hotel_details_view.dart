@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 import '../data/repo/hotels_repository.dart';
 
@@ -22,7 +24,7 @@ class HotelDetailsView extends StatelessWidget {
       child: Scaffold(
         backgroundColor: Colors.white,
         // 2. زر الحجز العائم في الأسفل
-        bottomNavigationBar: _buildBottomBookingBar(),
+        bottomNavigationBar: OfferBookingBar(),
         body: BlocBuilder<HotelsCubit, HotelsState>(
           buildWhen: (previous, current) =>
               current is HotelDetailsLoading ||
@@ -84,10 +86,10 @@ class HotelDetailsView extends StatelessWidget {
                                     "https://via.placeholder.com/300",
                                 fit: BoxFit.cover,
                                 placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(),
+                                  child: Icon(FontAwesomeIcons.image),
                                 ),
                                 errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+                                    Icon(FontAwesomeIcons.image),
                               ),
                               // طبقة التدرج اللوني (لجعل الكتابة واضحة)
                               Container(
@@ -241,45 +243,6 @@ class HotelDetailsView extends StatelessWidget {
             }
             return const SizedBox();
           },
-        ),
-      ),
-    );
-  }
-
-  // ودجت زر الحجز السفلي
-  Widget _buildBottomBookingBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: ElevatedButton(
-          onPressed: () {
-            // كود الحجز هنا
-          },
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColor.primaryBlue,
-            padding: EdgeInsets.symmetric(vertical: 15.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-          ),
-          child: Text(
-            "احجز الآن",
-            style: TextStyle(
-              color: Colors.white,
-              fontSize: 16.sp,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
         ),
       ),
     );

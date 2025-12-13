@@ -3,6 +3,8 @@ import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
+import 'package:flutter_application_1/featuer/global_setting/data/repo/settings_repository.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/data/repo/offers_repository.dart.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cubit.dart';
 import 'package:flutter_application_1/featuer/home/view/package/data/repo/package_repo.dart';
@@ -21,12 +23,8 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // Initialize ScreenUtil for responsive design (using .sp)
     return ScreenUtilInit(
-      designSize: const Size(
-        375,
-        812,
-      ), // Standard iPhone design size, adjust if needed
+      designSize: const Size(375, 812),
       minTextAdapt: true,
       splitScreenMode: true,
       builder: (context, child) {
@@ -41,6 +39,10 @@ class MyApp extends StatelessWidget {
                   PackagesCubit(PackagesRepository())..fetchPackages(),
             ),
             BlocProvider(create: (context) => UserCubit()..loadUser()),
+            BlocProvider(
+              create: (context) =>
+                  SettingsCubit(SettingsRepository())..fetchSettings(),
+            ),
           ],
           child: MaterialApp(
             title: 'Zhab W Auda',
@@ -51,7 +53,6 @@ class MyApp extends StatelessWidget {
               scaffoldBackgroundColor: AppColor.mainWhite,
               useMaterial3: true,
             ),
-            // Connect Routing
             initialRoute: Routes.splash,
             onGenerateRoute: appRouter.onGenerateRoute,
           ),

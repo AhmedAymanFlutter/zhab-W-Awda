@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_state.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
@@ -18,6 +19,7 @@ class CountryDetailsView extends StatelessWidget {
       create: (context) =>
           CountriesCubit(CountriesRepository())..getCountryDetails(countrySlug),
       child: Scaffold(
+        bottomNavigationBar: OfferBookingBar(),
         backgroundColor: Colors.white,
         body: BlocBuilder<CountriesCubit, CountriesState>(
           buildWhen: (previous, current) =>

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
+import 'package:flutter_application_1/featuer/home/view/offer/data/model/get_all_offers_model.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cubit.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_state.dart';
 import 'package:flutter_application_1/featuer/home/view/package/data/model/get_all_packages_model.dart';
@@ -29,7 +31,7 @@ class HomeView extends StatelessWidget {
             SectionHeader(
               title: "العروض",
               onShowMoreTap: () {
-                // Navigate to all offers
+                Navigator.pushNamed(context, Routes.offersView);
               },
             ),
             BlocBuilder<OffersCubit, OffersState>(
@@ -39,7 +41,9 @@ class HomeView extends StatelessWidget {
                     enabled: true,
                     child: SizedBox(
                       height: 190.h,
-                      child: OffersSlider(offers: []), // هنا dummy data
+                      child: OffersSlider(
+                        offers: [OfferItem(), OfferItem(), OfferItem()],
+                      ),
                     ),
                   );
                 } else if (state is OffersListError) {
@@ -60,12 +64,15 @@ class HomeView extends StatelessWidget {
 
             Container(
               margin: EdgeInsets.symmetric(horizontal: 16.w),
-              height: 70.h,
+              height: 100.h,
               width: double.infinity,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16.r),
-                color: AppColor.primaryBlue,
-                // image: DecorationImage(...)
+                // color: AppColor.primaryBlue,
+                image: DecorationImage(
+                  image: AssetImage("assets/photo/sale.avif"),
+                  fit: BoxFit.cover,
+                ),
               ),
               child: Center(
                 child: Text(
@@ -82,7 +89,12 @@ class HomeView extends StatelessWidget {
             SizedBox(height: 24.h),
 
             // 4. Packages Section
-            SectionHeader(title: "الباقات", onShowMoreTap: () {}),
+            SectionHeader(
+              title: "الباقات",
+              onShowMoreTap: () {
+                Navigator.pushNamed(context, Routes.packagesView);
+              },
+            ),
 
             // Grid of Packages
             BlocBuilder<PackagesCubit, PackagesState>(

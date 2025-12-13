@@ -45,17 +45,6 @@ class ContactUsView extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // --- Header Text (Optional) ---
-                    Text(
-                      "نحن هنا لمساعدتك! اختر الطريقة التي تناسبك للتواصل معنا.",
-                      style: TextStyle(
-                        fontSize: 14.sp,
-                        color: Colors.grey[600],
-                        height: 1.5,
-                      ),
-                    ),
-                    SizedBox(height: 24.h),
-
                     // --- Contact Info ---
                     if (data.contactInfo != null)
                       ContactInfoSection(contactInfo: data.contactInfo!),

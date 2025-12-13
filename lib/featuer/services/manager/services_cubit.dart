@@ -15,16 +15,21 @@ class ServicesCubit extends Cubit<ServicesState> {
     try {
       final response = await _repository.getServices();
 
-      // Check nested structure: data -> services
-      if (response.data != null &&
-          response.data!.services != null &&
-          response.data!.services!.isNotEmpty) {
-        emit(ServicesSuccess(response.data!.services!));
-      } else {
-        emit(ServicesError("لا توجد خدمات متاحة حالياً"));
+      // ✅ التحقق قبل إصدار الحالة بعد استجابة السيرفر
+      if (!isClosed) {
+        if (response.data != null &&
+            response.data!.services != null &&
+            response.data!.services!.isNotEmpty) {
+          emit(ServicesSuccess(response.data!.services!));
+        } else {
+          emit(ServicesError("لا توجد خدمات متاحة حالياً"));
+        }
       }
     } catch (e) {
-      emit(ServicesError(e.toString()));
+      // ✅ التحقق عند حدوث خطأ
+      if (!isClosed) {
+        emit(ServicesError(e.toString()));
+      }
     }
   }
 
@@ -32,9 +37,16 @@ class ServicesCubit extends Cubit<ServicesState> {
     emit(ServiceDetailsLoading());
     try {
       final service = await _repository.getServiceById(id);
-      emit(ServiceDetailsSuccess(service));
+
+      // ✅ التحقق هنا أيضاً
+      if (!isClosed) {
+        emit(ServiceDetailsSuccess(service));
+      }
     } catch (e) {
-      emit(ServiceDetailsError(e.toString()));
+      // ✅ وهنا
+      if (!isClosed) {
+        emit(ServiceDetailsError(e.toString()));
+      }
     }
   }
 }

@@ -5,7 +5,7 @@ import 'package:flutter_application_1/featuer/packageType/manager/package_types_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
-
+import '../../../../core/widgets/cusstom_search_bar.dart';
 import 'widgets/package_type_card.dart';
 
 class PackageTypesView extends StatelessWidget {
@@ -23,6 +23,14 @@ class PackageTypesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
+              ReusableSearchBar(
+                hintText: "Search package types (e.g. Cairo, Luxury...)",
+                useDebounce: true,
+                onFilterTap: () {},
+                onSearchChanged: (value) {
+                  // PackageTypesCubit.get(context).searchLocalPackageTypes(value);
+                },
+              ),
               SizedBox(height: 10.h),
               Expanded(
                 child: BlocBuilder<PackageTypesCubit, PackageTypesState>(

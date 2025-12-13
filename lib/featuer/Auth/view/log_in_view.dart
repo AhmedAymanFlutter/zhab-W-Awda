@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../core/router/routes.dart';
 import '../../../core/theme/app_color.dart';
-import '../../../core/theme/app_text_style.dart';
 import 'widgets/app_button.dart';
 
 class LogInView extends StatefulWidget {
@@ -17,9 +16,7 @@ class LogInView extends StatefulWidget {
 }
 
 class _LogInViewState extends State<LogInView> {
-  final TextEditingController emailController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   bool isObscureText = true;
@@ -65,63 +62,6 @@ class _LogInViewState extends State<LogInView> {
                   ),
                   SizedBox(height: 36.h),
 
-                  // --- Email Field ---
-                  AppTextFormField(
-                    hintText: 'البريد الإلكتروني',
-                    controller: emailController,
-                    keyboardType: TextInputType.emailAddress,
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال البريد الإلكتروني';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  SizedBox(height: 18.h),
-
-                  // --- Password Field ---
-                  AppTextFormField(
-                    hintText: 'كلمة المرور',
-                    controller: passwordController,
-                    isObscureText: isObscureText,
-                    suffixIcon: GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          isObscureText = !isObscureText;
-                        });
-                      },
-                      child: Icon(
-                        isObscureText ? Icons.visibility_off : Icons.visibility,
-                        color: AppColor.secondaryGrey,
-                        size: 22.sp,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'يرجى إدخال كلمة المرور';
-                      }
-                      return null;
-                    },
-                  ),
-
-                  SizedBox(height: 16.h),
-
-                  // --- Forgot Password ---
-                  Align(
-                    alignment: AlignmentDirectional.centerEnd,
-                    child: Text(
-                      'نسيت كلمة المرور؟',
-                      style: AppTextStyle.setelMessiriTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.w600,
-                        color: AppColor.primaryBlue,
-                      ),
-                    ),
-                  ),
-
-                  SizedBox(height: 32.h),
-
                   // --- Login Button ---
                   AppButton(
                     buttonText: 'تسجيل الدخول',
@@ -138,33 +78,6 @@ class _LogInViewState extends State<LogInView> {
                   ),
 
                   SizedBox(height: 24.h),
-
-                  // --- Don't have account? ---
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'ليس لديك حساب؟ ',
-                        style: AppTextStyle.setelMessiriBlack(
-                          fontSize: 13,
-                          fontWeight: FontWeight.normal,
-                        ),
-                      ),
-                      GestureDetector(
-                        onTap: () {
-                          // Navigator.pushNamed(context, Routes.registerScreen);
-                        },
-                        child: Text(
-                          'إنشاء حساب',
-                          style: AppTextStyle.setelMessiriTextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: AppColor.primaryBlue,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
                 ],
               ),
             ),

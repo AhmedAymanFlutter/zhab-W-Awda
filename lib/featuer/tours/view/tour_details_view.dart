@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -19,7 +20,7 @@ class TourDetailsView extends StatelessWidget {
           ToursCubit(ToursRepository())..getTourDetails(tourId),
       child: Scaffold(
         backgroundColor: Colors.white,
-        bottomNavigationBar: _buildBottomBookingBar(),
+        bottomNavigationBar: OfferBookingBar(),
         body: BlocBuilder<ToursCubit, ToursState>(
           buildWhen: (previous, current) =>
               current is TourDetailsLoading ||
@@ -262,38 +263,6 @@ class TourDetailsView extends StatelessWidget {
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildBottomBookingBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColor.primaryBlue,
-            padding: EdgeInsets.symmetric(vertical: 15.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-          ),
-          child: Text(
-            "احجز الآن",
-            style: TextStyle(color: Colors.white, fontSize: 16.sp),
-          ),
-        ),
       ),
     );
   }

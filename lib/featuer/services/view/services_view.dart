@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
 
+import '../../../core/widgets/cusstom_search_bar.dart';
 import 'widgets/service_card.dart';
 
 class ServicesView extends StatelessWidget {
@@ -38,6 +39,19 @@ class ServicesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
+              SizedBox(height: 12.h),
+              Builder(
+                builder: (context) {
+                  return ReusableSearchBar(
+                    hintText: "Search services...",
+                    useDebounce: true,
+                    onFilterTap: () {},
+                    onSearchChanged: (value) {
+                      // Now this context works because it is inside the Builder
+                    },
+                  );
+                },
+              ),
               SizedBox(height: 10.h),
               Expanded(
                 child: BlocBuilder<ServicesCubit, ServicesState>(

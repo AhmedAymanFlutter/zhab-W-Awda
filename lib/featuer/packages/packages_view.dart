@@ -5,6 +5,7 @@ import 'package:flutter_application_1/featuer/packageType/manager/package_types_
 import 'package:flutter_application_1/featuer/packageType/view/widgets/package_type_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_color.dart';
 
 class PackageTypesView extends StatelessWidget {
@@ -27,18 +28,32 @@ class PackageTypesView extends StatelessWidget {
                 child: BlocBuilder<PackageTypesCubit, PackageTypesState>(
                   builder: (context, state) {
                     if (state is PackageTypesLoading) {
-                      return const Center(child: CircularProgressIndicator());
+                      return Skeletonizer(
+                        enabled: true,
+                        child: ListView.separated(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: 5,
+                          separatorBuilder: (context, index) =>
+                              SizedBox(height: 12.h),
+                          itemBuilder: (context, index) {
+                            return Container(
+                              height: 200.h,
+                              decoration: BoxDecoration(
+                                color: Colors.grey,
+                                borderRadius: BorderRadius.circular(16.r),
+                              ),
+                            );
+                          },
+                        ),
+                      );
                     } else if (state is PackageTypesError) {
                       return Center(child: Text(state.message));
                     } else if (state is PackageTypesSuccess) {
-                      // ✅ استخدام ListView للقائمة العمودية
                       return ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemCount: state.types.length,
-                        // إضافة مسافة بين كل عنصر والآخر
                         separatorBuilder: (context, index) =>
                             SizedBox(height: 16.h),
-                        // مسافة في الأسفل عشان آخر عنصر
                         padding: EdgeInsets.only(bottom: 20.h),
                         itemBuilder: (context, index) {
                           return PackageTypeCard(

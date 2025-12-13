@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/profile_widgets.dart';
+import 'package:flutter_application_1/featuer/layout/view/widgets/floatingActionButton_widget.dart'
+    show FloatingActionButtonWidget;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -53,13 +55,7 @@ class LayoutView extends StatelessWidget {
             drawer: const CustomDrawer(),
 
             body: cubit.screens[cubit.currentIndex],
-            floatingActionButton: FloatingActionButton(
-              onPressed: () {},
-              backgroundColor: AppColor.primaryBlue,
-              elevation: 4,
-              shape: const CircleBorder(),
-              child: Icon(FontAwesomeIcons.whatsapp, color: AppColor.mainWhite),
-            ),
+            floatingActionButton: FloatingActionButtonWidget(),
             bottomNavigationBar: Container(
               decoration: BoxDecoration(
                 boxShadow: [

@@ -21,7 +21,6 @@ class GetHotelIdModel {
 
 class HotelIdData {
   Price? price;
-  Seo? seo;
   String? sId;
   String? name;
   String? country;
@@ -46,7 +45,6 @@ class HotelIdData {
 
   HotelIdData({
     this.price,
-    this.seo,
     this.sId,
     this.name,
     this.country,
@@ -72,7 +70,6 @@ class HotelIdData {
 
   HotelIdData.fromJson(Map<String, dynamic> json) {
     price = json['price'] != null ? Price.fromJson(json['price']) : null;
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     sId = json['_id'];
     name = json['name'];
     // التعامل مع الكائنات المعقدة إذا جاءت كسلاسل أو كائنات
@@ -114,37 +111,5 @@ class Price {
   Price.fromJson(Map<String, dynamic> json) {
     min = json['min']?.toString();
     max = json['max']?.toString();
-  }
-}
-
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-  String? metaTitle;
-  String? keywords;
-  String? slugUrl;
-  String? metaDescription;
-  double? priority;
-  String? ogTitle;
-  String? ogImage;
-  String? ogDescription;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    metaDescription = json['metaDescription'];
-    priority = json['priority'];
-    ogTitle = json['ogTitle'];
-    ogImage = json['ogImage'];
-    ogDescription = json['ogDescription'];
   }
 }

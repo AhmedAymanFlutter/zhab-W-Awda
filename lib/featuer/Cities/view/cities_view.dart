@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_application_1/featuer/Cities/data/repo/cities_repo.dart';
 import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
 import 'package:flutter_application_1/featuer/Cities/manager/cities_state.dart';
@@ -38,6 +39,20 @@ class CitiesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
+              SizedBox(height: 10.h),
+              Builder(
+                builder: (context) {
+                  return ReusableSearchBar(
+                    hintText: "Search cities (e.g. Cairo, Luxor...)",
+                    useDebounce: true,
+                    onFilterTap: () {},
+                    onSearchChanged: (value) {
+                      // Now this context works because it is inside the Builder
+                      CitiesCubit.get(context).searchLocalCities(value);
+                    },
+                  );
+                },
+              ),
               SizedBox(height: 10.h),
               Expanded(
                 child: BlocBuilder<CitiesCubit, CitiesState>(

@@ -24,11 +24,12 @@ class HotelsRepository {
     }
   }
 
-  Future<HotelIdData> getHotelById(String id) async {
+  Future<HotelIdData> getHotelBySlug(String slug) async {
     try {
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.hotels}/admin/$id',
+        endPoint: '${EndPoints.hotels}/$slug',
         isProtected: false,
+        isFormData: false,
       );
 
       if (response.status == true && response.data != null) {

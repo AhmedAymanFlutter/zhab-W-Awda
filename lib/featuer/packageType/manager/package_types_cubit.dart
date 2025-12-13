@@ -15,15 +15,21 @@ class PackageTypesCubit extends Cubit<PackageTypesState> {
     try {
       final response = await _repository.getPackageTypes();
 
-      if (response.data != null &&
-          response.data!.packageTypes != null &&
-          response.data!.packageTypes!.isNotEmpty) {
-        emit(PackageTypesSuccess(response.data!.packageTypes!));
-      } else {
-        emit(PackageTypesError("لا توجد أنواع باقات متاحة حالياً"));
+      // ✅ التحقق قبل إصدار الحالة
+      if (!isClosed) {
+        if (response.data != null &&
+            response.data!.packageTypes != null &&
+            response.data!.packageTypes!.isNotEmpty) {
+          emit(PackageTypesSuccess(response.data!.packageTypes!));
+        } else {
+          emit(PackageTypesError("لا توجد أنواع باقات متاحة حالياً"));
+        }
       }
     } catch (e) {
-      emit(PackageTypesError(e.toString()));
+      // ✅ التحقق عند الخطأ
+      if (!isClosed) {
+        emit(PackageTypesError(e.toString()));
+      }
     }
   }
 
@@ -31,15 +37,22 @@ class PackageTypesCubit extends Cubit<PackageTypesState> {
     emit(PackageTypeCountriesLoading());
     try {
       final countries = await _repository.getCountriesByPackageType(slug);
-      if (countries.isNotEmpty) {
-        emit(PackageTypeCountriesSuccess(countries));
-      } else {
-        emit(
-          PackageTypeCountriesError("لا توجد وجهات متاحة لهذا النوع حالياً"),
-        );
+
+      // ✅ التحقق هنا
+      if (!isClosed) {
+        if (countries.isNotEmpty) {
+          emit(PackageTypeCountriesSuccess(countries));
+        } else {
+          emit(
+            PackageTypeCountriesError("لا توجد وجهات متاحة لهذا النوع حالياً"),
+          );
+        }
       }
     } catch (e) {
-      emit(PackageTypeCountriesError(e.toString()));
+      // ✅ وهنا
+      if (!isClosed) {
+        emit(PackageTypeCountriesError(e.toString()));
+      }
     }
   }
 
@@ -54,15 +67,21 @@ class PackageTypesCubit extends Cubit<PackageTypesState> {
         countrySlug: countrySlug,
       );
 
-      if (packages.isNotEmpty) {
-        emit(PackagesInCountrySuccess(packages));
-      } else {
-        emit(
-          PackagesInCountryError("لا توجد باقات متاحة في هذه الوجهة حالياً"),
-        );
+      // ✅ التحقق هنا
+      if (!isClosed) {
+        if (packages.isNotEmpty) {
+          emit(PackagesInCountrySuccess(packages));
+        } else {
+          emit(
+            PackagesInCountryError("لا توجد باقات متاحة في هذه الوجهة حالياً"),
+          );
+        }
       }
     } catch (e) {
-      emit(PackagesInCountryError(e.toString()));
+      // ✅ وهنا
+      if (!isClosed) {
+        emit(PackagesInCountryError(e.toString()));
+      }
     }
   }
 }

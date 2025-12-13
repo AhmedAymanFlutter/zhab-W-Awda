@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/featuer/Cities/data/model/getcitiesModel.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 
 class CityCard extends StatelessWidget {
@@ -47,10 +48,11 @@ class CityCard extends StatelessWidget {
                       imageUrl:
                           city.imageCover ?? "https://via.placeholder.com/200",
                       fit: BoxFit.cover,
+                      width: double.infinity,
                       placeholder: (context, url) =>
-                          const Center(child: CircularProgressIndicator()),
+                          const Center(child: Icon(FontAwesomeIcons.image)),
                       errorWidget: (context, url, error) =>
-                          const Icon(Icons.error),
+                          const Icon(FontAwesomeIcons.image),
                     ),
                     // Gradient for text visibility
                     Container(

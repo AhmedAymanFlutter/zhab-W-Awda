@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:cached_network_image/cached_network_image.dart'; // 👈 هام جداً
@@ -67,11 +68,12 @@ class _OffersSliderState extends State<OffersSlider> {
                                         colorBlendMode: BlendMode.darken,
                                         placeholder: (context, url) =>
                                             const Center(
-                                              child:
-                                                  CircularProgressIndicator(),
+                                              child: Icon(
+                                                FontAwesomeIcons.image,
+                                              ),
                                             ),
                                         errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
+                                            const Icon(FontAwesomeIcons.image),
                                       ),
                                     ),
                                   ),

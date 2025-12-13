@@ -15,6 +15,9 @@ import 'package:flutter_application_1/featuer/layout/view/layout_view.dart';
 import 'package:flutter_application_1/featuer/onboarding/onboarding_screen.dart';
 import 'package:flutter_application_1/featuer/packageType/view/package_type_details_view.dart';
 import 'package:flutter_application_1/featuer/packageType/view/packages_in_country_view.dart';
+import 'package:flutter_application_1/featuer/profile/profile_view.dart';
+import 'package:flutter_application_1/featuer/seeAllPage/AllOffersView.dart';
+import 'package:flutter_application_1/featuer/seeAllPage/AllpackageView.dart';
 import 'package:flutter_application_1/featuer/services/view/service_details_view.dart';
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
@@ -60,8 +63,10 @@ class AppRouter {
         final citySlug = settings.arguments as String;
         return RouterTransitions.buildFade(CityDetailsView(citySlug: citySlug));
       case Routes.hotelDetailsView:
-        final hotelId = settings.arguments as String;
-        return RouterTransitions.buildFade(HotelDetailsView(hotelId: hotelId));
+        final getHotelBySlug = settings.arguments as String;
+        return RouterTransitions.buildFade(
+          HotelDetailsView(hotelId: getHotelBySlug),
+        );
       case Routes.tourDetailsView:
         final tourId = settings.arguments as String;
         return RouterTransitions.buildFade(TourDetailsView(tourId: tourId));
@@ -83,6 +88,12 @@ class AppRouter {
         );
       case Routes.contactUsView:
         return RouterTransitions.buildFade(const ContactUsView());
+      case Routes.offersView:
+        return RouterTransitions.buildFade(OffersView());
+      case Routes.packagesView:
+        return RouterTransitions.buildFade(PackagesView());
+      case Routes.profileView:
+        return RouterTransitions.buildFade(const ProfileView());
       default:
         return RouterTransitions.build(
           const Scaffold(body: Center(child: Text("No Route"))),

@@ -4,7 +4,7 @@ import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cub
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_state.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/view/widgets/offer_details_app_bar.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/view/widgets/offer_details_content.dart';
-import 'package:flutter_application_1/featuer/home/view/offer/view/widgets/offer_booking_bar.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 class OfferDetailsView extends StatelessWidget {

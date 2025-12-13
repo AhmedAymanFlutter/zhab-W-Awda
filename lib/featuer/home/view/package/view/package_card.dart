@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../core/theme/app_color.dart';
 import '../../../../../core/theme/app_text_style.dart';
@@ -57,9 +58,9 @@ class PackageCard extends StatelessWidget {
                         package.imageCover ?? "https://via.placeholder.com/200",
                     fit: BoxFit.cover,
                     placeholder: (context, url) =>
-                        const Center(child: CircularProgressIndicator()),
+                        const Center(child: Icon(FontAwesomeIcons.image)),
                     errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
+                        const Icon(FontAwesomeIcons.image),
                   ),
                 ),
               ),

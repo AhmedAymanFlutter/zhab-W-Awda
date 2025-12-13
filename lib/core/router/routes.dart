@@ -18,4 +18,7 @@ class Routes {
   static const String packageTypeDetailsView = '/PackageTypeDetailsView';
   static const String packagesInCountryView = '/PackagesInCountryView';
   static const String contactUsView = '/ContactUsView';
+  static const String offersView = '/OffersView';
+  static const String packagesView = '/PackagesView';
+  static const String profileView = '/ProfileView';
 }

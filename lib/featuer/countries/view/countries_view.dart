@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_application_1/featuer/countries/data/repo/countries_repository.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_state.dart';
@@ -39,6 +40,19 @@ class CountriesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
+              Builder(
+                builder: (context) {
+                  return ReusableSearchBar(
+                    hintText: "Search countries...",
+                    useDebounce: true,
+                    onFilterTap: () {},
+                    onSearchChanged: (value) {
+                      // Now this context works because it is inside the Builder
+                      CountriesCubit.get(context).searchLocalCountries(value);
+                    },
+                  );
+                },
+              ),
               SizedBox(height: 10.h),
               Expanded(
                 child: BlocBuilder<CountriesCubit, CountriesState>(

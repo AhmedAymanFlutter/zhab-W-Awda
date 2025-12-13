@@ -3,8 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/Cities/data/repo/cities_repo.dart';
 import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
 import 'package:flutter_application_1/featuer/Cities/manager/cities_state.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 
 class CityDetailsView extends StatelessWidget {
@@ -18,6 +20,7 @@ class CityDetailsView extends StatelessWidget {
       create: (context) =>
           CitiesCubit(CitiesRepository())..getCityDetails(citySlug),
       child: Scaffold(
+        bottomNavigationBar: OfferBookingBar(),
         backgroundColor: Colors.white,
         body: BlocBuilder<CitiesCubit, CitiesState>(
           buildWhen: (previous, current) =>
@@ -71,13 +74,14 @@ class CityDetailsView extends StatelessWidget {
                               CachedNetworkImage(
                                 imageUrl:
                                     city.imageCover ??
-                                    "https://via.placeholder.com/300",
+                                    "https://via.placeholder.com/200",
                                 fit: BoxFit.cover,
+                                width: double.infinity,
                                 placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(),
+                                  child: Icon(FontAwesomeIcons.image),
                                 ),
                                 errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+                                    const Icon(FontAwesomeIcons.image),
                               ),
                               Container(
                                 decoration: BoxDecoration(

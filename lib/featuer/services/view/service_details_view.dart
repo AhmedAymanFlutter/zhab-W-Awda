@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/services/manager/services_cubit.dart';
 import 'package:flutter_application_1/featuer/services/manager/services_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 import '../data/repo/services_repository.dart';
 
@@ -19,7 +21,7 @@ class ServiceDetailsView extends StatelessWidget {
           ServicesCubit(ServicesRepository())..getServiceDetails(serviceId),
       child: Scaffold(
         backgroundColor: Colors.white,
-        bottomNavigationBar: _buildBottomContactBar(),
+        bottomNavigationBar: OfferBookingBar(),
         body: BlocBuilder<ServicesCubit, ServicesState>(
           buildWhen: (previous, current) =>
               current is ServiceDetailsLoading ||
@@ -66,7 +68,9 @@ class ServiceDetailsView extends StatelessWidget {
                                 "https://via.placeholder.com/300",
                             fit: BoxFit.cover,
                             placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
+                              child: Center(
+                                child: Icon(FontAwesomeIcons.image, size: 32),
+                              ),
                             ),
                             errorWidget: (context, url, error) =>
                                 const Icon(Icons.error),
@@ -196,38 +200,6 @@ class ServiceDetailsView extends StatelessWidget {
             }
             return const SizedBox();
           },
-        ),
-      ),
-    );
-  }
-
-  Widget _buildBottomContactBar() {
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 15.h),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, -5),
-          ),
-        ],
-      ),
-      child: SafeArea(
-        child: ElevatedButton(
-          onPressed: () {},
-          style: ElevatedButton.styleFrom(
-            backgroundColor: AppColor.primaryBlue,
-            padding: EdgeInsets.symmetric(vertical: 15.h),
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(16.r),
-            ),
-          ),
-          child: Text(
-            "اطلب الخدمة الآن",
-            style: TextStyle(color: Colors.white, fontSize: 16.sp),
-          ),
         ),
       ),
     );

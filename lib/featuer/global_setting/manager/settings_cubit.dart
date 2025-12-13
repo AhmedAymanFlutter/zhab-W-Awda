@@ -15,13 +15,19 @@ class SettingsCubit extends Cubit<SettingsState> {
     try {
       final response = await _repository.getSettings();
 
-      if (response.data != null) {
-        emit(SettingsSuccess(response.data!));
-      } else {
-        emit(SettingsError("فشل في تحميل البيانات"));
+      // ✅ التحقق قبل إصدار الحالة بعد انتظار الرد
+      if (!isClosed) {
+        if (response.data != null) {
+          emit(SettingsSuccess(response.data!));
+        } else {
+          emit(SettingsError("فشل في تحميل البيانات"));
+        }
       }
     } catch (e) {
-      emit(SettingsError(e.toString()));
+      // ✅ التحقق قبل إصدار حالة الخطأ
+      if (!isClosed) {
+        emit(SettingsError(e.toString()));
+      }
     }
   }
 }

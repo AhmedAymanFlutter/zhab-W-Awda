@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/theme/app_color.dart';
+import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
-import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
 import 'package:flutter_application_1/featuer/hotels/view/widget/hotel_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
-import '../../../../core/theme/app_color.dart';
+
+import '../manager/hotels_state.dart';
 
 class HotelsView extends StatelessWidget {
   const HotelsView({super.key});
@@ -23,6 +25,21 @@ class HotelsView extends StatelessWidget {
             padding: EdgeInsets.symmetric(horizontal: 16.w),
             child: Column(
               children: [
+                SizedBox(height: 16.h),
+
+                Builder(
+                  builder: (context) {
+                    return ReusableSearchBar(
+                      onSearchChanged: (value) {
+                        HotelsCubit.get(context).searchLocalHotels(value);
+                      },
+                      onFilterTap: () {},
+                      hintText: "Search hotels...",
+                      useDebounce: true,
+                    );
+                  },
+                ),
+
                 SizedBox(height: 16.h),
                 Expanded(
                   child: BlocBuilder<HotelsCubit, HotelsState>(
@@ -41,13 +58,21 @@ class HotelsView extends StatelessWidget {
                                   childAspectRatio: 0.75,
                                 ),
                             itemBuilder: (context, index) {
-                              return HotelCard(hotel: HotelItem());
+                              return HotelCard(
+                                hotel: HotelItem(name: "Loading"),
+                              );
                             },
                           ),
                         );
                       } else if (state is HotelsError) {
                         return Center(child: Text(state.message));
                       } else if (state is HotelsSuccess) {
+                        if (state.hotels.isEmpty) {
+                          return const Center(
+                            child: Text("No hotels found matching your search"),
+                          );
+                        }
+
                         return GridView.builder(
                           physics: const BouncingScrollPhysics(),
                           itemCount: state.hotels.length,
@@ -56,8 +81,7 @@ class HotelsView extends StatelessWidget {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12.w,
                                 mainAxisSpacing: 12.h,
-                                childAspectRatio:
-                                    0.75, // Adjust for card height
+                                childAspectRatio: 0.75,
                               ),
                           itemBuilder: (context, index) {
                             return HotelCard(hotel: state.hotels[index]);
