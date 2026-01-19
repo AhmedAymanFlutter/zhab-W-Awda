@@ -17,11 +17,17 @@ class PackageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(
-          context,
-          Routes.packageDetailsView,
-          arguments: package.sId,
-        );
+        if (package.sId != null) {
+          Navigator.pushNamed(
+            context,
+            Routes.packageDetailsView,
+            arguments: package.sId,
+          );
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("تفاصيل الباقة غير متوفرة حالياً")),
+          );
+        }
       },
       child: Container(
         decoration: BoxDecoration(

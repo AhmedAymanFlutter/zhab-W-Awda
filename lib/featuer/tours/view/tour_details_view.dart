@@ -5,8 +5,10 @@ import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import '../../../../core/theme/app_color.dart';
 import '../data/repo/tours_repository.dart';
+import 'dart:ui';
 
 class TourDetailsView extends StatelessWidget {
   final String tourId;
@@ -45,12 +47,33 @@ class TourDetailsView extends StatelessWidget {
                     leading: Container(
                       margin: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
+                      child: ClipOval(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                              color: Colors.white,
+                              onPressed: () => Navigator.pop(context),
+                              padding: EdgeInsets.zero,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     flexibleSpace: FlexibleSpaceBar(
@@ -166,11 +189,11 @@ class TourDetailsView extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10.h),
-                            Text(
+                            HtmlWidget(
                               tour.description ??
                                   tour.descText ??
                                   "لا يوجد وصف متاح.",
-                              style: TextStyle(
+                              textStyle: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.grey[600],
                                 height: 1.6,
@@ -189,8 +212,16 @@ class TourDetailsView extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(height: 10.h),
-                              ...tour.paths!.map(
-                                (path) => _buildPathItem(path),
+                              ListView.builder(
+                                shrinkWrap: true,
+                                physics: const NeverScrollableScrollPhysics(),
+                                itemCount: tour.paths!.length,
+                                itemBuilder: (context, index) {
+                                  return _buildPathItem(
+                                    tour.paths![index],
+                                    isLast: index == tour.paths!.length - 1,
+                                  );
+                                },
                               ),
                             ],
 
@@ -212,20 +243,20 @@ class TourDetailsView extends StatelessWidget {
 
   Widget _buildInfoChip(IconData icon, String label) {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 10.h),
       decoration: BoxDecoration(
-        color: AppColor.primaryBlue.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(10.r),
-        border: Border.all(color: AppColor.primaryBlue.withOpacity(0.1)),
+        color: AppColor.primaryBlue.withOpacity(0.08),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColor.primaryBlue, size: 16.sp),
-          SizedBox(width: 6.w),
+          Icon(icon, color: AppColor.primaryBlue, size: 18.sp),
+          SizedBox(width: 8.w),
           Text(
             label,
             style: TextStyle(
-              fontSize: 11.sp,
+              fontSize: 12.sp,
               fontWeight: FontWeight.w600,
               color: AppColor.primaryBlue,
             ),
@@ -235,31 +266,66 @@ class TourDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildPathItem(dynamic path) {
-    return Padding(
-      padding: EdgeInsets.only(bottom: 12.h),
+  Widget _buildPathItem(dynamic path, {bool isLast = false}) {
+    return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Icon(Icons.circle, size: 10.sp, color: AppColor.primaryBlue),
-          SizedBox(width: 10.w),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  path.title ?? "",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 14.sp,
+          Column(
+            children: [
+              Container(
+                margin: EdgeInsets.only(top: 4.h),
+                width: 12.w,
+                height: 12.w,
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: AppColor.primaryBlue,
+                  boxShadow: [
+                    BoxShadow(
+                      color: AppColor.primaryBlue.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+              ),
+              if (!isLast)
+                Expanded(
+                  child: Container(
+                    width: 2.w,
+                    margin: EdgeInsets.symmetric(vertical: 4.h),
+                    color: AppColor.primaryBlue.withOpacity(0.2),
                   ),
                 ),
-                if (path.description != null)
+            ],
+          ),
+          SizedBox(width: 16.w),
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(bottom: 24.h),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
                   Text(
-                    path.description!,
-                    style: TextStyle(color: Colors.grey[600], fontSize: 12.sp),
+                    path.title ?? "",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 16.sp,
+                      color: Colors.black87,
+                    ),
                   ),
-              ],
+                  SizedBox(height: 6.h),
+                  if (path.description != null)
+                    Text(
+                      path.description!,
+                      style: TextStyle(
+                        color: Colors.grey[600],
+                        fontSize: 13.sp,
+                        height: 1.5,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
         ],

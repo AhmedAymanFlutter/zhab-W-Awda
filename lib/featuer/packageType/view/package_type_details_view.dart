@@ -7,6 +7,7 @@ import 'package:flutter_application_1/featuer/packageType/view/widgets/gradient_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
+import 'dart:ui';
 
 class PackageTypeDetailsView extends StatelessWidget {
   final String slug;
@@ -38,9 +39,32 @@ class PackageTypeDetailsView extends StatelessWidget {
               color: AppColor.primaryBlue,
             ),
           ),
-          leading: IconButton(
-            icon: const Icon(Icons.arrow_back, color: AppColor.primaryBlue),
-            onPressed: () => Navigator.pop(context),
+          leading: Container(
+            margin: EdgeInsets.all(8.w),
+            decoration: BoxDecoration(
+              color: AppColor.primaryBlue.withOpacity(0.1),
+              shape: BoxShape.circle,
+            ),
+            child: ClipOval(
+              child: BackdropFilter(
+                filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: AppColor.primaryBlue.withOpacity(0.1),
+                    shape: BoxShape.circle,
+                  ),
+                  child: IconButton(
+                    icon: Icon(
+                      Icons.arrow_back_ios_new,
+                      color: AppColor.primaryBlue,
+                      size: 20.sp,
+                    ),
+                    onPressed: () => Navigator.pop(context),
+                    padding: EdgeInsets.zero,
+                  ),
+                ),
+              ),
+            ),
           ),
         ),
         body: BlocBuilder<PackageTypesCubit, PackageTypesState>(
@@ -83,18 +107,21 @@ class PackageTypeDetailsView extends StatelessWidget {
       child: Container(
         height: 180.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(20.r), // More rounded
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.05),
-              blurRadius: 5,
-              offset: const Offset(0, 5),
+              color: Colors.black.withOpacity(
+                0.08,
+              ), // Slightly darker for depth
+              blurRadius: 15, // Softer shadow
+              offset: const Offset(0, 8),
+              spreadRadius: 0,
             ),
           ],
         ),
         child: ClipRRect(
-          borderRadius: BorderRadius.circular(16.r),
+          borderRadius: BorderRadius.circular(20.r),
           child: Stack(
             children: [
               // Reusing your GradientImageContainer
@@ -108,7 +135,7 @@ class PackageTypeDetailsView extends StatelessWidget {
               Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: EdgeInsets.all(16.w),
+                  padding: EdgeInsets.all(20.w), // Increased padding
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -117,8 +144,16 @@ class PackageTypeDetailsView extends StatelessWidget {
                         country.name ?? "اسم الوجهة",
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: 18.sp,
-                          fontWeight: FontWeight.bold,
+                          fontSize: 22.sp, // Larger font
+                          fontWeight: FontWeight.w800, // Bolder
+                          letterSpacing: 0.5,
+                          shadows: [
+                            BoxShadow(
+                              color: Colors.black.withOpacity(0.5),
+                              blurRadius: 10,
+                              offset: const Offset(0, 2),
+                            ),
+                          ],
                         ),
                       ),
                     ],

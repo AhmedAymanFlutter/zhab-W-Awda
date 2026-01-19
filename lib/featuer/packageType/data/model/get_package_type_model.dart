@@ -7,7 +7,7 @@ class GetPackageTypeModel {
 
   GetPackageTypeModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = json['results'];
+    results = (json['results'] as num?)?.toInt();
     data = json['data'] != null
         ? PackageTypesDataWrapper.fromJson(json['data'])
         : null;
@@ -104,7 +104,7 @@ class Seo {
     keywords = json['keywords'];
     slugUrl = json['slugUrl'];
     metaDescription = json['metaDescription'];
-    priority = json['priority'];
+    priority = (json['priority'] as num?)?.toInt();
     ogTitle = json['ogTitle'];
     ogImage = json['ogImage'];
     ogDescription = json['ogDescription'];

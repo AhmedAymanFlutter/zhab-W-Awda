@@ -12,10 +12,13 @@ class GetPackagesInCountryModel {
     message = json['message'];
     if (json['data'] != null) {
       data = <PackageItem>[];
-      json['data'].forEach((v) {
-        // Reuse the existing PackageItem.fromJson
-        data!.add(PackageItem.fromJson(v));
-      });
+      if (json['data'] is List) {
+        json['data'].forEach((v) {
+          data!.add(PackageItem.fromJson(v));
+        });
+      } else if (json['data'] is Map<String, dynamic>) {
+        data!.add(PackageItem.fromJson(json['data']));
+      }
     }
   }
 }

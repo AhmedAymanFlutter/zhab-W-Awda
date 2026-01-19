@@ -4,10 +4,12 @@ import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 import '../data/repo/hotels_repository.dart';
 
+import 'dart:ui';
 import '../manager/hotels_cubit.dart';
 
 class HotelDetailsView extends StatelessWidget {
@@ -46,20 +48,35 @@ class HotelDetailsView extends StatelessWidget {
                     pinned: true,
                     stretch: true,
                     backgroundColor: Colors.transparent,
-                    leading: Padding(
-                      padding: EdgeInsets.only(left: 16.w),
-                      child: Container(
-                        margin: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.3),
-                          shape: BoxShape.circle,
-                        ),
-                        child: IconButton(
-                          icon: const Icon(
-                            Icons.arrow_back,
-                            color: Colors.white,
+                    leading: Container(
+                      margin: EdgeInsets.all(8.w),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        shape: BoxShape.circle,
+                      ),
+                      child: ClipOval(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                              color: Colors.white,
+                              onPressed: () => Navigator.pop(context),
+                              padding: EdgeInsets.zero,
+                            ),
                           ),
-                          onPressed: () => Navigator.pop(context),
                         ),
                       ),
                     ),
@@ -148,26 +165,33 @@ class HotelDetailsView extends StatelessWidget {
                                 if (hotel.rating != null)
                                   Container(
                                     padding: EdgeInsets.symmetric(
-                                      horizontal: 8.w,
-                                      vertical: 4.h,
+                                      horizontal: 10.w,
+                                      vertical: 6.h,
                                     ),
                                     decoration: BoxDecoration(
-                                      color: Colors.amber.withOpacity(0.2),
-                                      borderRadius: BorderRadius.circular(8.r),
+                                      color: const Color(
+                                        0xFFFFF8E1,
+                                      ), // Softer Amber
+                                      borderRadius: BorderRadius.circular(12.r),
+                                      border: Border.all(
+                                        color: const Color(0xFFFFD54F),
+                                        width: 0.5,
+                                      ),
                                     ),
                                     child: Row(
                                       children: [
                                         Icon(
-                                          Icons.star,
-                                          color: Colors.amber,
-                                          size: 16.sp,
+                                          Icons.star_rounded,
+                                          color: const Color(0xFFFFC107),
+                                          size: 18.sp,
                                         ),
                                         SizedBox(width: 4.w),
                                         Text(
                                           hotel.rating!,
                                           style: TextStyle(
-                                            fontWeight: FontWeight.bold,
-                                            color: Colors.amber[800],
+                                            fontWeight: FontWeight.w700,
+                                            fontSize: 13.sp,
+                                            color: const Color(0xFFFFA000),
                                           ),
                                         ),
                                       ],
@@ -222,11 +246,11 @@ class HotelDetailsView extends StatelessWidget {
                             SizedBox(height: 10.h),
 
                             // نص الوصف
-                            Text(
+                            HtmlWidget(
                               hotel.description ??
                                   hotel.descText ??
                                   "لا يوجد وصف متاح لهذا الفندق.",
-                              style: TextStyle(
+                              textStyle: TextStyle(
                                 fontSize: 14.sp,
                                 color: Colors.grey[600],
                                 height: 1.6,

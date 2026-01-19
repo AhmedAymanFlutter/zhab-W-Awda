@@ -7,6 +7,7 @@ import '../../../../../core/theme/app_color.dart';
 import '../data/repo/package_repo.dart';
 import '../manager/packages_cubit.dart';
 import '../manager/packages_state.dart';
+import 'dart:ui';
 
 class PackageDetailsView extends StatelessWidget {
   final String packageId;
@@ -45,12 +46,33 @@ class PackageDetailsView extends StatelessWidget {
                     leading: Container(
                       margin: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.white.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
-                      child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
-                        onPressed: () => Navigator.pop(context),
+                      child: ClipOval(
+                        child: BackdropFilter(
+                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white.withOpacity(0.2),
+                              shape: BoxShape.circle,
+                              border: Border.all(
+                                color: Colors.white.withOpacity(0.2),
+                                width: 1,
+                              ),
+                            ),
+                            child: IconButton(
+                              icon: Icon(
+                                Icons.arrow_back_ios_new,
+                                color: Colors.white,
+                                size: 20.sp,
+                              ),
+                              color: Colors.white,
+                              onPressed: () => Navigator.pop(context),
+                              padding: EdgeInsets.zero,
+                            ),
+                          ),
+                        ),
                       ),
                     ),
                     flexibleSpace: FlexibleSpaceBar(

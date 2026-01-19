@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
-import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/data/model/get_all_offers_model.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cubit.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_state.dart';
@@ -60,32 +59,6 @@ class HomeView extends StatelessWidget {
                 return const SizedBox(); // Initial State
               },
             ),
-            SizedBox(height: 24.h),
-
-            Container(
-              margin: EdgeInsets.symmetric(horizontal: 16.w),
-              height: 100.h,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(16.r),
-                // color: AppColor.primaryBlue,
-                image: DecorationImage(
-                  image: AssetImage("assets/photo/sale.avif"),
-                  fit: BoxFit.cover,
-                ),
-              ),
-              child: Center(
-                child: Text(
-                  "عروض جديدة",
-                  style: AppTextStyle.setelMessiriTextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: AppColor.primaryWhite,
-                  ),
-                ),
-              ),
-            ),
-
             SizedBox(height: 24.h),
 
             // 4. Packages Section
