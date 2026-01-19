@@ -76,16 +76,19 @@ class HomeView extends StatelessWidget {
                   return Center(
                     child: Skeletonizer(
                       enabled: true,
-                      child: SizedBox(
-                        height: 200.h,
-                        child: GridView.builder(
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                              ),
-                          itemBuilder: (BuildContext context, int index) {
-                            return PackageCard(package: PackageItem());
-                          },
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: SizedBox(
+                          height: 200.h,
+                          child: GridView.builder(
+                            gridDelegate:
+                                SliverGridDelegateWithFixedCrossAxisCount(
+                                  crossAxisCount: 2,
+                                ),
+                            itemBuilder: (BuildContext context, int index) {
+                              return PackageCard(package: PackageItem());
+                            },
+                          ),
                         ),
                       ),
                     ),

@@ -37,19 +37,27 @@ class PackagesCubit extends Cubit<PackagesState> {
 
   Future<void> getPackageDetails(String id) async {
     emit(PackageDetailsLoading());
-
     try {
       final package = await _repository.getPackageById(id);
-
-      // ✅ التحقق هنا أيضاً
-      if (!isClosed) {
-        emit(PackageDetailsSuccess(package));
-      }
+      if (!isClosed) emit(PackageDetailsSuccess(package));
     } catch (e) {
-      // ✅ وهنا
-      if (!isClosed) {
-        emit(PackageDetailsError(e.toString()));
-      }
+      if (!isClosed) emit(PackageDetailsError(e.toString()));
+    }
+  }
+
+  Future<void> getPackageDetailsBySlug({
+    required String packageSlug,
+    required String packageTypeSlug,
+  }) async {
+    emit(PackageDetailsLoading());
+    try {
+      final package = await _repository.getPackageDetailsBySlug(
+        packageTypeSlug,
+        packageSlug,
+      );
+      if (!isClosed) emit(PackageDetailsSuccess(package));
+    } catch (e) {
+      if (!isClosed) emit(PackageDetailsError(e.toString()));
     }
   }
 
@@ -62,11 +70,14 @@ class PackagesCubit extends Cubit<PackagesState> {
     final lowerQuery = query.toLowerCase();
 
     final filteredList = _allPackages.where((package) {
-      // تأكد أنك تبحث في الحقول الصحيحة (هنا تبحث في city، يمكنك إضافة title أو description)
+      final queryLower = lowerQuery.trim();
       final cityName = package.city?.toLowerCase() ?? '';
-      // final title = package.title?.toLowerCase() ?? ''; // مثال إذا أردت البحث بالعنوان أيضاً
+      final packageName = package.name?.toLowerCase() ?? '';
+      final price = package.price?.toString() ?? '';
 
-      return cityName.contains(lowerQuery);
+      return cityName.contains(queryLower) ||
+          packageName.contains(queryLower) ||
+          price.contains(queryLower);
     }).toList();
 
     if (!isClosed) emit(PackagesSuccess(filteredList));

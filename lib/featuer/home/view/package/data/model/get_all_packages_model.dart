@@ -41,7 +41,7 @@ class PackageItem {
   List<String>? includes;
   List<String>? excludes;
   Country? country;
-  List<String>? cities;
+  List<City>? cities; // Changed from List<String>
   List<String>? images;
   String? description;
   String? descText;
@@ -52,7 +52,8 @@ class PackageItem {
   String? alt;
   String? imageCover;
   String? updatedBy;
-  String? city;
+  String?
+  city; // Keeping this flexible, might be removed or unused, but let's check parsing
 
   PackageItem({
     this.seo,
@@ -85,7 +86,7 @@ class PackageItem {
     sId = json['_id'];
     name = json['name'];
     price = json['price'];
-    rate = json['rate']?.toString(); // Ensure it's a string even if int comes
+    rate = json['rate']?.toString();
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
     packageType = json['packageType'] != null
         ? PackageType.fromJson(json['packageType'])
@@ -96,19 +97,38 @@ class PackageItem {
         itinerary!.add(Itinerary.fromJson(v));
       });
     }
-    // Handle List<String> safely
-    includes = json['includes'] != null
-        ? List<String>.from(json['includes'])
-        : [];
-    excludes = json['excludes'] != null
-        ? List<String>.from(json['excludes'])
-        : [];
+
+    if (json['includes'] != null) {
+      includes = (json['includes'] as List).map((e) => e.toString()).toList();
+    } else {
+      includes = [];
+    }
+
+    if (json['excludes'] != null) {
+      excludes = (json['excludes'] as List).map((e) => e.toString()).toList();
+    } else {
+      excludes = [];
+    }
 
     country = json['country'] != null
         ? Country.fromJson(json['country'])
         : null;
 
-    cities = json['cities'] != null ? List<String>.from(json['cities']) : [];
+    // Parse cities as Objects
+    if (json['cities'] != null) {
+      cities = <City>[];
+      json['cities'].forEach((v) {
+        if (v is Map<String, dynamic>) {
+          cities!.add(City.fromJson(v));
+        } else if (v is String) {
+          // Handle case where it might be string IDs or names
+          cities!.add(City(name: v));
+        }
+      });
+    } else {
+      cities = [];
+    }
+
     images = json['images'] != null ? List<String>.from(json['images']) : [];
 
     description = json['description'];
@@ -116,11 +136,39 @@ class PackageItem {
     createdBy = json['createdBy'];
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
+    updatedBy = json['updatedBy'];
     slug = json['slug'];
     alt = json['alt'];
     imageCover = json['imageCover'];
-    updatedBy = json['updatedBy'];
-    city = json['city'];
+
+    // Safe handling for city field which might be object or string or null
+    // If city is an object with name, extract name. If string, use it.
+    if (json['city'] != null) {
+      if (json['city'] is Map) {
+        city = json['city']['name']?.toString();
+      } else {
+        city = json['city'].toString();
+      }
+    } else {
+      // Fallback: use first city from list if available
+      if (cities != null && cities!.isNotEmpty) {
+        city = cities![0].name;
+      }
+    }
+  }
+}
+
+// ... existing sub classes ...
+
+class City {
+  String? sId;
+  String? name;
+
+  City({this.sId, this.name});
+
+  City.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
   }
 }
 

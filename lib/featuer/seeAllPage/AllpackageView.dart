@@ -1,6 +1,4 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_application_1/featuer/home/view/package/data/repo/package_repo.dart';
 import 'package:flutter_application_1/featuer/home/view/package/manager/packages_cubit.dart';
@@ -10,6 +8,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
+import '../home/view/package/view/package_card.dart';
 
 class PackagesView extends StatelessWidget {
   const PackagesView({super.key});
@@ -97,71 +96,9 @@ class PackagesView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           final package = state.packages[index];
 
-                          return InkWell(
-                            onTap: () => Navigator.pushNamed(
-                              context,
-                              Routes.packageDetailsView,
-                              arguments: package.sId,
-                            ),
-                            child: Container(
-                              height: 200.h,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(16.r),
-                                color: Colors.black,
-                              ),
-                              child: Stack(
-                                children: [
-                                  // Image
-                                  Positioned.fill(
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(16.r),
-                                      child: CachedNetworkImage(
-                                        imageUrl: package.imageCover ?? "",
-                                        fit: BoxFit.cover,
-                                        color: Colors.black.withOpacity(0.3),
-                                        colorBlendMode: BlendMode.darken,
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(
-                                              Icons.error,
-                                              color: Colors.white,
-                                            ),
-                                      ),
-                                    ),
-                                  ),
-                                  // Text Content
-                                  Positioned(
-                                    bottom: 12.h,
-                                    left: 12.w,
-                                    right: 12.w,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          package.city ?? "باقة مميزة",
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 18.sp,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        if (package.price != null) ...[
-                                          SizedBox(height: 4.h),
-                                          Text(
-                                            "${package.price} ج.م",
-                                            style: TextStyle(
-                                              color: Colors.amber,
-                                              fontSize: 16.sp,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          ),
-                                        ],
-                                      ],
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
+                          return SizedBox(
+                            height: 220.h,
+                            child: PackageCard(package: package),
                           );
                         },
                       );

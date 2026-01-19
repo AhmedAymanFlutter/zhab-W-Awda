@@ -17,11 +17,15 @@ class PackageCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        if (package.sId != null) {
+        if (package.slug != null) {
           Navigator.pushNamed(
             context,
             Routes.packageDetailsView,
-            arguments: package.sId,
+            arguments: {
+              'packageSlug': package.slug,
+              'packageTypeSlug': package.packageType?.slug ?? 'general',
+              'packageId': package.sId,
+            },
           );
         } else {
           ScaffoldMessenger.of(context).showSnackBar(

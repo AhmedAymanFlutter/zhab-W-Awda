@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/router_transation.dart'; // Check spelling: router_transation vs router_transition
 import 'package:flutter_application_1/core/router/routes.dart';
+import 'package:flutter_application_1/core/widgets/ExitConfirmWrapper_widget.dart';
 import 'package:flutter_application_1/featuer/Auth/view/log_in_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
@@ -27,58 +28,84 @@ class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
     switch (settings.name) {
       case Routes.splash:
-        return RouterTransitions.build(const Splashscreen());
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const Splashscreen()),
+        );
 
       case Routes.home:
-        return RouterTransitions.buildFade(const HomeView());
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const HomeView()),
+        );
 
       case Routes.loginView:
-        return RouterTransitions.buildFade(const LogInView());
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const LogInView()),
+        );
+
       case Routes.onboarding:
-        return RouterTransitions.buildFade(const OnboardingScreen());
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const OnboardingScreen()),
+        );
+
       case Routes.layout:
-        return RouterTransitions.buildFade(const LayoutView());
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const LayoutView()),
+        );
+
       case Routes.cities:
         return RouterTransitions.buildFade(const CitiesView());
+
       case Routes.countriesView:
         return RouterTransitions.buildFade(const CountriesView());
+
       case Routes.bookFlightView:
         return RouterTransitions.buildFade(const BookFlightView());
+
       case Routes.servicesView:
         return RouterTransitions.buildFade(const ServicesView());
+
       case Routes.serviceDetailsView:
         final serviceId = settings.arguments as String;
         return RouterTransitions.buildFade(
           ServiceDetailsView(serviceId: serviceId),
         );
+
       case Routes.packageDetailsView:
-        final packageId = settings.arguments as String;
+        final args = settings.arguments;
         return RouterTransitions.buildFade(
-          PackageDetailsView(packageId: packageId),
+          PackageDetailsView(
+            arguments: args is Map<String, dynamic>
+                ? args
+                : {'packageId': args},
+          ),
         );
+
       case Routes.offerDetailsView:
         final offerId = settings.arguments as String;
         return RouterTransitions.buildFade(OfferDetailsView(offerId: offerId));
+
       case Routes.cityDetailsView:
         final citySlug = settings.arguments as String;
         return RouterTransitions.buildFade(CityDetailsView(citySlug: citySlug));
+
       case Routes.hotelDetailsView:
-        final getHotelBySlug = settings.arguments as String;
+        final hotelSlug = settings.arguments as String;
         return RouterTransitions.buildFade(
-          HotelDetailsView(hotelId: getHotelBySlug),
+          HotelDetailsView(hotelId: hotelSlug),
         );
+
       case Routes.tourDetailsView:
         final tourId = settings.arguments as String;
         return RouterTransitions.buildFade(TourDetailsView(tourId: tourId));
+
       case Routes.packageTypeDetailsView:
         final args = settings.arguments as Map<String, dynamic>;
-
         return RouterTransitions.buildFade(
           PackageTypeDetailsView(slug: args['slug'], title: args['title']),
         );
+
       case Routes.packagesInCountryView:
         final args = settings.arguments as Map<String, dynamic>;
-
         return RouterTransitions.buildFade(
           PackagesInCountryView(
             packageTypeSlug: args['packageTypeSlug'],
@@ -86,17 +113,22 @@ class AppRouter {
             countryName: args['countryName'],
           ),
         );
+
       case Routes.contactUsView:
         return RouterTransitions.buildFade(const ContactUsView());
+
       case Routes.offersView:
         return RouterTransitions.buildFade(OffersView());
+
       case Routes.packagesView:
         return RouterTransitions.buildFade(PackagesView());
+
       case Routes.profileView:
         return RouterTransitions.buildFade(const ProfileView());
+
       default:
         return RouterTransitions.build(
-          const Scaffold(body: Center(child: Text("No Route"))),
+          const Scaffold(body: Center(child: Text("No Route Found"))),
         );
     }
   }

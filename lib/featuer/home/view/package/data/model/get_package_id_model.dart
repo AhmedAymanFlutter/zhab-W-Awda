@@ -1,155 +1,291 @@
-// lib/features/packages/data/models/get_package_id_model.dart
-
 class GetPackageIdModel {
-  String? status;
+  bool? success;
+  String? message;
   PackageIdData? data;
 
-  GetPackageIdModel({this.status, this.data});
+  GetPackageIdModel({this.success, this.message, this.data});
 
   GetPackageIdModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    // Handle nested 'data' key issue if present
-    if (json['data'] != null) {
-      if (json['data']['data'] != null) {
-        data = PackageIdData.fromJson(json['data']['data']);
-      } else {
-        data = PackageIdData.fromJson(json['data']);
-      }
-    }
+    success = json['success'];
+    message = json['message'];
+    data = json['data'] != null ? PackageIdData.fromJson(json['data']) : null;
   }
 }
 
 class PackageIdData {
-  Seo? seo;
-  String? sId;
-  String? name;
-  String? price;
-  String? rate;
-  Header? header;
-  String? packageType;
-  List<Itinerary>? itinerary;
-  List<String>? includes;
-  List<String>? excludes;
-  String? country;
-  List<String>? cities;
-  List<String>? images; // Changed from List<Null> to List<String>
-  String? description;
-  String? descText;
-  String? createdBy;
-  String? createdAt;
-  String? updatedAt;
-  String? slug;
-  String? alt;
-  int? iV;
-  String? imageCover; // Added imageCover manually as it's common
+  Pkg? pkg;
+  List<Branch>? branches;
+  List<RelatedPackage>? relatedPackages;
 
-  PackageIdData({
-    this.seo,
-    this.sId,
-    this.name,
-    this.price,
-    this.rate,
-    this.header,
-    this.packageType,
-    this.itinerary,
-    this.includes,
-    this.excludes,
-    this.country,
-    this.cities,
-    this.images,
-    this.description,
-    this.descText,
-    this.createdBy,
-    this.createdAt,
-    this.updatedAt,
-    this.slug,
-    this.alt,
-    this.iV,
-    this.imageCover,
-  });
+  PackageIdData({this.pkg, this.branches, this.relatedPackages});
 
   PackageIdData.fromJson(Map<String, dynamic> json) {
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
-    sId = json['_id'];
-    name = json['name'];
-    price = json['price'];
-    rate = json['rate']?.toString();
-    header = json['header'] != null ? Header.fromJson(json['header']) : null;
-    packageType = json['packageType'];
-    if (json['itinerary'] != null) {
-      itinerary = <Itinerary>[];
-      json['itinerary'].forEach((v) {
-        itinerary!.add(Itinerary.fromJson(v));
+    pkg = json['pkg'] != null ? Pkg.fromJson(json['pkg']) : null;
+    if (json['branches'] != null) {
+      branches = <Branch>[];
+      json['branches'].forEach((v) {
+        branches!.add(Branch.fromJson(v));
       });
     }
-    includes = json['includes'] != null
-        ? List<String>.from(json['includes'])
-        : [];
-    excludes = json['excludes'] != null
-        ? List<String>.from(json['excludes'])
-        : [];
-    country = json['country'];
-    cities = json['cities'] != null ? List<String>.from(json['cities']) : [];
-
-    // Safety check for images
-    if (json['images'] != null) {
-      images = List<String>.from(
-        json['images'].where((i) => i != null).map((i) => i.toString()),
-      );
+    if (json['relatedPackages'] != null) {
+      relatedPackages = <RelatedPackage>[];
+      json['relatedPackages'].forEach((v) {
+        relatedPackages!.add(RelatedPackage.fromJson(v));
+      });
     }
+  }
+}
 
+class Pkg {
+  String? sId;
+  String? name;
+  String? description;
+  String? descText;
+  List<String>? images;
+  String? imageCover; // Helper for UI if images list is used
+  Country? country;
+  List<City>? cities;
+  PackageType? packageType;
+  int? ratingsAverage;
+  int? ratingsQuantity;
+  String? slug;
+
+  Pkg({
+    this.sId,
+    this.name,
+    this.description,
+    this.descText,
+    this.images,
+    this.country,
+    this.cities,
+    this.packageType,
+    this.ratingsAverage,
+    this.ratingsQuantity,
+    this.slug,
+  });
+
+  Pkg.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
     description = json['description'];
     descText = json['descText'];
-    createdBy = json['createdBy'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
+    if (json['images'] != null) {
+      images = List<String>.from(json['images']);
+    }
+    // Logic to set imageCover from first image if available, or handle separately if needed
+    if (images != null && images!.isNotEmpty) {
+      imageCover = images![0];
+    }
+
+    country = json['country'] != null
+        ? Country.fromJson(json['country'])
+        : null;
+    if (json['cities'] != null) {
+      cities = <City>[];
+      json['cities'].forEach((v) {
+        cities!.add(City.fromJson(v));
+      });
+    }
+    packageType = json['packageType'] != null
+        ? PackageType.fromJson(json['packageType'])
+        : null;
+    ratingsAverage = (json['ratingsAverage'] as num?)?.toInt();
+    ratingsQuantity = (json['ratingsQuantity'] as num?)?.toInt();
     slug = json['slug'];
-    alt = json['alt'];
-    iV = json['__v'];
-    imageCover = json['imageCover'];
   }
 }
 
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-  }
-}
-
-class Header {
-  String? dayNumber;
-  String? nights;
-  String? location;
+class Branch {
   String? sId;
+  String? name;
+  int? daysCount;
+  int? nightsCount;
+  int? price; // Keeping as int based on response example
+  List<String>? includes;
+  List<String>? excludes;
+  List<Day>? days;
 
-  Header.fromJson(Map<String, dynamic> json) {
-    dayNumber = json['dayNumber'];
-    nights = json['nights'];
-    location = json['location'];
+  Branch({
+    this.sId,
+    this.name,
+    this.daysCount,
+    this.nightsCount,
+    this.price,
+    this.includes,
+    this.excludes,
+    this.days,
+  });
+
+  Branch.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    name = json['name'];
+    daysCount = (json['daysCount'] as num?)?.toInt();
+    nightsCount = (json['nightsCount'] as num?)?.toInt();
+    price = (json['price'] as num?)?.toInt();
+    if (json['includes'] != null) {
+      includes = List<String>.from(json['includes']);
+    }
+    if (json['excludes'] != null) {
+      excludes = List<String>.from(json['excludes']);
+    }
+    if (json['days'] != null) {
+      days = <Day>[];
+      json['days'].forEach((v) {
+        days!.add(Day.fromJson(v));
+      });
+    }
   }
 }
 
-class Itinerary {
-  String? day;
+class Day {
+  int? dayNumber;
+  String? type;
+  Tour? tour;
+
+  Day({this.dayNumber, this.type, this.tour});
+
+  Day.fromJson(Map<String, dynamic> json) {
+    dayNumber = (json['dayNumber'] as num?)?.toInt();
+    type = json['type'];
+    tour = json['tour'] != null ? Tour.fromJson(json['tour']) : null;
+  }
+}
+
+class Tour {
+  String? sId;
   String? title;
   String? description;
-  String? sId;
+  String? descText;
+  List<String>? includes;
+  List<String>? excludes;
+  TourHeader? header;
+  List<TourPath>? paths;
+  List<String>? images;
 
-  Itinerary.fromJson(Map<String, dynamic> json) {
-    day = json['day'];
+  Tour({
+    this.sId,
+    this.title,
+    this.description,
+    this.descText,
+    this.includes,
+    this.excludes,
+    this.header,
+    this.paths,
+    this.images,
+  });
+
+  Tour.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
     title = json['title'];
     description = json['description'];
+    descText = json['descText'];
+    if (json['includes'] != null) {
+      includes = List<String>.from(json['includes']);
+    }
+    if (json['excludes'] != null) {
+      excludes = List<String>.from(json['excludes']);
+    }
+    header = json['header'] != null
+        ? TourHeader.fromJson(json['header'])
+        : null;
+    if (json['paths'] != null) {
+      paths = <TourPath>[];
+      json['paths'].forEach((v) {
+        paths!.add(TourPath.fromJson(v));
+      });
+    }
+    if (json['images'] != null) {
+      images = List<String>.from(json['images']);
+    }
+  }
+}
+
+class TourHeader {
+  String? days;
+  String? people;
+  String? type;
+
+  TourHeader({this.days, this.people, this.type});
+
+  TourHeader.fromJson(Map<String, dynamic> json) {
+    days = json['days'];
+    people = json['people'];
+    type = json['type'];
+  }
+}
+
+class TourPath {
+  String? title;
+  String? duration;
+  String? description;
+  String? descText;
+
+  TourPath({this.title, this.duration, this.description, this.descText});
+
+  TourPath.fromJson(Map<String, dynamic> json) {
+    title = json['title'];
+    duration = json['duration'];
+    description = json['description'];
+    descText = json['descText'];
+  }
+}
+
+class RelatedPackage {
+  String? sId;
+  String? name;
+  String? descText;
+  String? slug;
+  int? ratingsAverage;
+
+  RelatedPackage({
+    this.sId,
+    this.name,
+    this.descText,
+    this.slug,
+    this.ratingsAverage,
+  });
+
+  RelatedPackage.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
+    name = json['name'];
+    descText = json['descText'];
+    slug = json['slug'];
+    ratingsAverage = (json['ratingsAverage'] as num?)?.toInt();
+  }
+}
+
+class Country {
+  String? sId;
+  String? name;
+
+  Country({this.sId, this.name});
+
+  Country.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+  }
+}
+
+class City {
+  String? sId;
+  String? name;
+
+  City({this.sId, this.name});
+
+  City.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
+  }
+}
+
+class PackageType {
+  String? sId;
+  String? name;
+
+  PackageType({this.sId, this.name});
+
+  PackageType.fromJson(Map<String, dynamic> json) {
+    sId = json['_id'];
+    name = json['name'];
   }
 }

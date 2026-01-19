@@ -94,13 +94,15 @@ class PackageTypeDetailsView extends StatelessWidget {
   Widget _buildCountryCard(BuildContext context, dynamic country) {
     return GestureDetector(
       onTap: () {
+        // User requested to navigate directly to Package Details
+        // The item "country" here effectively represents a Package
         Navigator.pushNamed(
           context,
-          Routes.packagesInCountryView,
+          Routes.packageDetailsView,
           arguments: {
-            'packageTypeSlug': slug,
-            'countrySlug': country.slug,
-            'countryName': country.name,
+            'packageTypeSlug': slug, // the package type slug
+            'packageSlug':
+                country.slug, // treating this slug as the package slug
           },
         );
       },
