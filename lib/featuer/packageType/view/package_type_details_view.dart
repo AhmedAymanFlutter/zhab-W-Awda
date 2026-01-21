@@ -94,29 +94,21 @@ class PackageTypeDetailsView extends StatelessWidget {
   Widget _buildCountryCard(BuildContext context, dynamic country) {
     return GestureDetector(
       onTap: () {
-        // User requested to navigate directly to Package Details
-        // The item "country" here effectively represents a Package
         Navigator.pushNamed(
           context,
           Routes.packageDetailsView,
-          arguments: {
-            'packageTypeSlug': slug, // the package type slug
-            'packageSlug':
-                country.slug, // treating this slug as the package slug
-          },
+          arguments: {'packageTypeSlug': slug, 'packageSlug': country.slug},
         );
       },
       child: Container(
         height: 180.h,
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(20.r), // More rounded
+          borderRadius: BorderRadius.circular(20.r),
           color: Colors.white,
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(
-                0.08,
-              ), // Slightly darker for depth
-              blurRadius: 15, // Softer shadow
+              color: Colors.black.withOpacity(0.08),
+              blurRadius: 15,
               offset: const Offset(0, 8),
               spreadRadius: 0,
             ),
@@ -126,18 +118,16 @@ class PackageTypeDetailsView extends StatelessWidget {
           borderRadius: BorderRadius.circular(20.r),
           child: Stack(
             children: [
-              // Reusing your GradientImageContainer
               GradientImageContainer(
                 imageUrl: country.imageCover,
                 width: double.infinity,
                 height: double.infinity,
               ),
 
-              // Text Overlay
               Align(
                 alignment: Alignment.bottomRight,
                 child: Padding(
-                  padding: EdgeInsets.all(20.w), // Increased padding
+                  padding: EdgeInsets.all(20.w),
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     crossAxisAlignment: CrossAxisAlignment.start,

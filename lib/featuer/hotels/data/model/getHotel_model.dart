@@ -7,7 +7,7 @@ class GetHotelModel {
 
   GetHotelModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = json['results'];
+    results = (json['results'] as num?)?.toInt();
     data = json['data'] != null
         ? HotelDataWrapper.fromJson(json['data'])
         : null;
@@ -31,7 +31,7 @@ class HotelDataWrapper {
 
 class HotelItem {
   Price? price;
-  Seo? seo;
+
   String? sId;
   String? name;
   Country? country;
@@ -55,7 +55,7 @@ class HotelItem {
 
   HotelItem({
     this.price,
-    this.seo,
+
     this.sId,
     this.name,
     this.country,
@@ -80,7 +80,7 @@ class HotelItem {
 
   HotelItem.fromJson(Map<String, dynamic> json) {
     price = json['price'] != null ? Price.fromJson(json['price']) : null;
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
+
     sId = json['_id'];
     name = json['name'];
     country = json['country'] != null
@@ -117,40 +117,6 @@ class Price {
   Price.fromJson(Map<String, dynamic> json) {
     min = json['min']?.toString();
     max = json['max']?.toString();
-  }
-}
-
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-  String? metaTitle;
-  String? keywords;
-  String? slugUrl;
-  String? metaDescription;
-  double? priority;
-  String? ogTitle;
-  String? ogImage;
-  String? ogDescription;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    metaDescription = json['metaDescription'];
-    priority = (json['priority'] is int)
-        ? (json['priority'] as int).toDouble()
-        : json['priority'];
-    ogTitle = json['ogTitle'];
-    ogImage = json['ogImage'];
-    ogDescription = json['ogDescription'];
   }
 }
 

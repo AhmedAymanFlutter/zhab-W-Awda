@@ -31,387 +31,421 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
   TabController? _tabController;
 
   @override
-  Widget build(BuildContext context) {
-    // robust argument extraction
-    String? packageSlug;
-    String? packageTypeSlug;
-    String? packageId;
+  void dispose() {
+    _tabController?.dispose();
+    super.dispose();
+  }
 
-    if (widget.arguments.containsKey('packageSlug')) {
-      packageSlug = widget.arguments['packageSlug'];
-      packageTypeSlug = widget.arguments['packageTypeSlug'];
-    } else {
-      if (widget.arguments.containsKey('packageId')) {
-        packageId = widget.arguments['packageId'] as String;
-      }
+  void _initializeTabController(int branchCount) {
+    if (_tabController == null || _tabController!.length != branchCount) {
+      _tabController?.dispose();
+      _tabController = TabController(length: branchCount, vsync: this);
+      _tabController!.addListener(_onTabChange);
+    }
+  }
+
+  void _onTabChange() {
+    if (_tabController!.indexIsChanging) {
+      setState(() {
+        _selectedBranchIndex = _tabController!.index;
+      });
+    }
+  }
+
+  void _showRateDialog(String? packageId) {
+    if (packageId == null) {
+      _showSnackBar("Cannot rate: Package ID not found");
+      return;
     }
 
+    showDialog(
+      context: context,
+      builder: (context) => RatePackageDialog(packageId: packageId),
+    );
+  }
+
+  void _showSnackBar(String message) {
+    if (!mounted) return;
+    ScaffoldMessenger.of(
+      context,
+    ).showSnackBar(SnackBar(content: Text(message)));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final packageArgs = _extractPackageArguments();
+
     return BlocProvider(
-      create: (context) {
-        final cubit = PackagesCubit(PackagesRepository());
-        if (packageSlug != null && packageTypeSlug != null) {
-          cubit.getPackageDetailsBySlug(
-            packageSlug: packageSlug,
-            packageTypeSlug: packageTypeSlug,
-          );
-        } else if (packageId != null) {
-          cubit.getPackageDetails(packageId);
-        }
-        return cubit;
-      },
+      create: (context) => _createCubit(packageArgs),
       child: Scaffold(
         backgroundColor: Colors.white,
-        bottomNavigationBar: OfferBookingBar(),
+        bottomNavigationBar: const OfferBookingBar(),
         body: BlocBuilder<PackagesCubit, PackagesState>(
-          builder: (context, state) {
-            if (state is PackageDetailsLoading) {
-              return const Center(child: CircularProgressIndicator());
-            } else if (state is PackageDetailsError) {
-              return Center(child: Text(state.message));
-            } else if (state is PackageDetailsSuccess) {
-              final packageData = state.package;
-              final pkg = packageData.pkg;
-              final branches = packageData.branches ?? [];
+          builder: (context, state) => _buildBody(state, packageArgs),
+        ),
+      ),
+    );
+  }
 
-              // Initialize TabController if branches exist
-              if (branches.isNotEmpty &&
-                  (_tabController == null ||
-                      _tabController!.length != branches.length)) {
-                _tabController = TabController(
-                  length: branches.length,
-                  vsync: this,
-                );
-                _tabController!.addListener(() {
-                  if (_tabController!.indexIsChanging) {
-                    setState(() {
-                      _selectedBranchIndex = _tabController!.index;
-                    });
-                  }
-                });
-              }
+  PackageArguments _extractPackageArguments() {
+    if (widget.arguments.containsKey('packageSlug')) {
+      return PackageArguments(
+        packageSlug: widget.arguments['packageSlug'] as String?,
+        packageTypeSlug: widget.arguments['packageTypeSlug'] as String?,
+      );
+    }
+    return PackageArguments(
+      packageId: widget.arguments['packageId'] as String?,
+    );
+  }
 
-              // Fallback current branch data
-              final currentBranch = branches.isNotEmpty
-                  ? branches[_selectedBranchIndex]
-                  : null;
+  PackagesCubit _createCubit(PackageArguments args) {
+    final cubit = PackagesCubit(PackagesRepository());
+    if (args.packageSlug != null && args.packageTypeSlug != null) {
+      cubit.getPackageDetailsBySlug(
+        packageSlug: args.packageSlug!,
+        packageTypeSlug: args.packageTypeSlug!,
+      );
+    } else if (args.packageId != null) {
+      cubit.getPackageDetails(args.packageId!);
+    }
+    return cubit;
+  }
 
-              return CustomScrollView(
-                slivers: [
-                  // --- 1. AppBar with Image ---
-                  SliverAppBar(
-                    expandedHeight: 400.h,
-                    pinned: true,
-                    stretch: true,
-                    backgroundColor: Colors.transparent,
-                    leading: Container(
-                      margin: EdgeInsets.all(8.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
-                      ),
-                      child: ClipOval(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.white,
-                                size: 20.sp,
-                              ),
-                              onPressed: () => Navigator.pop(context),
-                              padding: EdgeInsets.zero,
-                            ),
-                          ),
-                        ),
-                      ),
+  Widget _buildBody(PackagesState state, PackageArguments args) {
+    if (state is PackageDetailsLoading) {
+      return const Center(child: CircularProgressIndicator());
+    }
+
+    if (state is PackageDetailsError) {
+      return _buildErrorView(state.message);
+    }
+
+    if (state is PackageDetailsSuccess) {
+      return _buildSuccessView(state, args);
+    }
+
+    return const SizedBox.shrink();
+  }
+
+  Widget _buildErrorView(String message) {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.error_outline, size: 64.sp, color: Colors.red),
+          SizedBox(height: 16.h),
+          Text(
+            message,
+            style: AppTextStyle.setelMessiriBlack(
+              fontSize: 16,
+              fontWeight: FontWeight.bold,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildSuccessView(PackageDetailsSuccess state, PackageArguments args) {
+    final packageData = state.package;
+    final pkg = packageData.pkg;
+    final branches = packageData.branches ?? [];
+
+    if (branches.isNotEmpty) {
+      _initializeTabController(branches.length);
+    }
+
+    final currentBranch = branches.isNotEmpty
+        ? branches[_selectedBranchIndex]
+        : null;
+    final packageSlug = args.packageSlug ?? pkg?.slug;
+
+    return CustomScrollView(
+      slivers: [
+        _buildAppBar(pkg),
+        if (branches.isNotEmpty) _buildBranchTabs(branches),
+        _buildContent(pkg, currentBranch, packageSlug),
+      ],
+    );
+  }
+
+  Widget _buildAppBar(dynamic pkg) {
+    return SliverAppBar(
+      expandedHeight: 400.h,
+      pinned: true,
+      stretch: true,
+      backgroundColor: Colors.transparent,
+      leading: _buildGlassButton(
+        icon: Icons.arrow_back_ios_new,
+        onPressed: () => Navigator.pop(context),
+        iconColor: Colors.black,
+      ),
+      actions: [
+        _buildGlassButton(
+          icon: Icons.star_border,
+          onPressed: () => _showRateDialog(pkg?.sId),
+          iconColor: Colors.white,
+        ),
+      ],
+      flexibleSpace: FlexibleSpaceBar(
+        stretchModes: const [
+          StretchMode.zoomBackground,
+          StretchMode.blurBackground,
+        ],
+        background: _buildHeaderImage(pkg),
+      ),
+    );
+  }
+
+  Widget _buildGlassButton({
+    required IconData icon,
+    required VoidCallback onPressed,
+    required Color iconColor,
+  }) {
+    return Container(
+      margin: EdgeInsets.all(8.w),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        shape: BoxShape.circle,
+      ),
+      child: ClipOval(
+        child: BackdropFilter(
+          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white.withOpacity(0.2),
+              shape: BoxShape.circle,
+              border: Border.all(
+                color: Colors.white.withOpacity(0.2),
+                width: 1,
+              ),
+            ),
+            child: IconButton(
+              icon: Icon(icon, color: iconColor, size: 20.sp),
+              onPressed: onPressed,
+              padding: EdgeInsets.zero,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildHeaderImage(dynamic pkg) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        CachedNetworkImage(
+          imageUrl: pkg?.imageCover ?? "https://via.placeholder.com/300",
+          fit: BoxFit.cover,
+          placeholder: (context, url) =>
+              const Center(child: CircularProgressIndicator()),
+          errorWidget: (context, url, error) => const Icon(Icons.error),
+        ),
+        Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [Colors.transparent, Colors.black.withOpacity(0.7)],
+            ),
+          ),
+        ),
+        Positioned(
+          bottom: 20.h,
+          right: 20.w,
+          child: Text(
+            pkg?.name ?? "اسم الباقة",
+            style:
+                AppTextStyle.setelMessiriWhite(
+                  fontSize: 22,
+                  fontWeight: FontWeight.bold,
+                ).copyWith(
+                  shadows: [
+                    BoxShadow(
+                      blurRadius: 10,
+                      color: Colors.black.withOpacity(0.5),
                     ),
-                    actions: [
-                      Container(
-                        margin: EdgeInsets.all(8.w),
-                        decoration: BoxDecoration(
-                          color: Colors.white.withOpacity(0.2),
-                          shape: BoxShape.circle,
-                        ),
-                        child: ClipOval(
-                          child: BackdropFilter(
-                            filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white.withOpacity(0.2),
-                                shape: BoxShape.circle,
-                                border: Border.all(
-                                  color: Colors.white.withOpacity(0.2),
-                                  width: 1,
-                                ),
-                              ),
-                              child: IconButton(
-                                icon: Icon(
-                                  Icons.star_border,
-                                  color: Colors.white,
-                                  size: 24.sp,
-                                ),
-                                onPressed: () {
-                                  if (pkg?.sId != null) {
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => RatePackageDialog(
-                                        packageId: pkg!.sId!,
-                                      ),
-                                    );
-                                  } else {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
-                                        content: Text(
-                                          "Cannot rate: Package ID not found",
-                                        ),
-                                      ),
-                                    );
-                                  }
-                                },
-                                padding: EdgeInsets.zero,
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                    flexibleSpace: FlexibleSpaceBar(
-                      stretchModes: const [
-                        StretchMode.zoomBackground,
-                        StretchMode.blurBackground,
-                      ],
-                      background: Stack(
-                        fit: StackFit.expand,
-                        children: [
-                          CachedNetworkImage(
-                            imageUrl:
-                                pkg?.imageCover ??
-                                "https://via.placeholder.com/300",
-                            fit: BoxFit.cover,
-                            placeholder: (context, url) => const Center(
-                              child: CircularProgressIndicator(),
-                            ),
-                            errorWidget: (context, url, error) =>
-                                const Icon(Icons.error),
-                          ),
-                          Container(
-                            decoration: BoxDecoration(
-                              gradient: LinearGradient(
-                                begin: Alignment.topCenter,
-                                end: Alignment.bottomCenter,
-                                colors: [
-                                  Colors.transparent,
-                                  Colors.black.withOpacity(0.7),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Positioned(
-                            bottom: 20.h,
-                            right: 20.w,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  pkg?.name ?? "اسم الباقة",
-                                  style:
-                                      AppTextStyle.setelMessiriWhite(
-                                        fontSize: 22,
-                                        fontWeight: FontWeight.bold,
-                                      ).copyWith(
-                                        shadows: [
-                                          BoxShadow(
-                                            blurRadius: 10,
-                                            color: Colors.black.withOpacity(
-                                              0.5,
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
+                  ],
+                ),
+          ),
+        ),
+      ],
+    );
+  }
 
-                  // --- 2. Branch Tabs ---
-                  if (branches.isNotEmpty)
-                    SliverPersistentHeader(
-                      pinned: true,
-                      delegate: _SliverAppBarDelegate(
-                        TabBar(
-                          controller: _tabController,
-                          labelColor: AppColor.primaryBlue,
-                          unselectedLabelColor: Colors.grey,
-                          indicatorColor: AppColor.primaryBlue,
-                          indicatorWeight: 3,
-                          labelStyle: AppTextStyle.setelMessiriBlack(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                          ),
-                          tabs: branches
-                              .map(
-                                (b) => Tab(
-                                  text:
-                                      b.name?.split('-').last.trim() ??
-                                      "Branch",
-                                ),
-                              )
-                              .toList(),
-                          onTap: (index) {
-                            setState(() {
-                              _selectedBranchIndex = index;
-                            });
-                          },
-                        ),
-                      ),
-                    ),
-
-                  // --- 3. Content Body ---
-                  SliverToBoxAdapter(
-                    child: Padding(
-                      padding: EdgeInsets.all(20.w),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          // Price & Info
-                          if (currentBranch != null) ...[
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Text(
-                                  "${currentBranch.price} ج.م",
-                                  style: AppTextStyle.setelMessiriTextStyle(
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold,
-                                    color: AppColor.primaryBlue,
-                                  ),
-                                ),
-                                PackageInfoChip(
-                                  icon: Icons.nights_stay,
-                                  label: "${currentBranch.nightsCount} ليالي",
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-
-                          // Description
-                          if (pkg?.descText != null) ...[
-                            Text(
-                              "عن الباقة",
-                              style: AppTextStyle.setelMessiriBlack(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            HtmlWidget(
-                              pkg?.description ?? pkg?.descText ?? "",
-                              textStyle:
-                                  AppTextStyle.setelMessiriSecondlightGrey(
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.normal,
-                                  ).copyWith(height: 1.5),
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-
-                          // --- Includes ---
-                          if (currentBranch?.includes != null &&
-                              currentBranch!.includes!.isNotEmpty) ...[
-                            Text(
-                              "ما تشمله الباقة",
-                              style: AppTextStyle.setelMessiriBlack(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            ...currentBranch.includes!.map(
-                              (item) => PackageFeatureItem(
-                                text: item,
-                                isIncluded: true,
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-
-                          // --- Excludes ---
-                          if (currentBranch?.excludes != null &&
-                              currentBranch!.excludes!.isNotEmpty) ...[
-                            Text(
-                              "ما لا تشمله الباقة",
-                              style: AppTextStyle.setelMessiriBlack(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            ...currentBranch.excludes!.map(
-                              (item) => PackageFeatureItem(
-                                text: item,
-                                isIncluded: false,
-                              ),
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-
-                          // Itinerary
-                          if (currentBranch?.days != null &&
-                              currentBranch!.days!.isNotEmpty) ...[
-                            Text(
-                              "برنامج الرحلة",
-                              style: AppTextStyle.setelMessiriBlack(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 16.h),
-                            ...currentBranch.days!.map(
-                              (day) => PackageItineraryItem(day: day),
-                            ),
-                            SizedBox(height: 20.h),
-                          ],
-
-                          // --- Reviews Section ---
-                          // --- Reviews Section ---
-                          Builder(
-                            builder: (context) {
-                              final slug = packageSlug ?? pkg?.slug;
-                              if (slug != null && slug.isNotEmpty) {
-                                return ReviewsSection(packageSlug: slug);
-                              }
-                              return const SizedBox();
-                            },
-                          ),
-
-                          SizedBox(height: 40.h), // Bottom padding
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              );
-            }
-            return const SizedBox();
+  Widget _buildBranchTabs(List<dynamic> branches) {
+    return SliverPersistentHeader(
+      pinned: true,
+      delegate: _SliverAppBarDelegate(
+        TabBar(
+          controller: _tabController,
+          labelColor: AppColor.primaryBlue,
+          unselectedLabelColor: Colors.grey,
+          indicatorColor: AppColor.primaryBlue,
+          indicatorWeight: 3,
+          labelStyle: AppTextStyle.setelMessiriBlack(
+            fontSize: 14,
+            fontWeight: FontWeight.bold,
+          ),
+          tabs: branches
+              .map((b) => Tab(text: b.name?.split('-').last.trim() ?? "Branch"))
+              .toList(),
+          onTap: (index) {
+            setState(() {
+              _selectedBranchIndex = index;
+            });
           },
         ),
       ),
     );
   }
+
+  Widget _buildContent(
+    dynamic pkg,
+    dynamic currentBranch,
+    String? packageSlug,
+  ) {
+    return SliverToBoxAdapter(
+      child: Padding(
+        padding: EdgeInsets.all(20.w),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            if (currentBranch != null) _buildPriceSection(currentBranch),
+            if (pkg?.descText != null) _buildDescriptionSection(pkg),
+            if (currentBranch?.includes?.isNotEmpty ?? false)
+              _buildIncludesSection(currentBranch),
+            if (currentBranch?.excludes?.isNotEmpty ?? false)
+              _buildExcludesSection(currentBranch),
+            if (currentBranch?.days?.isNotEmpty ?? false)
+              _buildItinerarySection(currentBranch),
+            if (packageSlug?.isNotEmpty ?? false)
+              ReviewsSection(packageSlug: packageSlug!),
+            SizedBox(height: 40.h),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildPriceSection(dynamic branch) {
+    return Column(
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              "${branch.price} ج.م",
+              style: AppTextStyle.setelMessiriTextStyle(
+                fontSize: 24,
+                fontWeight: FontWeight.bold,
+                color: AppColor.primaryBlue,
+              ),
+            ),
+            PackageInfoChip(
+              icon: Icons.nights_stay,
+              label: "${branch.nightsCount} ليالي",
+            ),
+          ],
+        ),
+        SizedBox(height: 20.h),
+      ],
+    );
+  }
+
+  Widget _buildDescriptionSection(dynamic pkg) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "عن الباقة",
+          style: AppTextStyle.setelMessiriBlack(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        HtmlWidget(
+          pkg.description ?? pkg.descText ?? "",
+          textStyle: AppTextStyle.setelMessiriSecondlightGrey(
+            fontSize: 14,
+            fontWeight: FontWeight.normal,
+          ).copyWith(height: 1.5),
+        ),
+        SizedBox(height: 20.h),
+      ],
+    );
+  }
+
+  Widget _buildIncludesSection(dynamic branch) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "ما تشمله الباقة",
+          style: AppTextStyle.setelMessiriBlack(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        ...branch.includes!.map(
+          (item) => PackageFeatureItem(text: item, isIncluded: true),
+        ),
+        SizedBox(height: 20.h),
+      ],
+    );
+  }
+
+  Widget _buildExcludesSection(dynamic branch) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "ما لا تشمله الباقة",
+          style: AppTextStyle.setelMessiriBlack(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 8.h),
+        ...branch.excludes!.map(
+          (item) => PackageFeatureItem(text: item, isIncluded: false),
+        ),
+        SizedBox(height: 20.h),
+      ],
+    );
+  }
+
+  Widget _buildItinerarySection(dynamic branch) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "برنامج الرحلة",
+          style: AppTextStyle.setelMessiriBlack(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(height: 16.h),
+        ...branch.days!.map((day) => PackageItineraryItem(day: day)),
+        SizedBox(height: 20.h),
+      ],
+    );
+  }
+}
+
+// Helper class for package arguments
+class PackageArguments {
+  final String? packageSlug;
+  final String? packageTypeSlug;
+  final String? packageId;
+
+  PackageArguments({this.packageSlug, this.packageTypeSlug, this.packageId});
 }
 
 class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
@@ -421,6 +455,7 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   double get minExtent => _tabBar.preferredSize.height;
+
   @override
   double get maxExtent => _tabBar.preferredSize.height;
 
@@ -434,7 +469,5 @@ class _SliverAppBarDelegate extends SliverPersistentHeaderDelegate {
   }
 
   @override
-  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) {
-    return false;
-  }
+  bool shouldRebuild(_SliverAppBarDelegate oldDelegate) => false;
 }

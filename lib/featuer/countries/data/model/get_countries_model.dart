@@ -7,7 +7,7 @@ class GetCountriesModel {
 
   GetCountriesModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = json['results'];
+    results = (json['results'] as num?)?.toInt();
     data = json['data'] != null
         ? CountriesDataWrapper.fromJson(json['data'])
         : null;
@@ -30,7 +30,6 @@ class CountriesDataWrapper {
 }
 
 class CountryItem {
-  Seo? seo;
   String? sId;
   String? name;
   String? code;
@@ -53,7 +52,6 @@ class CountryItem {
   String? updatedBy;
 
   CountryItem({
-    this.seo,
     this.sId,
     this.name,
     this.code,
@@ -77,7 +75,6 @@ class CountryItem {
   });
 
   CountryItem.fromJson(Map<String, dynamic> json) {
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     sId = json['_id'];
     name = json['name'];
     code = json['code'];
@@ -107,38 +104,3 @@ class CountryItem {
 }
 
 // --- Sub Classes ---
-
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-  String? metaTitle;
-  String? metaDescription;
-  String? keywords;
-  String? slugUrl;
-  double? priority;
-  String? ogTitle;
-  String? ogDescription;
-  String? ogImage;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    metaDescription = json['metaDescription'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    // Handle int to double conversion safely
-    priority = (json['priority'] is int)
-        ? (json['priority'] as int).toDouble()
-        : json['priority'];
-    ogTitle = json['ogTitle'];
-    ogDescription = json['ogDescription'];
-    ogImage = json['ogImage'];
-  }
-}

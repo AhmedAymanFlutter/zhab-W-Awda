@@ -11,10 +11,8 @@ class PackageTypesRepository {
 
   Future<GetPackageTypeModel> getPackageTypes() async {
     try {
-      // Assuming EndPoints.packageTypes = 'packageTypes'
       final response = await _apiHelper.getRequest(
-        endPoint: EndPoints
-            .packageTypes, // Ensure this exists in your EndPoints class
+        endPoint: EndPoints.packageTypes,
         isProtected: false,
       );
 
@@ -32,13 +30,11 @@ class PackageTypesRepository {
     String slug,
   ) async {
     try {
-      // Endpoint: /packageTypes/:slug
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.packageTypes}/$slug',
         isProtected: false,
       );
 
-      // The API returns { "success": true, "data": [ ... ] }
       if (response.data['success'] == true && response.data['data'] != null) {
         final model = GetCountriesByPackageTypeModel.fromJson(response.data);
         return model.data ?? [];

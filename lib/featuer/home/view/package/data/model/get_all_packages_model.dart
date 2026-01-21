@@ -30,7 +30,6 @@ class PackagesDataWrapper {
 }
 
 class PackageItem {
-  Seo? seo;
   String? sId;
   String? name;
   String? price;
@@ -56,7 +55,6 @@ class PackageItem {
   city; // Keeping this flexible, might be removed or unused, but let's check parsing
 
   PackageItem({
-    this.seo,
     this.sId,
     this.name,
     this.price,
@@ -82,10 +80,9 @@ class PackageItem {
   });
 
   PackageItem.fromJson(Map<String, dynamic> json) {
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     sId = json['_id'];
     name = json['name'];
-    price = json['price'];
+    price = json['price']?.toString();
     rate = json['rate']?.toString();
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
     packageType = json['packageType'] != null
@@ -174,38 +171,6 @@ class City {
 
 // --- Sub Classes ---
 
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-  String? metaTitle;
-  String? keywords;
-  String? slugUrl;
-  String? metaDescription;
-  int? priority;
-  String? ogTitle;
-  String? ogImage;
-  String? ogDescription;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    metaDescription = json['metaDescription'];
-    priority = (json['priority'] as num?)?.toInt();
-    ogTitle = json['ogTitle'];
-    ogImage = json['ogImage'];
-    ogDescription = json['ogDescription'];
-  }
-}
-
 class Header {
   String? dayNumber;
   String? nights;
@@ -213,8 +178,8 @@ class Header {
   String? sId;
 
   Header.fromJson(Map<String, dynamic> json) {
-    dayNumber = json['dayNumber'];
-    nights = json['nights'];
+    dayNumber = json['dayNumber']?.toString();
+    nights = json['nights']?.toString();
     location = json['location'];
     sId = json['_id'];
   }

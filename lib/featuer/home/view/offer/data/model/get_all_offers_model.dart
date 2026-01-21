@@ -9,7 +9,7 @@ class GetAllOffersModel {
 
   GetAllOffersModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = json['results'];
+    results = (json['results'] as num?)?.toInt();
     data = json['data'] != null
         ? OfferDataWrapper.fromJson(json['data'])
         : null;
@@ -56,7 +56,7 @@ class OfferItem {
     offer = json['offer'];
     name = json['name'];
     description = json['description'];
-    price = json['price'];
-    oldPrice = json['oldPrice'];
+    price = json['price']?.toString();
+    oldPrice = json['oldPrice']?.toString();
   }
 }

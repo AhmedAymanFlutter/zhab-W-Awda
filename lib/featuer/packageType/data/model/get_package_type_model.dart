@@ -1,13 +1,13 @@
 class GetPackageTypeModel {
   String? status;
-  int? results;
+  double? results;
   PackageTypesDataWrapper? data;
 
   GetPackageTypeModel({this.status, this.results, this.data});
 
   GetPackageTypeModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = (json['results'] as num?)?.toInt();
+    results = (json['results'] as num?)?.toDouble();
     data = json['data'] != null
         ? PackageTypesDataWrapper.fromJson(json['data'])
         : null;
@@ -30,7 +30,6 @@ class PackageTypesDataWrapper {
 }
 
 class PackageTypeItem {
-  Seo? seo;
   String? sId;
   String? name;
   String? description;
@@ -45,7 +44,6 @@ class PackageTypeItem {
   String? updatedBy;
 
   PackageTypeItem({
-    this.seo,
     this.sId,
     this.name,
     this.description,
@@ -61,7 +59,6 @@ class PackageTypeItem {
   });
 
   PackageTypeItem.fromJson(Map<String, dynamic> json) {
-    seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     sId = json['_id'];
     name = json['name'];
     description = json['description'];
@@ -78,35 +75,3 @@ class PackageTypeItem {
 }
 
 // --- Sub Classes ---
-
-class Seo {
-  String? changeFrequency;
-  String? noIndex;
-  String? noFollow;
-  String? noArchive;
-  String? noSnippet;
-  String? metaTitle;
-  String? keywords;
-  String? slugUrl;
-  String? metaDescription;
-  int? priority;
-  String? ogTitle;
-  String? ogImage;
-  String? ogDescription;
-
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    metaDescription = json['metaDescription'];
-    priority = (json['priority'] as num?)?.toInt();
-    ogTitle = json['ogTitle'];
-    ogImage = json['ogImage'];
-    ogDescription = json['ogDescription'];
-  }
-}

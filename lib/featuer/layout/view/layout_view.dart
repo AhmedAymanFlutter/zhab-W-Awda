@@ -51,7 +51,7 @@ class LayoutView extends StatelessWidget {
               iconTheme: const IconThemeData(color: AppColor.primaryBlue),
             ),
 
-            // --- 2. ربط الـ Drawer ---
+            // Drawer ---
             drawer: const CustomDrawer(),
 
             body: cubit.screens[cubit.currentIndex],

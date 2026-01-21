@@ -48,7 +48,7 @@ class ReviewModel {
     sId = json['_id'];
     authorName = json['authorName'];
     content = json['content'];
-    rate = json['rate'];
+    rate = (json['rate'] as num?)?.toInt();
     package = json['package'];
     createdAt = json['createdAt'];
   }

@@ -10,9 +10,15 @@ class GetCountriesByPackageTypeModel {
     message = json['message'];
     if (json['data'] != null) {
       data = <CountryInPackageItem>[];
-      json['data'].forEach((v) {
-        data!.add(CountryInPackageItem.fromJson(v));
-      });
+      if (json['data'] is Map && json['data']['packages'] != null) {
+        json['data']['packages'].forEach((v) {
+          data!.add(CountryInPackageItem.fromJson(v));
+        });
+      } else if (json['data'] is List) {
+        json['data'].forEach((v) {
+          data!.add(CountryInPackageItem.fromJson(v));
+        });
+      }
     }
   }
 }

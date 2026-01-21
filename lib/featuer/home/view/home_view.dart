@@ -74,10 +74,10 @@ class HomeView extends StatelessWidget {
               builder: (context, state) {
                 if (state is PackagesLoading) {
                   return Center(
-                    child: Skeletonizer(
-                      enabled: true,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8.0),
+                    child: SizedBox(
+                      height: 200.h,
+                      child: Skeletonizer(
+                        enabled: true,
                         child: SizedBox(
                           height: 200.h,
                           child: GridView.builder(
@@ -85,6 +85,8 @@ class HomeView extends StatelessWidget {
                                 SliverGridDelegateWithFixedCrossAxisCount(
                                   crossAxisCount: 2,
                                 ),
+                            itemCount: 6,
+                            physics: const NeverScrollableScrollPhysics(),
                             itemBuilder: (BuildContext context, int index) {
                               return PackageCard(package: PackageItem());
                             },
@@ -104,8 +106,8 @@ class HomeView extends StatelessWidget {
                       itemCount: state.packages.length,
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                         crossAxisCount: 2,
-                        crossAxisSpacing: 12.w,
-                        mainAxisSpacing: 12.h,
+                        crossAxisSpacing: 16.w,
+                        mainAxisSpacing: 16.h,
                         childAspectRatio: 0.8,
                       ),
                       itemBuilder: (context, index) {
@@ -118,7 +120,7 @@ class HomeView extends StatelessWidget {
               },
             ),
 
-            SizedBox(height: 100.h), // مساحة في الأسفل عشان الـ Bottom Nav
+            SizedBox(height: 100.h),
           ],
         ),
       ),
