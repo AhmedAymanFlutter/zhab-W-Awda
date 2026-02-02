@@ -51,8 +51,6 @@ class APIHelper {
           ? '$endPoint/$resourcePath'
           : endPoint;
 
-      print('🌐 Full URL: ${dio.options.baseUrl}$finalEndpoint');
-
       final response = await dio.get(
         finalEndpoint,
         queryParameters: queryParameters,
@@ -67,7 +65,6 @@ class APIHelper {
 
       return ApiResponse.fromResponse(response);
     } catch (e) {
-      print('❌ API Error: $e');
       return ApiResponse.fromError(e);
     }
   }
@@ -128,8 +125,6 @@ class APIHelper {
     bool isAuthorized = true,
   }) async {
     try {
-      print('📤 Sending data: $data'); // Add logging
-
       var response = await dio.post(
         endPoint,
         data: isFormData && data != null ? FormData.fromMap(data) : data,
@@ -145,7 +140,6 @@ class APIHelper {
       );
       return ApiResponse.fromResponse(response);
     } catch (e) {
-      print('❌ POST Error: $e');
       return ApiResponse.fromError(e);
     }
   }

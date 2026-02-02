@@ -9,6 +9,8 @@ import 'package:flutter_application_1/featuer/home/view/offer/data/repo/offers_r
 import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cubit.dart';
 import 'package:flutter_application_1/featuer/home/view/package/data/repo/package_repo.dart';
 import 'package:flutter_application_1/featuer/home/view/package/manager/packages_cubit.dart';
+import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository.dart';
+import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -42,6 +44,10 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) =>
                   SettingsCubit(SettingsRepository())..fetchSettings(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  HotelsCubit(HotelsRepository())..fetchHotels(),
             ),
           ],
           child: MaterialApp(

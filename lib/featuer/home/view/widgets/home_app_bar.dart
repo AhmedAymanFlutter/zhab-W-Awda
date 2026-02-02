@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 import '../../../../core/theme/app_color.dart';
+import '../../../../core/theme/app_text_style.dart';
 import '../../../Auth/manager/user_cubit.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -21,10 +22,9 @@ class HomeAppBar extends StatelessWidget {
               // Name
               Text(
                 state.name,
-                style: TextStyle(
+                style: AppTextStyle.setelMessiriBlack(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
-                  fontFamily: 'cairo',
                 ),
               ),
               SizedBox(width: 8.w),

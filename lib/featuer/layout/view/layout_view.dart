@@ -1,10 +1,10 @@
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/featuer/Auth/view/widgets/profile_widgets.dart';
 import 'package:flutter_application_1/featuer/layout/view/widgets/floatingActionButton_widget.dart'
     show FloatingActionButtonWidget;
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../core/theme/app_color.dart';
 import '../../../core/theme/app_text_style.dart';
 import '../logic/layout_cubit.dart';
@@ -25,19 +25,8 @@ class LayoutView extends StatelessWidget {
           return Scaffold(
             backgroundColor: AppColor.primaryWhite,
 
-            // --- 1. إضافة AppBar بسيط ليظهر زر القائمة ---
             appBar: AppBar(
-              actions: [
-                Padding(
-                  padding: EdgeInsets.only(right: 12.w),
-                  child: AvatarPicker(
-                    radius: 20.r,
-                    backgroundColor: AppColor.primaryBlue,
-                    iconColor: AppColor.primaryRed,
-                  ),
-                ),
-              ],
-              backgroundColor: AppColor.mainWhite,
+              backgroundColor: AppColor.primaryBlue,
               elevation: 0,
               centerTitle: true,
               title: Text(
@@ -45,10 +34,10 @@ class LayoutView extends StatelessWidget {
                 style: AppTextStyle.setelMessiriTextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.bold,
-                  color: AppColor.primaryBlue,
+                  color: Colors.white,
                 ),
               ),
-              iconTheme: const IconThemeData(color: AppColor.primaryBlue),
+              iconTheme: const IconThemeData(color: Colors.white),
             ),
 
             // Drawer ---
@@ -56,76 +45,148 @@ class LayoutView extends StatelessWidget {
 
             body: cubit.screens[cubit.currentIndex],
             floatingActionButton: FloatingActionButtonWidget(),
-            bottomNavigationBar: Container(
-              decoration: BoxDecoration(
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, -5),
-                  ),
+            bottomNavigationBar: SafeArea(
+              child: CurvedNavigationBar(
+                backgroundColor: Colors.transparent,
+                color: AppColor.primaryBlue,
+                buttonBackgroundColor: Colors.white,
+                height: 75.h,
+                animationDuration: const Duration(milliseconds: 300),
+                animationCurve: Curves.easeInOut,
+                index: cubit.currentIndex,
+                onTap: (index) {
+                  cubit.changeBottomNav(index);
+                },
+                items: <Widget>[
+                  cubit.currentIndex == 0
+                      ? SvgPicture.asset(
+                          'assets/icon/home-2.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          color: AppColor.primaryBlue,
+                          fit: BoxFit.scaleDown,
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 8.h),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon/home-2.svg',
+                                width: 30.w,
+                                height: 30.h,
+                                color: Colors.white,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'الرئيسية',
+                                style: AppTextStyle.setelMessiriTextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                  cubit.currentIndex == 1
+                      ? SvgPicture.asset(
+                          'assets/icon/Packages.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          color: AppColor.primaryBlue,
+                          fit: BoxFit.scaleDown,
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 8.h),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon/Packages.svg',
+                                width: 30.w,
+                                height: 30.h,
+                                color: Colors.white,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'الباقات',
+                                style: AppTextStyle.setelMessiriTextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                  cubit.currentIndex == 2
+                      ? SvgPicture.asset(
+                          'assets/icon/hotel_filled.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          color: AppColor.primaryBlue,
+                          fit: BoxFit.scaleDown,
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 8.h),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon/hotel_filled.svg',
+                                width: 30.w,
+                                height: 30.h,
+                                color: Colors.white,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'الفنادق',
+                                style: AppTextStyle.setelMessiriTextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                  cubit.currentIndex == 3
+                      ? SvgPicture.asset(
+                          'assets/icon/bag.svg',
+                          width: 30.w,
+                          height: 30.h,
+                          color: AppColor.primaryBlue,
+                          fit: BoxFit.scaleDown,
+                        )
+                      : Padding(
+                          padding: EdgeInsets.only(top: 8.h),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              SvgPicture.asset(
+                                'assets/icon/bag.svg',
+                                width: 30.w,
+                                height: 30.h,
+                                color: Colors.white,
+                                fit: BoxFit.scaleDown,
+                              ),
+                              SizedBox(height: 4.h),
+                              Text(
+                                'الجولات',
+                                style: AppTextStyle.setelMessiriTextStyle(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.white,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                 ],
-              ),
-              child: NavigationBarTheme(
-                data: NavigationBarThemeData(
-                  labelTextStyle: WidgetStateProperty.resolveWith((states) {
-                    if (states.contains(WidgetState.selected)) {
-                      return AppTextStyle.setelMessiriTextStyle(
-                        fontSize: 12,
-                        fontWeight: FontWeight.bold,
-                        color: AppColor.primaryBlue,
-                      );
-                    }
-                    return AppTextStyle.setelMessiriSecondlightGrey(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                    );
-                  }),
-                ),
-                child: NavigationBar(
-                  height: 70.h,
-                  backgroundColor: Colors.white,
-                  indicatorColor: AppColor.primaryBlue.withOpacity(0.1),
-                  elevation: 0,
-                  selectedIndex: cubit.currentIndex,
-                  onDestinationSelected: (index) {
-                    cubit.changeBottomNav(index);
-                  },
-                  destinations: [
-                    NavigationDestination(
-                      icon: Icon(FontAwesomeIcons.home),
-                      selectedIcon: Icon(
-                        FontAwesomeIcons.home,
-                        color: AppColor.primaryBlue,
-                      ),
-                      label: 'الرئيسية',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(FontAwesomeIcons.plane),
-                      selectedIcon: Icon(
-                        FontAwesomeIcons.plane,
-                        color: AppColor.primaryBlue,
-                      ),
-                      label: 'الباقات',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(FontAwesomeIcons.hotel),
-                      selectedIcon: Icon(
-                        FontAwesomeIcons.hotel,
-                        color: AppColor.primaryBlue,
-                      ),
-                      label: 'الفنادق',
-                    ),
-                    NavigationDestination(
-                      icon: Icon(FontAwesomeIcons.map),
-                      selectedIcon: Icon(
-                        FontAwesomeIcons.map,
-                        color: AppColor.primaryBlue,
-                      ),
-                      label: 'الجولات',
-                    ),
-                  ],
-                ),
               ),
             ),
           );

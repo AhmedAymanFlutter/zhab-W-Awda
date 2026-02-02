@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class DrawerItemModel {
   final String title;
-  final IconData icon;
+  final Widget icon;
   final VoidCallback onTap;
 
   DrawerItemModel({

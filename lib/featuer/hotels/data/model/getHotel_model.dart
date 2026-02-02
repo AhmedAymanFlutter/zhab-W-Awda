@@ -1,38 +1,26 @@
 class GetHotelModel {
-  String? status;
-  int? results;
-  HotelDataWrapper? data;
+  bool? success;
+  int? count;
+  List<HotelItem>? data;
 
-  GetHotelModel({this.status, this.results, this.data});
+  GetHotelModel({this.success, this.count, this.data});
 
   GetHotelModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    results = (json['results'] as num?)?.toInt();
-    data = json['data'] != null
-        ? HotelDataWrapper.fromJson(json['data'])
-        : null;
-  }
-}
-
-class HotelDataWrapper {
-  List<HotelItem>? hotels;
-
-  HotelDataWrapper({this.hotels});
-
-  HotelDataWrapper.fromJson(Map<String, dynamic> json) {
+    success = json['success'];
+    count = (json['count'] as num?)?.toInt();
     if (json['data'] != null) {
-      hotels = <HotelItem>[];
+      data = <HotelItem>[];
       json['data'].forEach((v) {
-        hotels!.add(HotelItem.fromJson(v));
+        data!.add(HotelItem.fromJson(v));
       });
     }
   }
 }
 
 class HotelItem {
-  Price? price;
-
+  num? price;
   String? sId;
+  String? hotelId;
   String? name;
   Country? country;
   City? city;
@@ -53,11 +41,19 @@ class HotelItem {
   String? updatedBy;
   String? imageCover;
 
+  // New fields from API
+  String? addressline1;
+  String? translatedName;
+  String? cityTranslated;
+  String? url;
+
   HotelItem({
     this.price,
-
     this.sId,
+    this.hotelId,
     this.name,
+    this.translatedName,
+    this.cityTranslated,
     this.country,
     this.city,
     this.rating,
@@ -79,32 +75,73 @@ class HotelItem {
   });
 
   HotelItem.fromJson(Map<String, dynamic> json) {
-    price = json['price'] != null ? Price.fromJson(json['price']) : null;
+    try {
+      price = json['price'];
+      sId = json['_id'];
+      hotelId = json['hotel_id']?.toString();
 
-    sId = json['_id'];
-    name = json['name'];
-    country = json['country'] != null
-        ? Country.fromJson(json['country'])
-        : null;
-    city = json['city'] != null ? City.fromJson(json['city']) : null;
-    rating = json['rating']?.toString(); // Ensure string conversion
-    category = json['category'];
-    description = json['description'];
-    descText = json['descText'];
-    isActive = json['isActive'];
-    phone = json['phone'];
-    email = json['email'];
-    website = json['website'];
-    if (json['images'] != null) {
-      images = List<String>.from(json['images'].map((x) => x.toString()));
+      // Handle naming mismatch
+      name = json['hotel_name'] ?? json['name'];
+      translatedName = json['hotel_translated_name'];
+
+      // Handle country: API returns string, model wants object?
+      // Parsing simple string into Country object for compatibility
+      if (json['country'] is String) {
+        country = Country(name: json['country']);
+      } else if (json['country'] != null) {
+        country = Country.fromJson(json['country']);
+      }
+
+      // Handle city: API returns string
+      if (json['city'] is String) {
+        city = City(name: json['city']);
+      } else if (json['city'] != null) {
+        city = City.fromJson(json['city']);
+      }
+      cityTranslated = json['city_translated'];
+
+      // Handle rating
+      if (json['star_rating'] != null) {
+        rating = json['star_rating'].toString();
+      } else {
+        rating = json['rating']?.toString();
+      }
+
+      category = json['category'];
+      description = json['description'] ?? json['addressline1']; // Fallback
+      descText = json['descText'];
+      isActive = json['isActive'];
+      phone = json['phone'];
+      email = json['email'];
+      website = json['website'];
+      url = json['url'];
+
+      // Handle images or photo1
+      if (json['photo1'] != null) {
+        images = [json['photo1']];
+        imageCover = json['photo1'];
+      } else if (json['images'] != null) {
+        images = List<String>.from(json['images'].map((x) => x.toString()));
+        if (images!.isNotEmpty) imageCover = images![0];
+      }
+
+      // specific image cover field
+      if (json['imageCover'] != null) {
+        imageCover = json['imageCover'];
+      }
+
+      slug = json['slug'];
+      createdBy = json['createdBy'];
+      createdAt = json['createdAt'];
+      updatedAt = json['updatedAt'];
+      alt = json['alt'];
+      updatedBy = json['updatedBy'];
+    } catch (e, stack) {
+      print("❌ Error parsing HotelItem: $e");
+      print("❌ Stack trace: $stack");
+      print("❌ JSON Data Causing Error: $json");
+      rethrow;
     }
-    slug = json['slug'];
-    createdBy = json['createdBy'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    alt = json['alt'];
-    updatedBy = json['updatedBy'];
-    imageCover = json['imageCover'];
   }
 }
 
@@ -125,6 +162,8 @@ class Country {
   String? name;
   String? id;
 
+  Country({this.sId, this.name, this.id});
+
   Country.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];
     name = json['name'];
@@ -135,6 +174,8 @@ class Country {
 class City {
   String? sId;
   String? name;
+
+  City({this.sId, this.name});
 
   City.fromJson(Map<String, dynamic> json) {
     sId = json['_id'];

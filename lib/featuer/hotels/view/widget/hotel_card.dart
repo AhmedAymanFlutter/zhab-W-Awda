@@ -19,7 +19,7 @@ class HotelCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routes.hotelDetailsView,
-          arguments: hotel.slug,
+          arguments: hotel.hotelId ?? hotel.sId,
         );
       },
       child: Container(
@@ -133,9 +133,9 @@ class HotelCard extends StatelessWidget {
                         ],
                       ),
                     const Spacer(),
-                    if (hotel.price?.min != null)
+                    if (hotel.price != null)
                       Text(
-                        "يبدأ من ${hotel.price!.min} ج.م",
+                        "يبدأ من ${hotel.price} ج.م",
                         style: AppTextStyle.setelMessiriTextStyle(
                           fontSize: 12,
                           fontWeight: FontWeight.bold,

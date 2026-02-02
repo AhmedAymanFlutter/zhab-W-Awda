@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../../core/theme/app_color.dart';
+import '../../../../../../core/theme/app_text_style.dart';
 import '../../data/model/get_all_offers_model.dart';
 
 class OfferDetailsContent extends StatelessWidget {
@@ -11,104 +12,133 @@ class OfferDetailsContent extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      transform: Matrix4.translationValues(0, -20, 0),
+      transform: Matrix4.translationValues(0, -30, 0),
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(30.r),
-          topRight: Radius.circular(30.r),
-        ),
+        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            offset: const Offset(0, -5),
+            blurRadius: 20,
+          ),
+        ],
       ),
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 25.h),
+        padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 60.h),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            // العنوان والتقييم
+            // --- Header Section (Title & Rating) ---
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Expanded(
                   child: Text(
                     offer.name ?? "تفاصيل العرض",
-                    style: TextStyle(
-                      fontSize: 22.sp,
+                    style: AppTextStyle.setelMessiriBlack(
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
-                      color: Colors.black87,
-                      height: 1.2,
-                    ),
+                    ).copyWith(height: 1.3),
                   ),
                 ),
+                SizedBox(width: 12.w),
                 _buildRatingBadge(),
               ],
             ),
 
-            SizedBox(height: 15.h),
+            SizedBox(height: 8.h),
 
-            // السعر
-            _buildPriceSection(),
-
-            SizedBox(height: 25.h),
-
-            // المميزات (Icons)
+            // Location (if available in name or description, placeholder for now)
             Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                _buildInfoChip(Icons.access_time_filled, "5 أيام"),
-                _buildInfoChip(Icons.location_on, "القاهرة"),
-                _buildInfoChip(Icons.people, "شامل الأفراد"),
+                Icon(Icons.location_on, color: Colors.grey, size: 16.sp),
+                SizedBox(width: 4.w),
+                Text(
+                  "القاهرة، مصر", // Placeholder or dynamic if available
+                  style: AppTextStyle.setelMessiriSecondlightGrey(
+                    fontSize: 14,
+                    fontWeight: FontWeight.normal,
+                  ),
+                ),
               ],
             ),
 
-            SizedBox(height: 25.h),
-            Divider(color: Colors.grey.withOpacity(0.2)),
-            SizedBox(height: 15.h),
+            SizedBox(height: 24.h),
 
-            // الوصف
-            Text(
-              "عن الرحلة",
-              style: TextStyle(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.bold,
-                color: Colors.black87,
+            // --- Features Chips ---
+            Container(
+              padding: EdgeInsets.all(16.r),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF8F9FA),
+                borderRadius: BorderRadius.circular(16.r),
+                border: Border.all(color: Colors.grey.withOpacity(0.1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  _buildFeatureItem(Icons.access_time_filled, "5 أيام"),
+                  _buildVerticalDivider(),
+                  _buildFeatureItem(Icons.people, "أفراد"),
+                  _buildVerticalDivider(),
+                  _buildFeatureItem(Icons.star, "4.8"),
+                ],
               ),
             ),
-            SizedBox(height: 10.h),
+
+            SizedBox(height: 24.h),
+
+            // --- Price Section ---
+            _buildPriceSection(),
+
+            SizedBox(height: 24.h),
+            Divider(color: Colors.grey.withOpacity(0.1), thickness: 1),
+            SizedBox(height: 24.h),
+
+            // --- Description ---
+            Text(
+              "تفاصيل العرض",
+              style: AppTextStyle.setelMessiriBlack(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 12.h),
             Text(
               offer.description ?? "لا يوجد وصف متاح لهذا العرض حالياً.",
-              style: TextStyle(
-                fontSize: 14.sp,
-                color: Colors.grey[600],
-                height: 1.6,
-              ),
+              style: AppTextStyle.setelMessirisecondaryGery(
+                fontSize: 15,
+                fontWeight: FontWeight.normal,
+              ).copyWith(height: 1.8),
             ),
-            SizedBox(height: 80.h), // مساحة إضافية عشان السكرول
+
+            SizedBox(height: 100.h), // Bottom padding for scrolling
           ],
         ),
       ),
     );
   }
 
-  // --- Helper Widgets Internal ---
+  // --- Helper Widgets ---
 
   Widget _buildRatingBadge() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 6.h),
       decoration: BoxDecoration(
-        color: Colors.amber.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(8.r),
+        color: const Color(0xFFFFF8E1), // Light Amber
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(Icons.star, color: Colors.amber, size: 16.sp),
+          Icon(Icons.star_rounded, color: Colors.amber, size: 18.sp),
           SizedBox(width: 4.w),
           Text(
             "4.8",
-            style: TextStyle(
+            style: AppTextStyle.setelMessiriTextStyle(
+              fontSize: 14,
               fontWeight: FontWeight.bold,
-              fontSize: 12.sp,
-              color: Colors.amber[800],
+              color: Colors.amber[800]!,
             ),
           ),
         ],
@@ -116,67 +146,69 @@ class OfferDetailsContent extends StatelessWidget {
     );
   }
 
-  Widget _buildPriceSection() {
-    return Row(
+  Widget _buildFeatureItem(IconData icon, String label) {
+    return Column(
       children: [
+        Icon(icon, color: AppColor.primaryBlue, size: 24.sp),
+        SizedBox(height: 6.h),
         Text(
-          "${offer.price} ج.م",
-          style: TextStyle(
-            fontSize: 24.sp,
-            fontWeight: FontWeight.bold,
-            color: AppColor.primaryBlue,
+          label,
+          style: AppTextStyle.setelMessiriBlack(
+            fontSize: 12,
+            fontWeight: FontWeight.w600,
           ),
         ),
-        SizedBox(width: 10.w),
-        if (offer.oldPrice != null) ...[
-          Text(
-            "${offer.oldPrice} ج.م",
-            style: TextStyle(
-              fontSize: 16.sp,
-              decoration: TextDecoration.lineThrough,
-              color: Colors.grey,
-            ),
-          ),
-          SizedBox(width: 10.w),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
-            decoration: BoxDecoration(
-              color: Colors.red.withOpacity(0.1),
-              borderRadius: BorderRadius.circular(8.r),
-            ),
-            child: Text(
-              "عرض خاص",
-              style: TextStyle(
-                color: Colors.red,
-                fontSize: 10.sp,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-          ),
-        ],
       ],
     );
   }
 
-  Widget _buildInfoChip(IconData icon, String label) {
+  Widget _buildVerticalDivider() {
     return Container(
-      padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 8.h),
+      height: 30.h,
+      width: 1,
+      color: Colors.grey.withOpacity(0.2),
+    );
+  }
+
+  Widget _buildPriceSection() {
+    return Container(
+      padding: EdgeInsets.all(16.r),
       decoration: BoxDecoration(
         color: AppColor.primaryBlue.withOpacity(0.05),
-        borderRadius: BorderRadius.circular(12.r),
+        borderRadius: BorderRadius.circular(16.r),
         border: Border.all(color: AppColor.primaryBlue.withOpacity(0.1)),
       ),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Icon(icon, color: AppColor.primaryBlue, size: 18.sp),
-          SizedBox(width: 6.w),
           Text(
-            label,
-            style: TextStyle(
-              fontSize: 12.sp,
-              fontWeight: FontWeight.w600,
-              color: AppColor.primaryBlue,
+            "السعر الإجمالي",
+            style: AppTextStyle.setelMessiriBlack(
+              fontSize: 16,
+              fontWeight: FontWeight.normal,
             ),
+          ),
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "${offer.price} ج.م",
+                style: AppTextStyle.setelMessiriDeepPurple(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              if (offer.oldPrice != null)
+                Text(
+                  "${offer.oldPrice} ج.م",
+                  style: TextStyle(
+                    fontSize: 14.sp,
+                    decoration: TextDecoration.lineThrough,
+                    color: Colors.grey,
+                    fontFamily: 'elMessiri', // Ensure font consistency
+                  ),
+                ),
+            ],
           ),
         ],
       ),

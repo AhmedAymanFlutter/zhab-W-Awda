@@ -3,10 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../../core/theme/app_color.dart';
 import '../../../../../core/theme/app_text_style.dart';
-import '../../package/data/model/get_all_packages_model.dart'; // Ensure correct path
+import '../../package/data/model/get_all_packages_model.dart';
 
 class PackageCard extends StatelessWidget {
   final PackageItem package;
@@ -34,14 +33,15 @@ class PackageCard extends StatelessWidget {
         }
       },
       child: Container(
+        width: 160.w, // Fixed width for horizontal list
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
           boxShadow: [
             BoxShadow(
               color: Colors.black.withOpacity(0.05),
-              blurRadius: 5,
-              spreadRadius: 1,
+              blurRadius: 10,
+              offset: const Offset(0, 4),
             ),
           ],
         ),
@@ -50,65 +50,108 @@ class PackageCard extends StatelessWidget {
           children: [
             // --- Image ---
             Expanded(
-              flex: 3,
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
+              flex: 4, // More space for image
+              child: Stack(
+                children: [
+                  Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
+                    ),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(16.r),
+                      ),
+                      child: CachedNetworkImage(
+                        imageUrl:
+                            package.imageCover ??
+                            "https://via.placeholder.com/200",
+                        fit: BoxFit.cover,
+                        placeholder: (context, url) =>
+                            const Center(child: Icon(FontAwesomeIcons.image)),
+                        errorWidget: (context, url, error) =>
+                            Center(child: const Icon(FontAwesomeIcons.image)),
+                      ),
+                    ),
                   ),
-                  color: Colors.grey.shade200,
-                ),
-                child: ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        package.imageCover ?? "https://via.placeholder.com/200",
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        const Center(child: Icon(FontAwesomeIcons.image)),
-                    errorWidget: (context, url, error) =>
-                        const Icon(FontAwesomeIcons.image),
-                  ),
-                ),
+                  if (package.header?.dayNumber != null)
+                    Positioned(
+                      top: 8.h,
+                      left: 8.w,
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(0.6),
+                          borderRadius: BorderRadius.circular(20.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(
+                              FontAwesomeIcons.clock,
+                              color: Colors.white,
+                              size: 10.sp,
+                            ),
+                            SizedBox(width: 4.w),
+                            Text(
+                              "${package.header?.dayNumber} أيام",
+                              style: AppTextStyle.setelMessiriWhite(
+                                fontSize: 10,
+                                fontWeight: FontWeight.normal,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                ],
               ),
             ),
 
             // --- Text Content ---
             Expanded(
-              flex: 2,
+              flex: 3,
               child: Padding(
-                padding: EdgeInsets.all(8.w),
+                padding: EdgeInsets.all(10.w),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
                       package.name ?? "اسم الباقة",
-                      maxLines: 1,
+                      maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.setelMessiriBlack(
                         fontSize: 12,
                         fontWeight: FontWeight.bold,
-                      ),
+                      ).copyWith(height: 1.2),
                     ),
                     const Spacer(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          _getDurationText(),
-                          style: AppTextStyle.setelMessiriSecondlightGrey(
-                            fontSize: 10,
-                            fontWeight: FontWeight.normal,
+                        Flexible(
+                          child: Text(
+                            ' اكتشف المزيد',
+                            style: AppTextStyle.setelMessiriTextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: AppColor.primaryBlue,
+                            ),
                           ),
                         ),
-                        Text(
-                          "${package.price} ج.م",
-                          style: AppTextStyle.setelMessiriTextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
+                        Container(
+                          padding: EdgeInsets.all(4.w),
+                          decoration: BoxDecoration(
+                            color: AppColor.primaryBlue.withOpacity(0.1),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_rounded,
+                            size: 14.sp,
                             color: AppColor.primaryBlue,
                           ),
                         ),
@@ -122,12 +165,5 @@ class PackageCard extends StatelessWidget {
         ),
       ),
     );
-  }
-
-  String _getDurationText() {
-    if (package.header != null) {
-      return "${package.header!.dayNumber ?? 0} أيام";
-    }
-    return "لفترة محدودة";
   }
 }

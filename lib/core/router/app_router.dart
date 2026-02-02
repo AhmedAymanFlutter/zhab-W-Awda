@@ -6,12 +6,14 @@ import 'package:flutter_application_1/featuer/Auth/view/log_in_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
 import 'package:flutter_application_1/featuer/countries/view/countries_view.dart';
+import 'package:flutter_application_1/featuer/hotels/view/hotel_countries_view.dart';
 import 'package:flutter_application_1/featuer/flightBooking/view/book_flight_view.dart';
 import 'package:flutter_application_1/featuer/global_setting/view/contact_us_view.dart';
 import 'package:flutter_application_1/featuer/home/view/home_view.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/view/offer_details_view.dart';
 import 'package:flutter_application_1/featuer/home/view/package/view/package_details_view.dart';
 import 'package:flutter_application_1/featuer/hotels/view/hotel_details_view.dart';
+import 'package:flutter_application_1/featuer/hotels/view/hotels_view.dart';
 import 'package:flutter_application_1/featuer/layout/view/layout_view.dart';
 import 'package:flutter_application_1/featuer/onboarding/onboarding_screen.dart';
 import 'package:flutter_application_1/featuer/packageType/view/package_type_details_view.dart';
@@ -23,6 +25,7 @@ import 'package:flutter_application_1/featuer/services/view/service_details_view
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
 import '../../featuer/onboarding/SplashScreen.dart';
+import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -57,6 +60,9 @@ class AppRouter {
 
       case Routes.countriesView:
         return RouterTransitions.buildFade(const CountriesView());
+
+      case Routes.hotelCountriesView:
+        return RouterTransitions.buildFade(const HotelCountriesView());
 
       case Routes.bookFlightView:
         return RouterTransitions.buildFade(const BookFlightView());
@@ -125,6 +131,15 @@ class AppRouter {
 
       case Routes.profileView:
         return RouterTransitions.buildFade(const ProfileView());
+
+      case Routes.hotelsView:
+        final countryName = settings.arguments as String?;
+        return RouterTransitions.buildFade(
+          HotelsView(countryName: countryName),
+        );
+
+      case Routes.reviewsView:
+        return RouterTransitions.buildFade(const ReviewsView());
 
       default:
         return RouterTransitions.build(

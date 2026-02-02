@@ -21,4 +21,7 @@ class Routes {
   static const String offersView = '/OffersView';
   static const String packagesView = '/PackagesView';
   static const String profileView = '/ProfileView';
+  static const String hotelsView = '/HotelsView';
+  static const String reviewsView = '/ReviewsView';
+  static const String hotelCountriesView = '/HotelCountriesView';
 }

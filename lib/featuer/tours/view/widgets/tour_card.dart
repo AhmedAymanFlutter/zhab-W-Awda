@@ -47,8 +47,9 @@ class TourCard extends StatelessWidget {
                   fit: BoxFit.cover,
                   width: double.infinity,
                   placeholder: (context, url) =>
-                      const Center(child: CircularProgressIndicator()),
-                  errorWidget: (context, url, error) => const Icon(Icons.error),
+                      const Center(child: Icon(Icons.image)),
+                  errorWidget: (context, url, error) =>
+                      const Center(child: Icon(Icons.image)),
                 ),
               ),
             ),

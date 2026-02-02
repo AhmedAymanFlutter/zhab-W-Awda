@@ -4,20 +4,24 @@ import 'package:flutter_application_1/core/widgets/cusstom_search_bar.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
-import 'package:flutter_application_1/featuer/hotels/view/widget/hotel_card.dart';
+import 'package:flutter_application_1/featuer/home/view/widgets/recommended_hotel_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import '../manager/hotels_state.dart';
+import 'widget/hotel_filter_bottom_sheet.dart';
 
 class HotelsView extends StatelessWidget {
-  const HotelsView({super.key});
+  final String? countryName;
+
+  const HotelsView({super.key, this.countryName});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) => HotelsCubit(HotelsRepository())..fetchHotels(),
+      create: (context) =>
+          HotelsCubit(HotelsRepository())..fetchHotels(country: countryName),
       child: Scaffold(
         backgroundColor: AppColor.primaryWhite,
         body: SafeArea(
@@ -31,9 +35,38 @@ class HotelsView extends StatelessWidget {
                   builder: (context) {
                     return ReusableSearchBar(
                       onSearchChanged: (value) {
-                        HotelsCubit.get(context).searchLocalHotels(value);
+                        HotelsCubit.get(context).fetchHotels(query: value);
                       },
-                      onFilterTap: () {},
+                      onFilterTap: () {
+                        final cubit = HotelsCubit.get(context);
+                        showModalBottomSheet(
+                          context: context,
+                          isScrollControlled: true,
+                          backgroundColor: Colors.transparent,
+                          builder: (context) {
+                            return HotelFilterBottomSheet(
+                              onApply:
+                                  (
+                                    city,
+                                    search,
+                                    checkIn,
+                                    checkOut,
+                                    adults,
+                                    children,
+                                  ) {
+                                    cubit.fetchHotels(
+                                      city: city,
+                                      query: search,
+                                      checkIn: checkIn,
+                                      checkOut: checkOut,
+                                      adults: adults,
+                                      children: children,
+                                    );
+                                  },
+                            );
+                          },
+                        );
+                      },
                       hintText: "Search hotels...",
                       useDebounce: true,
                     );
@@ -58,7 +91,7 @@ class HotelsView extends StatelessWidget {
                                   childAspectRatio: 0.75,
                                 ),
                             itemBuilder: (context, index) {
-                              return HotelCard(
+                              return RecommendedHotelCard(
                                 hotel: HotelItem(name: "Loading"),
                               );
                             },
@@ -81,10 +114,12 @@ class HotelsView extends StatelessWidget {
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12.w,
                                 mainAxisSpacing: 12.h,
-                                childAspectRatio: 0.75,
+                                childAspectRatio: 0.6,
                               ),
                           itemBuilder: (context, index) {
-                            return HotelCard(hotel: state.hotels[index]);
+                            return RecommendedHotelCard(
+                              hotel: state.hotels[index],
+                            );
                           },
                         );
                       }

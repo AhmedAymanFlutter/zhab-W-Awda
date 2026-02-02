@@ -80,77 +80,84 @@ class PackageItem {
   });
 
   PackageItem.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    price = json['price']?.toString();
-    rate = json['rate']?.toString();
-    header = json['header'] != null ? Header.fromJson(json['header']) : null;
-    packageType = json['packageType'] != null
-        ? PackageType.fromJson(json['packageType'])
-        : null;
-    if (json['itinerary'] != null) {
-      itinerary = <Itinerary>[];
-      json['itinerary'].forEach((v) {
-        itinerary!.add(Itinerary.fromJson(v));
-      });
-    }
+    try {
+      sId = json['_id'];
+      name = json['name'];
+      price = json['price']?.toString();
+      rate = json['rate']?.toString();
+      header = json['header'] != null ? Header.fromJson(json['header']) : null;
+      packageType = json['packageType'] != null
+          ? PackageType.fromJson(json['packageType'])
+          : null;
+      if (json['itinerary'] != null) {
+        itinerary = <Itinerary>[];
+        json['itinerary'].forEach((v) {
+          itinerary!.add(Itinerary.fromJson(v));
+        });
+      }
 
-    if (json['includes'] != null) {
-      includes = (json['includes'] as List).map((e) => e.toString()).toList();
-    } else {
-      includes = [];
-    }
-
-    if (json['excludes'] != null) {
-      excludes = (json['excludes'] as List).map((e) => e.toString()).toList();
-    } else {
-      excludes = [];
-    }
-
-    country = json['country'] != null
-        ? Country.fromJson(json['country'])
-        : null;
-
-    // Parse cities as Objects
-    if (json['cities'] != null) {
-      cities = <City>[];
-      json['cities'].forEach((v) {
-        if (v is Map<String, dynamic>) {
-          cities!.add(City.fromJson(v));
-        } else if (v is String) {
-          // Handle case where it might be string IDs or names
-          cities!.add(City(name: v));
-        }
-      });
-    } else {
-      cities = [];
-    }
-
-    images = json['images'] != null ? List<String>.from(json['images']) : [];
-
-    description = json['description'];
-    descText = json['descText'];
-    createdBy = json['createdBy'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
-    updatedBy = json['updatedBy'];
-    slug = json['slug'];
-    alt = json['alt'];
-    imageCover = json['imageCover'];
-
-    // Safe handling for city field which might be object or string or null
-    // If city is an object with name, extract name. If string, use it.
-    if (json['city'] != null) {
-      if (json['city'] is Map) {
-        city = json['city']['name']?.toString();
+      if (json['includes'] != null) {
+        includes = (json['includes'] as List).map((e) => e.toString()).toList();
       } else {
-        city = json['city'].toString();
+        includes = [];
       }
-    } else {
-      // Fallback: use first city from list if available
-      if (cities != null && cities!.isNotEmpty) {
-        city = cities![0].name;
+
+      if (json['excludes'] != null) {
+        excludes = (json['excludes'] as List).map((e) => e.toString()).toList();
+      } else {
+        excludes = [];
       }
+
+      country = json['country'] != null
+          ? Country.fromJson(json['country'])
+          : null;
+
+      // Parse cities as Objects
+      if (json['cities'] != null) {
+        cities = <City>[];
+        json['cities'].forEach((v) {
+          if (v is Map<String, dynamic>) {
+            cities!.add(City.fromJson(v));
+          } else if (v is String) {
+            // Handle case where it might be string IDs or names
+            cities!.add(City(name: v));
+          }
+        });
+      } else {
+        cities = [];
+      }
+
+      images = json['images'] != null ? List<String>.from(json['images']) : [];
+
+      description = json['description'];
+      descText = json['descText'];
+      createdBy = json['createdBy'];
+      createdAt = json['createdAt'];
+      updatedAt = json['updatedAt'];
+      updatedBy = json['updatedBy'];
+      slug = json['slug'];
+      alt = json['alt'];
+      imageCover = json['imageCover'];
+
+      // Safe handling for city field which might be object or string or null
+      // If city is an object with name, extract name. If string, use it.
+      if (json['city'] != null) {
+        if (json['city'] is Map) {
+          city = json['city']['name']?.toString();
+        } else {
+          city = json['city'].toString();
+        }
+      } else {
+        // Fallback: use first city from list if available
+        if (cities != null && cities!.isNotEmpty) {
+          city = cities![0].name;
+        }
+      }
+    } catch (e, stack) {
+      print("❌ Error parsing PackageItem: $e");
+      print("❌ Stack trace: $stack");
+      print("❌ JSON Data Causing Error: $json");
+      rethrow;
     }
   }
 }
@@ -176,6 +183,8 @@ class Header {
   String? nights;
   String? location;
   String? sId;
+
+  Header({this.dayNumber, this.nights, this.location, this.sId});
 
   Header.fromJson(Map<String, dynamic> json) {
     dayNumber = json['dayNumber']?.toString();

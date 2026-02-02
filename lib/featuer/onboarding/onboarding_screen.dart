@@ -26,7 +26,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void _navigateToNext() {
-    // هنا وجه المستخدم لصفحة تسجيل الدخول أو الرئيسية
     Navigator.pushReplacementNamed(context, Routes.loginView);
   }
 
@@ -97,8 +96,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     )
                   else
                     const SizedBox(width: 48),
-
-                  // الزر الدائري (تأكد إن الويدجت دي موجودة عندك)
                   CircularNextButton(progress: progressValue, onTap: _nextPage),
                 ],
               ),

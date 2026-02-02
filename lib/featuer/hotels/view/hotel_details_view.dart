@@ -1,16 +1,16 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:flutter_widget_from_html/flutter_widget_from_html.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../../../../core/theme/app_color.dart';
 import '../data/repo/hotels_repository.dart';
-
-import 'dart:ui';
 import '../manager/hotels_cubit.dart';
+import 'widget/hotel_description.dart';
+import 'widget/hotel_info_section.dart';
+import 'widget/hotel_location_section.dart';
+import 'widget/hotel_title_section.dart';
+import 'widget/premium_gallery_header.dart';
+import 'widget/related_hotels_list.dart';
 
 class HotelDetailsView extends StatelessWidget {
   final String hotelId;
@@ -20,18 +20,11 @@ class HotelDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      // 1. إنشاء الكيوبت واستدعاء دالة التفاصيل
       create: (context) =>
           HotelsCubit(HotelsRepository())..getHotelDetails(hotelId),
       child: Scaffold(
         backgroundColor: Colors.white,
-        // 2. زر الحجز العائم في الأسفل
-        bottomNavigationBar: OfferBookingBar(),
         body: BlocBuilder<HotelsCubit, HotelsState>(
-          buildWhen: (previous, current) =>
-              current is HotelDetailsLoading ||
-              current is HotelDetailsSuccess ||
-              current is HotelDetailsError,
           builder: (context, state) {
             if (state is HotelDetailsLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -40,226 +33,84 @@ class HotelDetailsView extends StatelessWidget {
             } else if (state is HotelDetailsSuccess) {
               final hotel = state.hotel;
 
-              return CustomScrollView(
-                slivers: [
-                  // --- 3. AppBar مع الصورة والتدرج اللوني ---
-                  SliverAppBar(
-                    expandedHeight: 500.h,
-                    pinned: true,
-                    stretch: true,
-                    backgroundColor: Colors.transparent,
-                    leading: Container(
-                      margin: EdgeInsets.all(8.w),
-                      decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.2),
-                        shape: BoxShape.circle,
+              return Stack(
+                children: [
+                  CustomScrollView(
+                    slivers: [
+                      // --- Premium Gallery Header ---
+                      PremiumGalleryHeader(
+                        image: hotel.imageCover,
+                        images: hotel.images,
                       ),
-                      child: ClipOval(
-                        child: BackdropFilter(
-                          filter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white.withOpacity(0.2),
-                              shape: BoxShape.circle,
-                              border: Border.all(
-                                color: Colors.white.withOpacity(0.2),
-                                width: 1,
-                              ),
-                            ),
-                            child: IconButton(
-                              icon: Icon(
-                                Icons.arrow_back_ios_new,
-                                color: Colors.white,
-                                size: 20.sp,
-                              ),
-                              color: Colors.white,
-                              onPressed: () => Navigator.pop(context),
-                              padding: EdgeInsets.zero,
+
+                      // --- Body Content ---
+                      SliverToBoxAdapter(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            borderRadius: BorderRadius.vertical(
+                              top: Radius.circular(30.r),
                             ),
                           ),
-                        ),
-                      ),
-                    ),
-                    flexibleSpace: FlexibleSpaceBar(
-                      stretchModes: const [
-                        StretchMode.zoomBackground,
-                        StretchMode.blurBackground,
-                      ],
-                      background: Padding(
-                        padding: EdgeInsets.only(
-                          left: 12.w,
-                          top: 20.h,
-                          right: 12.w,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(20.r)),
-                          child: Stack(
-                            fit: StackFit.expand,
+                          // Pull up to overlap the image slightly
+                          transform: Matrix4.translationValues(0, -20, 0),
+                          padding: EdgeInsets.symmetric(horizontal: 20.w),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              // الصورة
-                              CachedNetworkImage(
-                                imageUrl:
-                                    hotel.imageCover ??
-                                    "https://via.placeholder.com/300",
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                  child: Icon(FontAwesomeIcons.image),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    Icon(FontAwesomeIcons.image),
+                              SizedBox(height: 30.h),
+
+                              // Hotel Title & Location
+                              HotelTitleSection(
+                                name: hotel.name,
+                                city: hotel.city,
+                                country: hotel.country,
                               ),
-                              // طبقة التدرج اللوني (لجعل الكتابة واضحة)
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
-                                    ],
-                                  ),
-                                ),
+                              SizedBox(height: 20.h),
+
+                              // Rating & Reviews Row
+                              HotelInfoSection(
+                                ratingAverage: hotel.ratingAverage,
+                                rating: hotel.rating,
+                                numberOfReviews: hotel.numberOfReviews,
+                                checkIn: hotel.checkIn,
                               ),
+                              SizedBox(height: 24.h),
+
+                              // Description
+                              HotelDescription(description: hotel.description),
+                              SizedBox(height: 24.h),
+
+                              // Map Section
+                              HotelLocationSection(
+                                latitude: hotel.latitude,
+                                longitude: hotel.longitude,
+                                address: hotel.addressline1,
+                              ),
+
+                              SizedBox(height: 24.h),
+
+                              // Related Hotels
+                              RelatedHotelsList(
+                                relatedHotels: state.relatedHotels,
+                              ),
+
+                              SizedBox(height: 100.h), // Bottom padding
                             ],
                           ),
                         ),
                       ),
-                    ),
+                    ],
                   ),
 
-                  // --- 4. محتوى التفاصيل ---
-                  SliverToBoxAdapter(
-                    child: Container(
-                      // سحب الكونتينر للأعلى قليلاً فوق الصورة
-                      transform: Matrix4.translationValues(0, -20, 0),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.r),
-                          topRight: Radius.circular(30.r),
-                        ),
-                      ),
-                      child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 25.h,
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            // الاسم والتقييم
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: Text(
-                                    hotel.name ?? "اسم الفندق",
-                                    style: TextStyle(
-                                      fontSize: 20.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.black87,
-                                    ),
-                                  ),
-                                ),
-                                if (hotel.rating != null)
-                                  Container(
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: 10.w,
-                                      vertical: 6.h,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      color: const Color(
-                                        0xFFFFF8E1,
-                                      ), // Softer Amber
-                                      borderRadius: BorderRadius.circular(12.r),
-                                      border: Border.all(
-                                        color: const Color(0xFFFFD54F),
-                                        width: 0.5,
-                                      ),
-                                    ),
-                                    child: Row(
-                                      children: [
-                                        Icon(
-                                          Icons.star_rounded,
-                                          color: const Color(0xFFFFC107),
-                                          size: 18.sp,
-                                        ),
-                                        SizedBox(width: 4.w),
-                                        Text(
-                                          hotel.rating!,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.w700,
-                                            fontSize: 13.sp,
-                                            color: const Color(0xFFFFA000),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                              ],
-                            ),
-
-                            SizedBox(height: 8.h),
-
-                            // السعر
-                            if (hotel.price?.min != null)
-                              Row(
-                                children: [
-                                  Text(
-                                    "يبدأ من ",
-                                    style: TextStyle(
-                                      fontSize: 14.sp,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                  Text(
-                                    "${hotel.price!.min} ج.م",
-                                    style: TextStyle(
-                                      fontSize: 22.sp,
-                                      fontWeight: FontWeight.bold,
-                                      color: AppColor.primaryBlue,
-                                    ),
-                                  ),
-                                  Text(
-                                    " / ليلة",
-                                    style: TextStyle(
-                                      fontSize: 12.sp,
-                                      color: Colors.grey,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                            SizedBox(height: 25.h),
-                            Divider(color: Colors.grey.withOpacity(0.2)),
-                            SizedBox(height: 15.h),
-
-                            // عنوان الوصف
-                            Text(
-                              "عن الفندق",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 10.h),
-
-                            // نص الوصف
-                            HtmlWidget(
-                              hotel.description ??
-                                  hotel.descText ??
-                                  "لا يوجد وصف متاح لهذا الفندق.",
-                              textStyle: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[600],
-                                height: 1.6,
-                              ),
-                            ),
-                            SizedBox(height: 80.h), // مساحة إضافية في الأسفل
-                          ],
-                        ),
-                      ),
+                  // Bottom Bar
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: OfferBookingBar(
+                      price: hotel.price != null ? "\$${hotel.price}" : null,
+                      offerName: hotel.name,
+                      targetPhoneNumber: hotel.phone,
+                      bookingUrl: hotel.url,
                     ),
                   ),
                 ],

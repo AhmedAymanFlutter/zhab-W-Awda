@@ -18,7 +18,6 @@ class OnboardingPageWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(flex: 3),
-          // تأكد إن الصور موجودة في المسار assets/onboarding/
           Image.asset(
             page.illustrationPath,
             height: 280.h,

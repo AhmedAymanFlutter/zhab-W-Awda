@@ -21,10 +21,20 @@ class HotelDetailsLoading extends HotelsState {}
 
 class HotelDetailsSuccess extends HotelsState {
   final HotelIdData hotel;
-  HotelDetailsSuccess(this.hotel);
+  final List<HotelItem> relatedHotels;
+  HotelDetailsSuccess(this.hotel, {this.relatedHotels = const []});
 }
 
 class HotelDetailsError extends HotelsState {
   final String message;
   HotelDetailsError(this.message);
+}
+
+class HotelCountriesLoading extends HotelsState {}
+
+class HotelCountriesSuccess extends HotelsState {}
+
+class HotelCountriesError extends HotelsState {
+  final String message;
+  HotelCountriesError(this.message);
 }
