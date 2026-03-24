@@ -194,7 +194,7 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
 
         // 3. Content Sheet
         Positioned.fill(
-          top: 0.35.sh,
+          top: 0.30.sh, // Increased space for details (was 0.35)
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -222,43 +222,50 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
                 ),
                 SizedBox(height: 20.h),
 
-                // Package Name Header
+                // Package Name Header & Rating
                 Padding(
                   padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        pkg?.name ?? "اسم الباقة غير متوفر",
-                        style: AppTextStyle.setelMessiriBlack(
-                          fontSize: 22,
-                          fontWeight: FontWeight.bold,
+                      // Title
+                      Expanded(
+                        child: Text(
+                          pkg?.name ?? "اسم الباقة غير متوفر",
+                          style: AppTextStyle.setelMessiriBlack(
+                            fontSize: 18, // Reduced from 22
+                            fontWeight: FontWeight.bold,
+                          ),
+                          maxLines: 2,
+                          overflow: TextOverflow.ellipsis,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
                       ),
-                      SizedBox(height: 8.h),
-                      // Rating
-                      Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 18.sp),
-                          SizedBox(width: 4.w),
-                          Text(
-                            "${pkg?.ratingsAverage ?? 4.5}",
-                            style: TextStyle(
-                              fontSize: 14.sp,
-                              fontWeight: FontWeight.bold,
+                      SizedBox(width: 8.w),
+                      // Rating (Next to title)
+                      Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.w,
+                          vertical: 4.h,
+                        ),
+                        decoration: BoxDecoration(
+                          color: Colors.amber.withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(8.r),
+                        ),
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.star, color: Colors.amber, size: 14.sp),
+                            SizedBox(width: 4.w),
+                            Text(
+                              "${pkg?.ratingsAverage ?? 4.5}",
+                              style: TextStyle(
+                                fontSize: 12.sp,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87,
+                              ),
                             ),
-                          ),
-                          Text(
-                            " (${pkg?.ratingsQuantity ?? 0} reviews)",
-                            style: TextStyle(
-                              fontSize: 12.sp,
-                              color: Colors.grey,
-                            ),
-                          ),
-                        ],
+                          ],
+                        ),
                       ),
                     ],
                   ),

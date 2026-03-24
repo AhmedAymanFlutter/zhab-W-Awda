@@ -14,9 +14,13 @@ import '../../../../core/theme/app_text_style.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
 import 'package:flutter_application_1/featuer/reviews/data/review_data.dart';
+import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
+import 'package:flutter_application_1/featuer/countries/manager/countries_state.dart';
+import 'package:flutter_application_1/featuer/countries/data/model/get_countries_model.dart';
+import 'package:flutter_application_1/featuer/countries/view/widgets/modern_country_card.dart';
 import 'package:flutter_application_1/featuer/reviews/view/widgets/reviews_slider.dart';
 import 'offer/view/offers_slider.dart';
-import 'package/view/package_card.dart';
+import 'package/view/modern_featured_package_card.dart';
 import 'widgets/recommended_hotel_card.dart';
 
 class HomeView extends StatelessWidget {
@@ -95,6 +99,87 @@ class HomeView extends StatelessWidget {
             ),
             SliverToBoxAdapter(child: SizedBox(height: 32.h)),
 
+            // --- 3. Tourist Guide (Countries) ---
+            SliverToBoxAdapter(
+              child: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 32.w),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    InkWell(
+                      onTap: () =>
+                          Navigator.pushNamed(context, Routes.countriesView),
+                      child: Text(
+                        "عرض الكل",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          decorationColor: AppColor.primaryBlue,
+                          fontSize: 12.sp,
+                          fontWeight: FontWeight.w600,
+                          color: AppColor.primaryBlue,
+                        ),
+                      ),
+                    ),
+                    Text(
+                      "الدليل السياحي",
+                      style: AppTextStyle.setelMessiriBlack(
+                        fontSize: 18,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 16.h)),
+            SliverToBoxAdapter(
+              child: SizedBox(
+                height: 220.h,
+                child: BlocBuilder<CountriesCubit, CountriesState>(
+                  builder: (context, state) {
+                    if (state is CountriesLoading) {
+                      return ListView.separated(
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 4,
+                        separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        itemBuilder: (context, index) {
+                          return Skeletonizer(
+                            enabled: true,
+                            child: ModernCountryCard(
+                              country: CountryItem(
+                                name: "اسم الدولة",
+                                continent: "القارة",
+                                imageCover: "https://via.placeholder.com/200",
+                              ),
+                            ),
+                          );
+                        },
+                      );
+                    } else if (state is CountriesSuccess) {
+                      if (state.countries.isEmpty) return const SizedBox();
+                      return ListView.separated(
+                        physics: const BouncingScrollPhysics(),
+                        padding: EdgeInsets.symmetric(horizontal: 16.w),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: state.countries.length,
+                        separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                        itemBuilder: (context, index) {
+                          return ModernCountryCard(
+                            country: state.countries[index],
+                          );
+                        },
+                      );
+                    } else if (state is CountriesError) {
+                      return Center(child: Text(state.message));
+                    }
+                    return const SizedBox();
+                  },
+                ),
+              ),
+            ),
+            SliverToBoxAdapter(child: SizedBox(height: 32.h)),
+
             // --- 4. Packages Section (Horizontal) ---
             SliverToBoxAdapter(
               child: Padding(
@@ -142,7 +227,7 @@ class HomeView extends StatelessWidget {
                         itemBuilder: (context, index) {
                           return Skeletonizer(
                             enabled: true,
-                            child: PackageCard(
+                            child: ModernFeaturedPackageCard(
                               package: PackageItem(
                                 name: "اسم الباقة السياحية هنا",
                                 price: "25000",
@@ -163,7 +248,9 @@ class HomeView extends StatelessWidget {
                         itemCount: state.packages.length,
                         separatorBuilder: (_, __) => SizedBox(width: 16.w),
                         itemBuilder: (context, index) {
-                          return PackageCard(package: state.packages[index]);
+                          return ModernFeaturedPackageCard(
+                            package: state.packages[index],
+                          );
                         },
                       );
                     }

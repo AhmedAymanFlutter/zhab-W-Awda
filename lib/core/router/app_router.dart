@@ -3,6 +3,7 @@ import 'package:flutter_application_1/core/router/router_transation.dart'; // Ch
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/widgets/ExitConfirmWrapper_widget.dart';
 import 'package:flutter_application_1/featuer/Auth/view/log_in_view.dart';
+import 'package:flutter_application_1/featuer/Auth/view/sign_up_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
 import 'package:flutter_application_1/featuer/countries/view/countries_view.dart';
@@ -43,6 +44,11 @@ class AppRouter {
       case Routes.loginView:
         return RouterTransitions.buildFade(
           ExitConfirmWrapper(child: const LogInView()),
+        );
+
+      case Routes.signUp:
+        return RouterTransitions.buildFade(
+          ExitConfirmWrapper(child: const SignUpView()),
         );
 
       case Routes.onboarding:

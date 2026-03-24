@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/html_content_widget.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_state.dart';
 import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
@@ -133,20 +134,36 @@ class CountryDetailsView extends StatelessWidget {
                             Row(
                               mainAxisAlignment: MainAxisAlignment.spaceBetween,
                               children: [
-                                _buildInfoItem(
-                                  Icons.public,
-                                  "القارة",
-                                  country.continent ?? "-",
+                                Expanded(
+                                  child: _buildInfoItem(
+                                    Icons.public,
+                                    "القارة",
+                                    country.continent ?? "-",
+                                  ),
                                 ),
-                                _buildInfoItem(
-                                  Icons.language,
-                                  "اللغة",
-                                  country.language ?? "-",
+                                Container(
+                                  width: 1,
+                                  height: 40.h,
+                                  color: Colors.grey.withOpacity(0.2),
                                 ),
-                                _buildInfoItem(
-                                  Icons.attach_money,
-                                  "العملة",
-                                  country.currency ?? "-",
+                                Expanded(
+                                  child: _buildInfoItem(
+                                    Icons.language,
+                                    "اللغة",
+                                    country.language ?? "-",
+                                  ),
+                                ),
+                                Container(
+                                  width: 1,
+                                  height: 40.h,
+                                  color: Colors.grey.withOpacity(0.2),
+                                ),
+                                Expanded(
+                                  child: _buildInfoItem(
+                                    Icons.attach_money,
+                                    "العملة",
+                                    country.currency ?? "-",
+                                  ),
                                 ),
                               ],
                             ),
@@ -164,15 +181,12 @@ class CountryDetailsView extends StatelessWidget {
                               ),
                             ),
                             SizedBox(height: 10.h),
-                            Text(
-                              country.description ??
+                            HtmlContentWidget(
+                              htmlContent:
+                                  country.description ??
                                   country.descText ??
                                   "لا يوجد وصف متاح.",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[600],
-                                height: 1.6,
-                              ),
+                              fontSize: 14.sp,
                             ),
                             SizedBox(height: 20.h),
 
@@ -236,10 +250,15 @@ class CountryDetailsView extends StatelessWidget {
         Text(
           title,
           style: TextStyle(fontSize: 12.sp, color: Colors.grey),
+          textAlign: TextAlign.center,
         ),
+        SizedBox(height: 4.h),
         Text(
           value,
           style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
+          textAlign: TextAlign.center,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
         ),
       ],
     );

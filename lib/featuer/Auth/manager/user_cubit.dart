@@ -20,9 +20,9 @@ class UserCubit extends Cubit<UserState> {
     final prefs = await SharedPreferences.getInstance();
     await prefs.setString("user_name", name);
     if (imagePath != null) await prefs.setString("user_image", imagePath);
-    await prefs.setString("user_email", "");
+    if (email != null) await prefs.setString("user_email", email);
 
-    emit(UserState(name: name, imagePath: imagePath));
+    emit(UserState(name: name, imagePath: imagePath, email: email));
   }
 
   Future<void> loadUser() async {

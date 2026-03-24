@@ -7,7 +7,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
 
 import '../../../core/widgets/cusstom_search_bar.dart';
-import 'widgets/service_card.dart';
+import 'widgets/modern_service_card.dart'; // UPDATED IMPORT
 
 class ServicesView extends StatelessWidget {
   const ServicesView({super.key});
@@ -17,9 +17,11 @@ class ServicesView extends StatelessWidget {
     return BlocProvider(
       create: (context) => ServicesCubit(ServicesRepository())..fetchServices(),
       child: Scaffold(
-        backgroundColor: AppColor.primaryWhite,
+        backgroundColor: const Color(
+          0xFFF8F9FA,
+        ), // Slightly off-white background
         appBar: AppBar(
-          backgroundColor: AppColor.primaryWhite,
+          backgroundColor: Colors.white,
           elevation: 0,
           centerTitle: true,
           title: Text(
@@ -39,20 +41,20 @@ class ServicesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
-              SizedBox(height: 12.h),
+              SizedBox(height: 16.h),
               Builder(
                 builder: (context) {
                   return ReusableSearchBar(
-                    hintText: "Search services...",
+                    hintText: "ابحث عن خدمة...",
                     useDebounce: true,
                     onFilterTap: () {},
                     onSearchChanged: (value) {
-                      // Now this context works because it is inside the Builder
+                      // context is available here
                     },
                   );
                 },
               ),
-              SizedBox(height: 10.h),
+              SizedBox(height: 20.h),
               Expanded(
                 child: BlocBuilder<ServicesCubit, ServicesState>(
                   builder: (context, state) {
@@ -61,17 +63,22 @@ class ServicesView extends StatelessWidget {
                     } else if (state is ServicesError) {
                       return Center(child: Text(state.message));
                     } else if (state is ServicesSuccess) {
+                      if (state.services.isEmpty) {
+                        return const Center(child: Text("لا توجد خدمات متاحة"));
+                      }
                       return GridView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount: state.services.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
-                          crossAxisSpacing: 12.w,
-                          mainAxisSpacing: 12.h,
-                          childAspectRatio: 0.85,
+                          crossAxisSpacing: 16.w,
+                          mainAxisSpacing: 16.h,
+                          childAspectRatio: 0.75, // Taller card for modern look
                         ),
                         itemBuilder: (context, index) {
-                          return ServiceCard(service: state.services[index]);
+                          return ModernServiceCard(
+                            service: state.services[index],
+                          );
                         },
                       );
                     }

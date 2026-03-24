@@ -15,19 +15,6 @@ class CustomDrawer extends StatelessWidget {
     // قائمة العناصر المطلوبة
     final List<DrawerItemModel> drawerItems = [
       DrawerItemModel(
-        title: "الدليل السياحي",
-        icon: SvgPicture.asset(
-          'assets/icon/map-point-wave-svgrepo-com.svg',
-          width: 24.w,
-          height: 24.h,
-          fit: BoxFit.scaleDown,
-          colorFilter: ColorFilter.mode(AppColor.primaryBlue, BlendMode.srcIn),
-        ),
-        onTap: () {
-          Navigator.pushNamed(context, Routes.countriesView);
-        },
-      ),
-      DrawerItemModel(
         title: "وجهات الفنادق",
         icon: SvgPicture.asset(
           'assets/icon/hotel_filled.svg',

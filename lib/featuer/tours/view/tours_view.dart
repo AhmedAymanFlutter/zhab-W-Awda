@@ -8,7 +8,7 @@ import '../data/model/get_all_tours_model.dart';
 import '../data/repo/tours_repository.dart';
 import '../manager/tours_cubit.dart';
 import '../manager/tours_state.dart';
-import 'widgets/tour_card.dart';
+import 'widgets/modern_tour_card.dart';
 
 class ToursView extends StatelessWidget {
   const ToursView({super.key});
@@ -60,7 +60,7 @@ class ToursView extends StatelessWidget {
                                   childAspectRatio: 0.8,
                                 ),
                             itemBuilder: (context, index) {
-                              return TourCard(tour: TourItem());
+                              return ModernTourCard(tour: TourItem());
                             },
                           ),
                         );
@@ -83,7 +83,7 @@ class ToursView extends StatelessWidget {
                                 childAspectRatio: 0.8,
                               ),
                           itemBuilder: (context, index) {
-                            return TourCard(tour: state.tours[index]);
+                            return ModernTourCard(tour: state.tours[index]);
                           },
                         );
                       }

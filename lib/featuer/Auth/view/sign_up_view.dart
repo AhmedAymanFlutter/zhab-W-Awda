@@ -10,22 +10,24 @@ import 'package:flutter_application_1/featuer/Auth/view/widgets/profile_widgets.
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class LogInView extends StatefulWidget {
-  const LogInView({super.key});
+class SignUpView extends StatefulWidget {
+  const SignUpView({super.key});
 
   @override
-  State<LogInView> createState() => _LogInViewState();
+  State<SignUpView> createState() => _SignUpViewState();
 }
 
-class _LogInViewState extends State<LogInView> {
+class _SignUpViewState extends State<SignUpView> {
   final TextEditingController nameController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return AuthBackground(
-      title: 'مرحباً بك مجدداً 👋',
-      subtitle: 'سجل دخولك للاستمتاع بأفضل العروض السياحية',
+      title: 'حساب جديد 🚀',
+      subtitle: 'انضم إلينا واكتشف العالم معنا',
       child: Form(
         key: formKey,
         child: Column(
@@ -73,16 +75,63 @@ class _LogInViewState extends State<LogInView> {
                 return null;
               },
             ),
+            SizedBox(height: 20.h),
+
+            // Email Field
+            CustomTextField(
+              hintText: 'البريد الإلكتروني',
+              labelText: 'ادخل بريدك الإلكتروني',
+              controller: emailController,
+              keyboardType: TextInputType.emailAddress,
+              prefixIcon: const Icon(
+                Icons.email_outlined,
+                color: AppColor.primaryBlue,
+              ),
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'يرجى إدخال البريد الإلكتروني';
+                }
+                return null;
+              },
+            ),
+            SizedBox(height: 20.h),
+            // Password Field
+            CustomTextField(
+              hintText: 'كلمة المرور',
+              labelText: 'ادخل كلمة المرور',
+              controller: passwordController,
+              isObscureText: true,
+              keyboardType: TextInputType.visiblePassword,
+              prefixIcon: const Icon(
+                Icons.lock_outline,
+                color: AppColor.primaryBlue,
+              ),
+              suffixIcon: const Icon(
+                Icons.visibility_off_outlined,
+                color: AppColor.secondaryGrey,
+              ), // Placeholder for visibility toggle logic
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'يرجى إدخال كلمة المرور';
+                }
+                if (value.length < 6) {
+                  return 'كلمة المرور يجب أن تكون 6 أحرف على الأقل';
+                }
+                return null;
+              },
+            ),
             SizedBox(height: 40.h),
 
-            // Login Button
+            // Sign Up Button
             CustomButton(
-              text: 'تسجيل الدخول',
+              text: 'إنشاء حساب',
               onPressed: () {
                 if (formKey.currentState!.validate()) {
                   context.read<UserCubit>().saveUser(
                     name: nameController.text,
                     imagePath: AvatarPicker.selectedImagePath,
+                    email: emailController
+                        .text, // Saving email as well to UserCubit (need to ensure UserCubit supports it or update it)
                   );
                   Navigator.pushReplacementNamed(context, Routes.layout);
                 }
@@ -90,12 +139,12 @@ class _LogInViewState extends State<LogInView> {
             ),
             SizedBox(height: 24.h),
 
-            // Sign Up Link
+            // Login Link
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'ليس لديك حساب؟',
+                  'لديك حساب بالفعل؟',
                   style: AppTextStyle.setelMessiriSecondaryBlack(
                     fontSize: 14,
                     fontWeight: FontWeight.normal,
@@ -103,10 +152,10 @@ class _LogInViewState extends State<LogInView> {
                 ),
                 TextButton(
                   onPressed: () {
-                    Navigator.pushNamed(context, Routes.signUp);
+                    Navigator.pop(context); // Go back to login
                   },
                   child: Text(
-                    'إنشاء حساب',
+                    'تسجيل الدخول',
                     style: AppTextStyle.setelMessiriDeepPurple(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,

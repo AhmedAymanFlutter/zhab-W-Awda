@@ -11,6 +11,8 @@ import 'package:flutter_application_1/featuer/home/view/package/data/repo/packag
 import 'package:flutter_application_1/featuer/home/view/package/manager/packages_cubit.dart';
 import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
+import 'package:flutter_application_1/featuer/countries/data/repo/countries_repository.dart';
+import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -48,6 +50,10 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) =>
                   HotelsCubit(HotelsRepository())..fetchHotels(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  CountriesCubit(CountriesRepository())..fetchCountries(),
             ),
           ],
           child: MaterialApp(

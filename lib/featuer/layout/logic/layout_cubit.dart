@@ -23,7 +23,6 @@ class LayoutCubit extends Cubit<LayoutState> {
 
   void changeBottomNav(int index) {
     currentIndex = index;
-    // هنا بنعمل emit عشان الـ UI يتحدث
     emit(LayoutChangeBottomNavState());
   }
 }

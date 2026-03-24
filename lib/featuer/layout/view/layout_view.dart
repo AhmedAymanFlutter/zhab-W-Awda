@@ -1,4 +1,4 @@
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:flutter_application_1/core/widgets/custom_curved_nav_bar.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/layout/view/widgets/floatingActionButton_widget.dart'
@@ -44,15 +44,17 @@ class LayoutView extends StatelessWidget {
             drawer: const CustomDrawer(),
 
             body: cubit.screens[cubit.currentIndex],
-            floatingActionButton: FloatingActionButtonWidget(),
+            floatingActionButton: Padding(
+              padding: EdgeInsets.only(bottom: 50.h),
+              child: const FloatingActionButtonWidget(),
+            ),
             bottomNavigationBar: SafeArea(
-              child: CurvedNavigationBar(
+              child: CustomCurvedNavigationBar(
                 backgroundColor: Colors.transparent,
                 color: AppColor.primaryBlue,
-                buttonBackgroundColor: Colors.white,
+                buttonBackgroundColor: AppColor.primaryBlue,
                 height: 75.h,
                 animationDuration: const Duration(milliseconds: 300),
-                animationCurve: Curves.easeInOut,
                 index: cubit.currentIndex,
                 onTap: (index) {
                   cubit.changeBottomNav(index);
@@ -63,7 +65,7 @@ class LayoutView extends StatelessWidget {
                           'assets/icon/home-2.svg',
                           width: 30.w,
                           height: 30.h,
-                          color: AppColor.primaryBlue,
+                          color: Colors.white,
                           fit: BoxFit.scaleDown,
                         )
                       : Padding(
@@ -95,7 +97,7 @@ class LayoutView extends StatelessWidget {
                           'assets/icon/Packages.svg',
                           width: 30.w,
                           height: 30.h,
-                          color: AppColor.primaryBlue,
+                          color: Colors.white,
                           fit: BoxFit.scaleDown,
                         )
                       : Padding(
@@ -127,7 +129,7 @@ class LayoutView extends StatelessWidget {
                           'assets/icon/hotel_filled.svg',
                           width: 30.w,
                           height: 30.h,
-                          color: AppColor.primaryBlue,
+                          color: Colors.white,
                           fit: BoxFit.scaleDown,
                         )
                       : Padding(
@@ -159,7 +161,7 @@ class LayoutView extends StatelessWidget {
                           'assets/icon/bag.svg',
                           width: 30.w,
                           height: 30.h,
-                          color: AppColor.primaryBlue,
+                          color: Colors.white,
                           fit: BoxFit.scaleDown,
                         )
                       : Padding(

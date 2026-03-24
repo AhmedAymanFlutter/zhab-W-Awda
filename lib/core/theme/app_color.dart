@@ -20,4 +20,6 @@ class AppColor {
   // --- Accents (Kept from original if needed) ---
   static const Color lightPurple = Color(0xff4C4DDC);
   static const Color lightBlue = Color(0xff00AEEF);
+  static const Color offWhite = Color(0xffF4F4F4);
+  static const Color mainColor = Color(0xff00AEEF);
 }
