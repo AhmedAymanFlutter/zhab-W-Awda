@@ -43,65 +43,91 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: PageView.builder(
-                controller: _pageController,
-                onPageChanged: _onPageChanged,
-                itemCount: onboardingPages.length,
-                itemBuilder: (_, index) =>
-                    OnboardingPageWidget(page: onboardingPages[index]),
-              ),
-            ),
-
-            // Indicators
-            SmoothPageIndicator(
-              controller: _pageController,
-              count: onboardingPages.length,
-              effect: const ExpandingDotsEffect(
-                activeDotColor: AppColor.primaryBlue,
-                dotColor: Color(0xFFD9D9D9),
-                dotHeight: 8,
-                dotWidth: 8,
-                expansionFactor: 3,
-                spacing: 6,
-              ),
-            ),
-
-            const SizedBox(height: 48),
-
-            // Bottom Controls
-            Padding(
-              padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  // زر تخطي
-                  if (_currentPage < onboardingPages.length - 1)
-                    TextButton(
-                      onPressed: _navigateToNext,
-                      child: Text(
-                        'تخطي',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w600,
-                          color: AppColor.primaryBlue,
-                          fontFamily: 'elMessiri',
-                          decoration: TextDecoration.underline,
-                        ),
-                      ),
-                    )
-                  else
-                    const SizedBox(width: 48),
-                  CircularNextButton(progress: progressValue, onTap: _nextPage),
+      body: Stack(
+        children: [
+          // Background Image
+          Image.asset(
+            'assets/photo/onboarding.png',
+            height: double.infinity,
+            width: double.infinity,
+            fit: BoxFit.cover,
+          ),
+          // Gradient Overlay for readability (optional but recommended for light backgrounds)
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+                colors: [
+                  Colors.black.withOpacity(0.1),
+                  Colors.black.withOpacity(0.4),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          SafeArea(
+            child: Column(
+              children: [
+                Expanded(
+                  child: PageView.builder(
+                    controller: _pageController,
+                    onPageChanged: _onPageChanged,
+                    itemCount: onboardingPages.length,
+                    itemBuilder: (_, index) =>
+                        OnboardingPageWidget(page: onboardingPages[index]),
+                  ),
+                ),
+
+                // Indicators
+                SmoothPageIndicator(
+                  controller: _pageController,
+                  count: onboardingPages.length,
+                  effect: const ExpandingDotsEffect(
+                    activeDotColor: AppColor.primaryBlue,
+                    dotColor: Color(0xFFD9D9D9),
+                    dotHeight: 8,
+                    dotWidth: 8,
+                    expansionFactor: 3,
+                    spacing: 6,
+                  ),
+                ),
+
+                const SizedBox(height: 48),
+
+                // Bottom Controls
+                Padding(
+                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      // زر تخطي
+                      if (_currentPage < onboardingPages.length - 1)
+                        TextButton(
+                          onPressed: _navigateToNext,
+                          child: Text(
+                            'تخطي',
+                            style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              color: Colors.white,
+                              fontFamily: 'elMessiri',
+                              decoration: TextDecoration.underline,
+                            ),
+                          ),
+                        )
+                      else
+                        const SizedBox(width: 48),
+                      CircularNextButton(
+                        progress: progressValue,
+                        onTap: _nextPage,
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -45,10 +45,6 @@ class _SplashscreenState extends State<Splashscreen>
     if (!mounted) return;
 
     final userCubit = context.read<UserCubit>();
-    // Ensure data is loaded (it's called in main.dart but let's be safe or just check current state if it's sync enough after delay)
-    // Since loadUser is async in main, by 3 seconds it should be done.
-    // We can also check state directly.
-
     if (userCubit.state.name.isNotEmpty) {
       Navigator.pushReplacementNamed(context, Routes.layout);
     } else {

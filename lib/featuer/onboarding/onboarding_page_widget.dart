@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
@@ -17,20 +16,13 @@ class OnboardingPageWidget extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const Spacer(flex: 3),
-          Image.asset(
-            page.illustrationPath,
-            height: 280.h,
-            fit: BoxFit.contain,
-            color: AppColor.primaryBlue,
-          ),
-          SizedBox(height: 48.h),
+          const Spacer(flex: 5), // Increased flex to push text down
           Text(
             page.title,
             textAlign: TextAlign.center,
-            style: AppTextStyle.setelMessiriBlack(
-              fontSize: 24.sp,
-              fontWeight: FontWeight.w600,
+            style: AppTextStyle.setelMessiriWhite(
+              fontSize: 28.sp, // Slightly larger
+              fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 16.h),
@@ -39,13 +31,13 @@ class OnboardingPageWidget extends StatelessWidget {
             child: Text(
               page.description,
               textAlign: TextAlign.center,
-              style: AppTextStyle.setelMessiriSecondlightGrey(
-                fontSize: 16.sp,
+              style: AppTextStyle.setelMessiriWhite(
+                fontSize: 18.sp,
                 fontWeight: FontWeight.w400,
-              ),
+              ).copyWith(color: Colors.white.withOpacity(0.9)),
             ),
           ),
-          const Spacer(flex: 2),
+          const Spacer(flex: 1),
         ],
       ),
     );

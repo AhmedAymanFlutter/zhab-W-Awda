@@ -5,7 +5,6 @@ import 'package:flutter_application_1/featuer/services/manager/services_cubit.da
 import 'package:flutter_application_1/featuer/services/manager/services_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
 import '../data/repo/services_repository.dart';
