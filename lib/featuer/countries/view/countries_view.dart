@@ -7,7 +7,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
 
-import 'widgets/country_card.dart';
+import 'widgets/modern_country_card_v2.dart';
 
 class CountriesView extends StatelessWidget {
   const CountriesView({super.key});
@@ -66,13 +66,12 @@ class CountriesView extends StatelessWidget {
                         physics: const BouncingScrollPhysics(),
                         itemCount: state.countries.length,
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12.w,
-                          mainAxisSpacing: 12.h,
-                          childAspectRatio: 0.9,
+                          crossAxisCount: 1,
+                          mainAxisSpacing: 16.h,
+                          childAspectRatio: 1.1,
                         ),
                         itemBuilder: (context, index) {
-                          return CountryCard(country: state.countries[index]);
+                          return ModernCountryCardV2(country: state.countries[index]);
                         },
                       );
                     }

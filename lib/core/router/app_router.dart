@@ -25,6 +25,7 @@ import 'package:flutter_application_1/featuer/seeAllPage/AllpackageView.dart';
 import 'package:flutter_application_1/featuer/services/view/service_details_view.dart';
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
+import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
 import '../../featuer/onboarding/SplashScreen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 
@@ -146,6 +147,9 @@ class AppRouter {
 
       case Routes.reviewsView:
         return RouterTransitions.buildFade(const ReviewsView());
+
+      case Routes.toursView:
+        return RouterTransitions.buildFade(const ToursView());
 
       default:
         return RouterTransitions.build(

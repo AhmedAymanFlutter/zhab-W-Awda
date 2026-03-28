@@ -4,6 +4,7 @@ import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../packages/packages_view.dart';
 import '../../home/view/home_view.dart';
+import '../../services/view/services_view.dart';
 import 'layout_state.dart';
 
 class LayoutCubit extends Cubit<LayoutState> {
@@ -19,9 +20,7 @@ class LayoutCubit extends Cubit<LayoutState> {
     const ToursView(),
     const BookFlightView(), // Airplane tab
     const PackageTypesView(),
-    const Scaffold(
-      body: Center(child: Text('المزيد')),
-    ), // Placeholder for "More"
+    const ServicesView(), // More screen showing all services
   ];
 
   void changeBottomNav(int index) {

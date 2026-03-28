@@ -13,6 +13,15 @@ import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/data/repo/countries_repository.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
+import 'package:flutter_application_1/featuer/services/data/repo/services_repository.dart';
+import 'package:flutter_application_1/featuer/services/manager/services_cubit.dart';
+import 'package:flutter_application_1/featuer/Cities/data/repo/cities_repo.dart';
+import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
+import 'package:flutter_application_1/featuer/reviews/data/datasources/reviews_datasource.dart';
+import 'package:flutter_application_1/featuer/reviews/data/repositories/review_repository_impl.dart';
+import 'package:flutter_application_1/featuer/reviews/presentation/manager/reviews_cubit.dart';
+import 'package:flutter_application_1/featuer/tours/data/repo/tours_repository.dart';
+import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -22,9 +31,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final AppRouter appRouter;
-
   const MyApp({super.key, required this.appRouter});
-
   @override
   Widget build(BuildContext context) {
     return ScreenUtilInit(
@@ -54,6 +61,23 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) =>
                   CountriesCubit(CountriesRepository())..fetchCountries(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  ServicesCubit(ServicesRepository())..fetchServices(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  ToursCubit(ToursRepository())..fetchTours(),
+            ),
+            BlocProvider(
+              create: (context) =>
+                  CitiesCubit(CitiesRepository())..fetchCities(),
+            ),
+            BlocProvider(
+              create: (context) => ReviewsCubit(
+                ReviewsRepositoryImpl(LocalReviewsDataSource()),
+              )..fetchReviews(),
             ),
           ],
           child: MaterialApp(

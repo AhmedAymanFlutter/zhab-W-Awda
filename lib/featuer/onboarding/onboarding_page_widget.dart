@@ -12,32 +12,30 @@ class OnboardingPageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      padding: EdgeInsets.fromLTRB(32.w, 40.h, 32.w, 60.h),
       child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.end,
         children: [
-          const Spacer(flex: 5), // Increased flex to push text down
           Text(
             page.title,
             textAlign: TextAlign.center,
             style: AppTextStyle.setelMessiriWhite(
-              fontSize: 28.sp, // Slightly larger
+              fontSize: 30,
               fontWeight: FontWeight.bold,
             ),
           ),
           SizedBox(height: 16.h),
-          Container(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Text(
-              page.description,
-              textAlign: TextAlign.center,
-              style: AppTextStyle.setelMessiriWhite(
-                fontSize: 18.sp,
-                fontWeight: FontWeight.w400,
-              ).copyWith(color: Colors.white.withOpacity(0.9)),
+          Text(
+            page.description,
+            textAlign: TextAlign.center,
+            style: AppTextStyle.setelMessiriWhite(
+              fontSize: 16,
+              fontWeight: FontWeight.w400,
+            ).copyWith(
+              color: Colors.white.withOpacity(0.85),
+              height: 1.6,
             ),
           ),
-          const Spacer(flex: 1),
         ],
       ),
     );

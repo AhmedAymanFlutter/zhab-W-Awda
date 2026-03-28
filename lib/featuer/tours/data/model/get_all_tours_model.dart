@@ -50,6 +50,7 @@ class TourItem {
   String? updatedBy;
   String? id;
   String? alt;
+  String? price;
 
   TourItem({
     this.seo,
@@ -72,6 +73,7 @@ class TourItem {
     this.updatedBy,
     this.id,
     this.alt,
+    this.price,
   });
 
   TourItem.fromJson(Map<String, dynamic> json) {
@@ -80,6 +82,7 @@ class TourItem {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
+    price = json['price']?.toString();
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     country = json['country'] != null
         ? Country.fromJson(json['country'])

@@ -59,22 +59,26 @@ class _CircularNextButtonState extends State<CircularNextButton>
     return GestureDetector(
       onTap: _handleTap,
       child: CircularPercentIndicator(
-        radius: 40.w,
-        lineWidth: 3,
+        radius: 46.w,
+        lineWidth: 4,
         percent: widget.progress,
-        progressColor: AppColor.primaryBlue,
-        backgroundColor: AppColor.primaryWhite,
+        progressColor: Colors.white,
+        backgroundColor: Colors.white.withOpacity(0.2),
         circularStrokeCap: CircularStrokeCap.round,
         center: Container(
-          width: 65.w,
-          height: 65.h,
-          decoration: BoxDecoration(
+          width: 75.w,
+          height: 75.h,
+          decoration: const BoxDecoration(
             shape: BoxShape.circle,
-            color: AppColor.primaryBlue,
+            color: Colors.white,
           ),
           child: RotationTransition(
             turns: _rotationAnimation,
-            child: Icon(Icons.arrow_forward_ios, color: Colors.white, size: 24),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              color: AppColor.primaryBlue3,
+              size: 24.sp,
+            ),
           ),
         ),
       ),

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/featuer/onboarding/circal_btn_widgets.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../core/theme/app_color.dart';
+import '../../core/theme/app_text_style.dart';
 import 'onboarding_page_widget.dart';
 import 'onboarding_data.dart';
 
@@ -52,7 +54,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
             width: double.infinity,
             fit: BoxFit.cover,
           ),
-          // Gradient Overlay for readability (optional but recommended for light backgrounds)
+          // Gradient Overlay for readability
           Container(
             decoration: BoxDecoration(
               gradient: LinearGradient(
@@ -60,8 +62,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 end: Alignment.bottomCenter,
                 colors: [
                   Colors.black.withOpacity(0.1),
-                  Colors.black.withOpacity(0.4),
+                  Colors.black.withOpacity(0.5),
+                  AppColor.primaryBlue3.withOpacity(0.9), // Deep Navy for contrast
                 ],
+                stops: const [0.0, 0.4, 1.0],
               ),
             ),
           ),
@@ -82,21 +86,21 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                 SmoothPageIndicator(
                   controller: _pageController,
                   count: onboardingPages.length,
-                  effect: const ExpandingDotsEffect(
-                    activeDotColor: AppColor.primaryBlue,
-                    dotColor: Color(0xFFD9D9D9),
-                    dotHeight: 8,
-                    dotWidth: 8,
-                    expansionFactor: 3,
-                    spacing: 6,
+                  effect: ExpandingDotsEffect(
+                    activeDotColor: Colors.white,
+                    dotColor: Colors.white.withOpacity(0.3),
+                    dotHeight: 8.h,
+                    dotWidth: 8.w,
+                    expansionFactor: 4,
+                    spacing: 8.w,
                   ),
                 ),
 
-                const SizedBox(height: 48),
+                SizedBox(height: 40.h),
 
                 // Bottom Controls
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(24, 0, 24, 32),
+                  padding: EdgeInsets.fromLTRB(32.w, 0, 32.w, 32.h),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
@@ -106,12 +110,12 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                           onPressed: _navigateToNext,
                           child: Text(
                             'تخطي',
-                            style: TextStyle(
-                              fontSize: 18,
+                            style: AppTextStyle.setelMessiriWhite(
+                              fontSize: 18.sp,
                               fontWeight: FontWeight.w600,
-                              color: Colors.white,
-                              fontFamily: 'elMessiri',
+                            ).copyWith(
                               decoration: TextDecoration.underline,
+                              decorationColor: Colors.white,
                             ),
                           ),
                         )

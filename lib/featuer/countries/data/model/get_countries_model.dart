@@ -41,6 +41,7 @@ class CountryItem {
   List<String>? favTime;
   List<String>? favMonth;
   bool? isActive;
+  bool? isTrending;
   List<String>? images;
   String? slug;
   String? createdBy;
@@ -63,6 +64,7 @@ class CountryItem {
     this.favTime,
     this.favMonth,
     this.isActive,
+    this.isTrending,
     this.images,
     this.slug,
     this.createdBy,
@@ -83,6 +85,7 @@ class CountryItem {
     language = json['language'];
     description = json['description'];
     descText = json['descText'];
+    isTrending = json['isTrending'] ?? false;
 
     // Safety check for Lists
     favTime = json['favTime'] != null ? List<String>.from(json['favTime']) : [];

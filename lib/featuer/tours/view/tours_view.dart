@@ -8,7 +8,7 @@ import '../data/model/get_all_tours_model.dart';
 import '../data/repo/tours_repository.dart';
 import '../manager/tours_cubit.dart';
 import '../manager/tours_state.dart';
-import 'widgets/modern_tour_card.dart';
+import 'widgets/tour_card_v2.dart';
 
 class ToursView extends StatelessWidget {
   const ToursView({super.key});
@@ -54,13 +54,13 @@ class ToursView extends StatelessWidget {
                             itemCount: 4,
                             gridDelegate:
                                 SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
+                                  crossAxisCount: 1,
                                   crossAxisSpacing: 12.w,
                                   mainAxisSpacing: 12.h,
-                                  childAspectRatio: 0.8,
+                                  childAspectRatio: 0.82,
                                 ),
                             itemBuilder: (context, index) {
-                              return ModernTourCard(tour: TourItem());
+                              return TourCardV2(tour: TourItem());
                             },
                           ),
                         );
@@ -77,13 +77,13 @@ class ToursView extends StatelessWidget {
                           itemCount: state.tours.length,
                           gridDelegate:
                               SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
+                                crossAxisCount: 1,
                                 crossAxisSpacing: 12.w,
                                 mainAxisSpacing: 12.h,
-                                childAspectRatio: 0.8,
+                                childAspectRatio: 0.82,
                               ),
                           itemBuilder: (context, index) {
-                            return ModernTourCard(tour: state.tours[index]);
+                            return TourCardV2(tour: state.tours[index]);
                           },
                         );
                       }

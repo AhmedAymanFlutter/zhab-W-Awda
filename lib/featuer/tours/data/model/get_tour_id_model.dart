@@ -38,6 +38,7 @@ class TourIdData {
   int? iV;
   String? updatedBy;
   String? id;
+  String? price;
 
   TourIdData({
     this.seo,
@@ -60,6 +61,7 @@ class TourIdData {
     this.iV,
     this.updatedBy,
     this.id,
+    this.price,
   });
 
   TourIdData.fromJson(Map<String, dynamic> json) {
@@ -68,6 +70,7 @@ class TourIdData {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
+    price = json['price']?.toString();
 
     // Handle dynamic types just in case (sometimes API returns Object, sometimes String)
     city = json['city'] is Map ? json['city']['name'] : json['city'];

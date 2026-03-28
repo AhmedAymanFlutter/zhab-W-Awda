@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:motion_tab_bar_v2/motion-tab-bar.dart';
 import 'package:motion_tab_bar_v2/motion-tab-controller.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -50,20 +51,6 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
 
           return Scaffold(
             backgroundColor: AppColor.primaryWhite,
-            appBar: AppBar(
-              backgroundColor: AppColor.primaryBlue,
-              elevation: 0,
-              centerTitle: true,
-              title: Text(
-                _getAppBarTitle(cubit.currentIndex),
-                style: AppTextStyle.setelMessiriTextStyle(
-                  fontSize: 18,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white,
-                ),
-              ),
-              iconTheme: const IconThemeData(color: Colors.white),
-            ),
             drawer: const CustomDrawer(),
             body: cubit.screens[cubit.currentIndex],
             bottomNavigationBar: MotionTabBar(
@@ -77,22 +64,28 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
                 "المزيد",
               ],
               iconWidgets: [
-                _buildSvgIcon('assets/icon/home-09.svg', 0, cubit.currentIndex),
-                _buildSvgIcon('assets/icon/maps.svg', 1, cubit.currentIndex),
                 _buildSvgIcon(
-                  'assets/icon/airplane.svg',
-                  2,
-                  cubit.currentIndex,
+                  asset: 'assets/icon/home_unslect.svg',
+                  unselectedAsset: 'assets/icon/home_unslect.svg',
+                  index: 0,
                 ),
                 _buildSvgIcon(
-                  'assets/icon/package-open.svg',
-                  3,
-                  cubit.currentIndex,
+                  asset: 'assets/icon/maps.svg',
+                  unselectedAsset: 'assets/icon/maps_unselect.svg',
+                  index: 1,
                 ),
                 _buildSvgIcon(
-                  'assets/icon/services-svgrepo-com.svg',
-                  4,
-                  cubit.currentIndex,
+                  asset: 'assets/icon/airplane.svg',
+                  index: 2,
+                ),
+                _buildSvgIcon(
+                  asset: 'assets/icon/package-open.svg',
+                  unselectedAsset: 'assets/icon/package_unselected.svg',
+                  index: 3,
+                ),
+                _buildSvgIcon(
+                  asset: 'assets/icon/services-svgrepo-com.svg',
+                  index: 4,
                 ),
               ],
               tabSize: 55,
@@ -104,14 +97,9 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
               ),
               tabIconColor: AppColor.lightGrey,
               tabIconSelectedColor: Colors.white,
-              tabSelectedColor: AppColor.primaryBlue,
+              tabSelectedColor: AppColor.primaryBlue3,
               onTabItemSelected: (index) {
-                if (index == 4) {
-                  Scaffold.of(context).openDrawer();
-                  _motionTabBarController!.index = cubit.currentIndex;
-                } else {
-                  cubit.changeBottomNav(index);
-                }
+                cubit.changeBottomNav(index);
               },
             ),
           );
@@ -120,34 +108,25 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
     );
   }
 
-  Widget _buildSvgIcon(String asset, int index, int currentIndex) {
-    final isSelected = index == currentIndex;
-    return SvgPicture.asset(
-      asset,
-      width: 28,
-      height: 28,
-      colorFilter: ColorFilter.mode(
-        isSelected ? Colors.white : AppColor.lightGrey,
-        BlendMode.srcIn,
-      ),
+  Widget _buildSvgIcon({
+    required String asset,
+    String? unselectedAsset,
+    required int index,
+  }) {
+    return ListenableBuilder(
+      listenable: _motionTabBarController!,
+      builder: (context, child) {
+        final isSelected = _motionTabBarController!.index == index;
+        return SvgPicture.asset(
+          isSelected ? asset : (unselectedAsset ?? asset),
+          width: 32.h,
+          height: 32.h,
+          colorFilter: ColorFilter.mode(
+            isSelected ? Colors.white : AppColor.lightGrey,
+            BlendMode.srcIn,
+          ),
+        );
+      },
     );
-  }
-
-  // دالة مساعدة لتغيير عنوان الصفحة حسب التبويب المختار
-  String _getAppBarTitle(int index) {
-    switch (index) {
-      case 0:
-        return 'الرئيسية';
-      case 1:
-        return 'جولات سياحية';
-      case 2:
-        return 'حجز طيران';
-      case 3:
-        return 'باقات السفر';
-      case 4:
-        return 'المزيد';
-      default:
-        return 'ذهاب وعودة';
-    }
   }
 }
