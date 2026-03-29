@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
+import '../../../../core/widgets/main_app_header.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -32,38 +33,7 @@ class HomeHeader extends StatelessWidget {
                 top: MediaQuery.of(context).padding.top + 10.h,
                 left: 20.w,
                 right: 20.w,
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 12.w,
-                    vertical: 4.h,
-                  ),
-                  decoration: BoxDecoration(
-                    color: AppColor.primaryBlue3,
-                    borderRadius: BorderRadius.circular(30.r),
-                  ),
-                  child: Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          Icons.menu,
-                          color: Colors.white,
-                          size: 24.sp,
-                        ),
-                        onPressed: () {
-                          Scaffold.of(context).openDrawer();
-                        },
-                      ),
-                      const Spacer(),
-                      Text(
-                        "ذهاب وعودة",
-                        style: AppTextStyle.setelMessiriWhite(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                child: MainAppHeader(title: "ذهاب وعودة"),
               ),
               // Center Content
               Positioned(

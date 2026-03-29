@@ -12,3 +12,5 @@ class BookFlightError extends BookFlightState {
   final String message;
   BookFlightError(this.message);
 }
+
+class BookFlightTripTypeChanged extends BookFlightState {}

@@ -5,8 +5,8 @@ import 'package:flutter_application_1/featuer/packageType/manager/package_types_
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
+import 'package:flutter_application_1/featuer/packageType/view/widgets/modern_package_type_card.dart';
 import '../../../../core/widgets/cusstom_search_bar.dart';
-import 'widgets/package_type_card.dart';
 
 class PackageTypesView extends StatelessWidget {
   const PackageTypesView({super.key});
@@ -43,15 +43,17 @@ class PackageTypesView extends StatelessWidget {
                       return GridView.builder(
                         physics: const BouncingScrollPhysics(),
                         itemCount: state.types.length,
+                        padding: EdgeInsets.only(bottom: 20.h),
                         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
                           crossAxisSpacing: 12.w,
                           mainAxisSpacing: 12.h,
-                          childAspectRatio: 1.0, // Square shape works well here
+                          childAspectRatio: 284 / 343,
                         ),
                         itemBuilder: (context, index) {
-                          return PackageTypeCard(
+                          return ModernPackageTypeCard(
                             packageType: state.types[index],
+                            variant: PackageTypeCardVariant.tall,
                           );
                         },
                       );

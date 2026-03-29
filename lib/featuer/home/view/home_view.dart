@@ -13,12 +13,10 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_text_style.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
 import 'package:flutter_application_1/featuer/hotels/manager/hotels_state.dart';
-
 import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/manager/countries_state.dart';
 import 'package:flutter_application_1/featuer/countries/data/model/get_countries_model.dart';
 import 'package:flutter_application_1/featuer/countries/view/widgets/modern_country_card_v2.dart';
-
 import 'package:flutter_application_1/featuer/home/view/widgets/home_header.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_services_section.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_cities_section.dart';

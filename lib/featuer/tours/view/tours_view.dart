@@ -83,7 +83,10 @@ class ToursView extends StatelessWidget {
                                 childAspectRatio: 0.82,
                               ),
                           itemBuilder: (context, index) {
-                            return TourCardV2(tour: state.tours[index]);
+                            return Padding(
+                              padding: EdgeInsets.all(16.h),
+                              child: TourCardV2(tour: state.tours[index]),
+                            );
                           },
                         );
                       }

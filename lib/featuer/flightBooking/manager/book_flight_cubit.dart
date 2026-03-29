@@ -27,10 +27,17 @@ class BookFlightCubit extends Cubit<BookFlightState> {
 
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  bool isRoundTrip = true;
+
+  void changeTripType(bool roundTrip) {
+    isRoundTrip = roundTrip;
+    emit(BookFlightTripTypeChanged());
+  }
+
   Future<void> submitBooking() async {
     if (!formKey.currentState!.validate()) return;
-    if (departureDate == null || returnDate == null) {
-      emit(BookFlightError("يرجى تحديد تواريخ السفر والعودة"));
+    if (departureDate == null || (isRoundTrip && returnDate == null)) {
+      emit(BookFlightError("يرجى تحديد تواريخ السفر" + (isRoundTrip ? " والعودة" : "")));
       return;
     }
 
@@ -45,7 +52,7 @@ class BookFlightCubit extends Cubit<BookFlightState> {
         toCity: toCityController.text,
         // Formatting to ISO 8601 string as requested (e.g., 2025-12-19T15:51)
         departureDate: departureDate!.toIso8601String(),
-        returnDate: returnDate!.toIso8601String(),
+        returnDate: isRoundTrip && returnDate != null ? returnDate!.toIso8601String() : departureDate!.toIso8601String(), // Or another logic for one way flight
         passengers: int.parse(passengersController.text),
       );
 
