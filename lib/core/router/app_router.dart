@@ -28,6 +28,7 @@ import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart'
 import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
 import '../../featuer/onboarding/SplashScreen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
+import 'package:flutter_application_1/featuer/more/presentation/view/more_view.dart';
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -150,6 +151,9 @@ class AppRouter {
 
       case Routes.toursView:
         return RouterTransitions.buildFade(const ToursView());
+
+      case Routes.moreView:
+        return RouterTransitions.buildFade(const MoreView());
 
       default:
         return RouterTransitions.build(
