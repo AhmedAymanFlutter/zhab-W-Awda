@@ -100,7 +100,8 @@ class Branch {
   String? name;
   int? daysCount;
   int? nightsCount;
-  int? price; // Keeping as int based on response example
+  dynamic price; // Changed from int? to handle Map/Number
+  String? originPrice;
   List<String>? includes;
   List<String>? excludes;
   List<Day>? days;
@@ -114,25 +115,41 @@ class Branch {
     this.includes,
     this.excludes,
     this.days,
+    this.originPrice,
   });
 
-  Branch.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    daysCount = (json['daysCount'] as num?)?.toInt();
-    nightsCount = (json['nightsCount'] as num?)?.toInt();
-    price = (json['price'] as num?)?.toInt();
-    if (json['includes'] != null) {
-      includes = List<String>.from(json['includes']);
-    }
-    if (json['excludes'] != null) {
-      excludes = List<String>.from(json['excludes']);
-    }
-    if (json['days'] != null) {
-      days = <Day>[];
-      json['days'].forEach((v) {
-        days!.add(Day.fromJson(v));
-      });
+  Branch.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      daysCount = (json['daysCount'] as num?)?.toInt();
+      nightsCount = (json['nightsCount'] as num?)?.toInt();
+      // Handle complex price object {amount: 100, currency: AED}
+      if (json['price'] != null) {
+        if (json['price'] is Map) {
+          final amt = json['price']['amount'];
+          final curr = json['price']['currency'];
+          price = amt?.toString();
+          originPrice = "$amt $curr";
+        } else {
+          price = json['price'].toString();
+          originPrice = price;
+        }
+      }
+      if (json['includes'] != null) {
+        includes = List<String>.from(json['includes']);
+      }
+      if (json['excludes'] != null) {
+        excludes = List<String>.from(json['excludes']);
+      }
+      if (json['days'] != null) {
+        days = <Day>[];
+        json['days'].forEach((v) {
+          days!.add(Day.fromJson(v));
+        });
+      }
+    } else if (json is String) {
+      sId = json;
     }
   }
 }
@@ -144,10 +161,12 @@ class Day {
 
   Day({this.dayNumber, this.type, this.tour});
 
-  Day.fromJson(Map<String, dynamic> json) {
-    dayNumber = (json['dayNumber'] as num?)?.toInt();
-    type = json['type'];
-    tour = json['tour'] != null ? Tour.fromJson(json['tour']) : null;
+  Day.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      dayNumber = (json['dayNumber'] as num?)?.toInt();
+      type = json['type'];
+      tour = json['tour'] != null ? Tour.fromJson(json['tour']) : null;
+    }
   }
 }
 
@@ -174,28 +193,32 @@ class Tour {
     this.images,
   });
 
-  Tour.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    title = json['title'];
-    description = json['description'];
-    descText = json['descText'];
-    if (json['includes'] != null) {
-      includes = List<String>.from(json['includes']);
-    }
-    if (json['excludes'] != null) {
-      excludes = List<String>.from(json['excludes']);
-    }
-    header = json['header'] != null
-        ? TourHeader.fromJson(json['header'])
-        : null;
-    if (json['paths'] != null) {
-      paths = <TourPath>[];
-      json['paths'].forEach((v) {
-        paths!.add(TourPath.fromJson(v));
-      });
-    }
-    if (json['images'] != null) {
-      images = List<String>.from(json['images']);
+  Tour.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      title = json['title'];
+      description = json['description'];
+      descText = json['descText'];
+      if (json['includes'] != null) {
+        includes = List<String>.from(json['includes']);
+      }
+      if (json['excludes'] != null) {
+        excludes = List<String>.from(json['excludes']);
+      }
+      header = json['header'] != null
+          ? TourHeader.fromJson(json['header'])
+          : null;
+      if (json['paths'] != null) {
+        paths = <TourPath>[];
+        json['paths'].forEach((v) {
+          paths!.add(TourPath.fromJson(v));
+        });
+      }
+      if (json['images'] != null) {
+        images = List<String>.from(json['images']);
+      }
+    } else if (json is String) {
+      sId = json;
     }
   }
 }
@@ -207,10 +230,12 @@ class TourHeader {
 
   TourHeader({this.days, this.people, this.type});
 
-  TourHeader.fromJson(Map<String, dynamic> json) {
-    days = json['days'];
-    people = json['people'];
-    type = json['type'];
+  TourHeader.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      days = json['days'];
+      people = json['people'];
+      type = json['type'];
+    }
   }
 }
 
@@ -222,11 +247,13 @@ class TourPath {
 
   TourPath({this.title, this.duration, this.description, this.descText});
 
-  TourPath.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    duration = json['duration'];
-    description = json['description'];
-    descText = json['descText'];
+  TourPath.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      title = json['title'];
+      duration = json['duration'];
+      description = json['description'];
+      descText = json['descText'];
+    }
   }
 }
 
@@ -245,12 +272,16 @@ class RelatedPackage {
     this.ratingsAverage,
   });
 
-  RelatedPackage.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    descText = json['descText'];
-    slug = json['slug'];
-    ratingsAverage = (json['ratingsAverage'] as num?)?.toInt();
+  RelatedPackage.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      descText = json['descText'];
+      slug = json['slug'];
+      ratingsAverage = (json['ratingsAverage'] as num?)?.toInt();
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -260,9 +291,13 @@ class Country {
 
   Country({this.sId, this.name});
 
-  Country.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  Country.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -272,9 +307,13 @@ class City {
 
   City({this.sId, this.name});
 
-  City.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  City.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -284,8 +323,12 @@ class PackageType {
 
   PackageType({this.sId, this.name});
 
-  PackageType.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  PackageType.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }

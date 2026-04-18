@@ -31,7 +31,7 @@ class CountriesRepository {
   Future<CountryDetailsData> getCountryBySlug(String slug) async {
     try {
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.countries}/$slug',
+        endPoint: '${EndPoints.countries}/slug/$slug',
         isProtected: false,
       );
 

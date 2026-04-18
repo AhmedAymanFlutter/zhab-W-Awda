@@ -33,7 +33,7 @@ class ServicesRepository {
       // Endpoint: /services/admin/:id
       // Use '${EndPoints.services}/$id' if public API
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.services}/admin/$id',
+        endPoint: '${EndPoints.services}/$id',
         isProtected: false,
       );
 

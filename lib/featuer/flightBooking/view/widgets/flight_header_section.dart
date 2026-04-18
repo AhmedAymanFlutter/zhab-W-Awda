@@ -33,17 +33,13 @@ class FlightHeaderSection extends StatelessWidget {
         ),
         SizedBox(height: 30.h),
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.w),
-          child: Container(
+          padding: EdgeInsets.all(20.w),
+          child: Image.asset(
+            'assets/photo/flight_component.png',
             height: 160.h,
             width: double.infinity,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('assets/photo/flight_componant.png'),
-                fit: BoxFit.cover,
-                alignment: Alignment.topCenter,
-              ),
-            ),
+            fit: BoxFit.cover,
+            alignment: Alignment.topCenter,
           ),
         ),
       ],

@@ -73,7 +73,7 @@ class PackageContentView extends StatelessWidget {
                 ),
               ),
               Text(
-                "${branch.price} LE",
+                branch.originPrice ?? "${branch.price} LE",
                 style: TextStyle(
                   color: AppColor.primaryBlue,
                   fontSize: 18.sp,

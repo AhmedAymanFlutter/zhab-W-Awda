@@ -192,7 +192,7 @@ class OfferDetailsContent extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Text(
-                "${offer.price} ج.م",
+                offer.originPrice ?? "${offer.price} ج.م",
                 style: AppTextStyle.setelMessiriDeepPurple(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,
@@ -200,7 +200,7 @@ class OfferDetailsContent extends StatelessWidget {
               ),
               if (offer.oldPrice != null)
                 Text(
-                  "${offer.oldPrice} ج.م",
+                  offer.oldPrice!.contains('{') ? "0" : offer.oldPrice!, // Safety check
                   style: TextStyle(
                     fontSize: 14.sp,
                     decoration: TextDecoration.lineThrough,

@@ -33,6 +33,7 @@ class PackageItem {
   String? sId;
   String? name;
   String? price;
+  String? originPrice;
   String? rate;
   Header? header;
   PackageType? packageType;
@@ -77,13 +78,27 @@ class PackageItem {
     this.imageCover,
     this.updatedBy,
     this.city,
+    this.originPrice,
   });
 
   PackageItem.fromJson(Map<String, dynamic> json) {
     try {
       sId = json['_id'];
       name = json['name'];
-      price = json['price']?.toString();
+      
+      // Handle complex price object {amount: 100, currency: AED}
+      if (json['price'] != null) {
+        if (json['price'] is Map) {
+          final amt = json['price']['amount'];
+          final curr = json['price']['currency'];
+          price = amt?.toString();
+          originPrice = "$amt $curr";
+        } else {
+          price = json['price'].toString();
+          originPrice = price;
+        }
+      }
+
       rate = json['rate']?.toString();
       header = json['header'] != null ? Header.fromJson(json['header']) : null;
       packageType = json['packageType'] != null
@@ -170,9 +185,13 @@ class City {
 
   City({this.sId, this.name});
 
-  City.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  City.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -186,11 +205,13 @@ class Header {
 
   Header({this.dayNumber, this.nights, this.location, this.sId});
 
-  Header.fromJson(Map<String, dynamic> json) {
-    dayNumber = json['dayNumber']?.toString();
-    nights = json['nights']?.toString();
-    location = json['location'];
-    sId = json['_id'];
+  Header.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      dayNumber = json['dayNumber']?.toString();
+      nights = json['nights']?.toString();
+      location = json['location'];
+      sId = json['_id'];
+    }
   }
 }
 
@@ -199,10 +220,14 @@ class PackageType {
   String? name;
   String? slug;
 
-  PackageType.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    slug = json['slug'];
+  PackageType.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      slug = json['slug'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -212,11 +237,13 @@ class Itinerary {
   String? description;
   String? sId;
 
-  Itinerary.fromJson(Map<String, dynamic> json) {
-    day = json['day'];
-    title = json['title'];
-    description = json['description'];
-    sId = json['_id'];
+  Itinerary.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      day = json['day'];
+      title = json['title'];
+      description = json['description'];
+      sId = json['_id'];
+    }
   }
 }
 
@@ -226,10 +253,14 @@ class Country {
   String? slug;
   String? id;
 
-  Country.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    slug = json['slug'];
-    id = json['id'];
+  Country.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      slug = json['slug'];
+      id = json['id'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }

@@ -121,45 +121,45 @@ class TourCardV2 extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                       style: AppTextStyle.setelMessiriTextStyle(
-                        fontSize: 20,
+                        fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
                         color: Colors.white,
                       ),
                     ),
-                    SizedBox(height: 4.h),
+                    SizedBox(height: 6.h),
                     Text(
                       tour.descText ?? tour.description ?? "استكشف جمال الطبيعة والمعالم السياحية في هذه الجولة المميزة.",
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       textAlign: TextAlign.right,
                       style: AppTextStyle.setelMessiriTextStyle(
-                        fontSize: 12,
+                        fontSize: 11.sp,
                         fontWeight: FontWeight.normal,
-                        color: Colors.white.withOpacity(0.9),
-                      ).copyWith(height: 1.4),
+                        color: Colors.white.withOpacity(0.85),
+                      ).copyWith(height: 1.3),
                     ),
-                    SizedBox(height: 12.h),
-                    RichText(
-                      text: TextSpan(
-                        children: [
-                          TextSpan(
-                            text: tour.price ?? "3000",
+                    SizedBox(height: 10.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          tour.originPrice ?? tour.price ?? "0",
+                          style: AppTextStyle.setelMessiriTextStyle(
+                            fontSize: 22.sp,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white,
+                          ),
+                        ),
+                        if (tour.originPrice == null)
+                          Text(
+                            " ريال",
                             style: AppTextStyle.setelMessiriTextStyle(
-                              fontSize: 24,
+                              fontSize: 14.sp,
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                             ),
                           ),
-                          TextSpan(
-                            text: " ريال",
-                            style: AppTextStyle.setelMessiriTextStyle(
-                              fontSize: 14,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ],
-                      ),
+                      ],
                     ),
                   ],
                 ),

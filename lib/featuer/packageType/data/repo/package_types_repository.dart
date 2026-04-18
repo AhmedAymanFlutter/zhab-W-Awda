@@ -31,7 +31,7 @@ class PackageTypesRepository {
   ) async {
     try {
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.packageTypes}/$slug',
+        endPoint: '${EndPoints.packageTypes}/slug/$slug',
         isProtected: false,
       );
 

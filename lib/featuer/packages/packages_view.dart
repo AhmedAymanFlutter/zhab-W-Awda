@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/widgets/main_app_header.dart';
 import 'package:flutter_application_1/featuer/packageType/data/repo/package_types_repository.dart';
 import 'package:flutter_application_1/featuer/packageType/manager/package_types_cubit.dart';
 import 'package:flutter_application_1/featuer/packageType/manager/package_types_state.dart';
@@ -23,6 +24,10 @@ class PackageTypesView extends StatelessWidget {
           padding: EdgeInsets.symmetric(horizontal: 16.w),
           child: Column(
             children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: 16.h),
+                child: MainAppHeader(title: "ذهاب و عودة"),
+              ),
               SizedBox(height: 10.h),
               Expanded(
                 child: BlocBuilder<PackageTypesCubit, PackageTypesState>(

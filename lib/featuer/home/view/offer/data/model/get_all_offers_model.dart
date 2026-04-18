@@ -38,6 +38,7 @@ class OfferItem {
   String? name;
   String? description;
   String? price;
+  String? originPrice;
   String? oldPrice;
 
   OfferItem({
@@ -47,6 +48,7 @@ class OfferItem {
     this.name,
     this.description,
     this.price,
+    this.originPrice,
     this.oldPrice,
   });
 
@@ -56,7 +58,28 @@ class OfferItem {
     offer = json['offer'];
     name = json['name'];
     description = json['description'];
-    price = json['price']?.toString();
-    oldPrice = json['oldPrice']?.toString();
+    
+    // Handle complex price object {amount: 100, currency: AED}
+    if (json['price'] != null) {
+      if (json['price'] is Map) {
+        final amt = json['price']['amount'];
+        final curr = json['price']['currency'];
+        price = amt?.toString();
+        originPrice = "$amt $curr";
+      } else {
+        price = json['price'].toString();
+        originPrice = price;
+      }
+    }
+
+    if (json['oldPrice'] != null) {
+      if (json['oldPrice'] is Map) {
+        final amt = json['oldPrice']['amount'];
+        final curr = json['oldPrice']['currency'];
+        oldPrice = "$amt $curr";
+      } else {
+        oldPrice = json['oldPrice'].toString();
+      }
+    }
   }
 }

@@ -51,6 +51,7 @@ class TourItem {
   String? id;
   String? alt;
   String? price;
+  String? originPrice;
 
   TourItem({
     this.seo,
@@ -74,6 +75,7 @@ class TourItem {
     this.id,
     this.alt,
     this.price,
+    this.originPrice,
   });
 
   TourItem.fromJson(Map<String, dynamic> json) {
@@ -82,7 +84,20 @@ class TourItem {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
-    price = json['price']?.toString();
+    
+    // Handle complex price object {amount: 100, currency: AED}
+    if (json['price'] != null) {
+      if (json['price'] is Map) {
+        final amt = json['price']['amount'];
+        final curr = json['price']['currency'];
+        price = amt?.toString();
+        originPrice = "$amt $curr";
+      } else {
+        price = json['price'].toString();
+        originPrice = price;
+      }
+    }
+
     city = json['city'] != null ? City.fromJson(json['city']) : null;
     country = json['country'] != null
         ? Country.fromJson(json['country'])
@@ -130,19 +145,21 @@ class Seo {
   String? ogImage;
   String? ogDescription;
 
-  Seo.fromJson(Map<String, dynamic> json) {
-    changeFrequency = json['changeFrequency'];
-    noIndex = json['noIndex'];
-    noFollow = json['noFollow'];
-    noArchive = json['noArchive'];
-    noSnippet = json['noSnippet'];
-    metaTitle = json['metaTitle'];
-    keywords = json['keywords'];
-    slugUrl = json['slugUrl'];
-    metaDescription = json['metaDescription'];
-    ogTitle = json['ogTitle'];
-    ogImage = json['ogImage'];
-    ogDescription = json['ogDescription'];
+  Seo.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      changeFrequency = json['changeFrequency'];
+      noIndex = json['noIndex'];
+      noFollow = json['noFollow'];
+      noArchive = json['noArchive'];
+      noSnippet = json['noSnippet'];
+      metaTitle = json['metaTitle'];
+      keywords = json['keywords'];
+      slugUrl = json['slugUrl'];
+      metaDescription = json['metaDescription'];
+      ogTitle = json['ogTitle'];
+      ogImage = json['ogImage'];
+      ogDescription = json['ogDescription'];
+    }
   }
 }
 
@@ -150,9 +167,13 @@ class City {
   String? sId;
   String? name;
 
-  City.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  City.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -161,10 +182,14 @@ class Country {
   String? name;
   String? id;
 
-  Country.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    id = json['id'];
+  Country.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      id = json['id'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -174,11 +199,13 @@ class Header {
   String? type;
   String? sId;
 
-  Header.fromJson(Map<String, dynamic> json) {
-    days = json['days'];
-    people = json['people'];
-    type = json['type'];
-    sId = json['_id'];
+  Header.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      days = json['days'];
+      people = json['people'];
+      type = json['type'];
+      sId = json['_id'];
+    }
   }
 }
 
@@ -189,11 +216,13 @@ class Paths {
   String? descText;
   String? sId;
 
-  Paths.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    duration = json['duration'];
-    description = json['description'];
-    descText = json['descText'];
-    sId = json['_id'];
+  Paths.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      title = json['title'];
+      duration = json['duration'];
+      description = json['description'];
+      descText = json['descText'];
+      sId = json['_id'];
+    }
   }
 }

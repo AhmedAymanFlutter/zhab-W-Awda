@@ -164,10 +164,14 @@ class Country {
 
   Country({this.sId, this.name, this.id});
 
-  Country.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
-    id = json['id'];
+  Country.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+      id = json['id'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }
 
@@ -177,8 +181,12 @@ class City {
 
   City({this.sId, this.name});
 
-  City.fromJson(Map<String, dynamic> json) {
-    sId = json['_id'];
-    name = json['name'];
+  City.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      sId = json['_id'];
+      name = json['name'];
+    } else if (json is String) {
+      sId = json;
+    }
   }
 }

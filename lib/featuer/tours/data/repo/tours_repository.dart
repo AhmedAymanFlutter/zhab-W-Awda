@@ -28,7 +28,7 @@ class ToursRepository {
     try {
       // Endpoint: /tours/admin/:id
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.tours}/admin/$id',
+        endPoint: '${EndPoints.tours}/$id',
         isProtected: false,
       );
 
