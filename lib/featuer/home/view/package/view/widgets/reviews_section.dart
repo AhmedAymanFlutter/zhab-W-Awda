@@ -4,11 +4,12 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 import '../../manager/reviews_cubit.dart';
 import '../../manager/reviews_state.dart';
 import '../../data/repo/package_repo.dart';
 import '../../data/model/get_reviews_model.dart';
-import 'package:intl/intl.dart';
+import 'review_item_card.dart';
 
 class ReviewsSection extends StatefulWidget {
   final String packageSlug;
@@ -35,186 +36,97 @@ class _ReviewsSectionState extends State<ReviewsSection> {
           ReviewsCubit(PackagesRepository())..getReviews(widget.packageSlug),
       child: BlocBuilder<ReviewsCubit, ReviewsState>(
         builder: (context, state) {
-          if (state is ReviewsLoading) {
-            return const Center(child: CircularProgressIndicator());
-          } else if (state is ReviewsError) {
-            return const SizedBox(); // Hide if error or handle gracefully
-          } else if (state is ReviewsSuccess) {
-            final reviews = state.reviews;
-            if (reviews.isEmpty) return const SizedBox();
+          final isLoading = state is ReviewsLoading;
+          final reviews = (state is ReviewsSuccess) 
+              ? state.reviews 
+              : List.generate(3, (index) => ReviewModel(
+                  authorName: "اسم العميل",
+                  content: "هذا نص تجريبي لتقييم العميل على الباقة السياحية المقدمة من الشركة.",
+                  rate: 5,
+                  createdAt: DateTime.now().toIso8601String(),
+                ));
 
-            return Container(
-              margin: EdgeInsets.symmetric(vertical: 20.h),
-              padding: EdgeInsets.all(16.w),
+          if (state is ReviewsError) return const SizedBox();
+          if (state is ReviewsSuccess && reviews.isEmpty) return const SizedBox();
+
+          return Skeletonizer(
+            enabled: isLoading,
+            child: Container(
+              margin: EdgeInsets.symmetric(vertical: 24.h),
+              padding: EdgeInsets.all(20.w),
               decoration: BoxDecoration(
                 color: Colors.white,
-                borderRadius: BorderRadius.circular(16.r),
+                borderRadius: BorderRadius.circular(24.r),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.05),
-                    blurRadius: 10,
-                    offset: const Offset(0, 4),
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 20,
+                    offset: const Offset(0, 8),
                   ),
                 ],
+                border: Border.all(color: Colors.grey.shade50),
               ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // Title & Stars
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      Row(
-                        children: List.generate(5, (index) {
-                          return Icon(
-                            Icons.star,
-                            color: Colors.amber,
-                            size: 20.sp,
-                          );
-                        }),
-                      ),
                       Text(
-                        "آراء العملاء",
-                        style: AppTextStyle.setelMessiriBlack(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                        "آراء المسافرين",
+                        style: AppTextStyle.setelMessiriBlack(fontSize: 20, fontWeight: FontWeight.bold),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
+                        decoration: BoxDecoration(
+                          color: AppColor.primaryBlue.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(12.r),
+                        ),
+                        child: Row(
+                          children: [
+                            Icon(Icons.star_rounded, color: Colors.amber, size: 18.sp),
+                            SizedBox(width: 4.w),
+                            Text(
+                              "4.9",
+                              style: TextStyle(fontSize: 13.sp, fontWeight: FontWeight.bold, color: AppColor.primaryBlue),
+                            ),
+                          ],
                         ),
                       ),
                     ],
                   ),
-                  SizedBox(height: 16.h),
-
-                  // Reviews Slider
+                  SizedBox(height: 24.h),
                   SizedBox(
-                    height: 180.h,
+                    height: 160.h,
                     child: PageView.builder(
                       controller: _pageController,
+                      physics: const BouncingScrollPhysics(),
                       itemCount: reviews.length,
                       itemBuilder: (context, index) {
-                        return _buildReviewItem(reviews[index]);
+                        return ReviewItemCard(review: reviews[index]);
                       },
                     ),
                   ),
-
-                  SizedBox(height: 12.h),
-
-                  // Indicator
+                  SizedBox(height: 20.h),
                   Center(
                     child: SmoothPageIndicator(
                       controller: _pageController,
                       count: reviews.length,
                       effect: ExpandingDotsEffect(
-                        dotHeight: 8.h,
-                        dotWidth: 8.w,
+                        dotHeight: 6.h,
+                        dotWidth: 6.w,
                         activeDotColor: AppColor.primaryBlue,
-                        dotColor: Colors.grey.shade300,
+                        dotColor: Colors.grey.shade200,
+                        expansionFactor: 4,
+                        spacing: 8.w,
                       ),
                     ),
                   ),
                 ],
               ),
-            );
-          }
-          return const SizedBox();
-        },
-      ),
-    );
-  }
-
-  Widget _buildReviewItem(ReviewModel review) {
-    // Format date if possible, else use raw or placeholder
-    String dateStr = "";
-    if (review.createdAt != null) {
-      try {
-        final date = DateTime.parse(review.createdAt!);
-        dateStr = DateFormat(
-          'dd MMMM yyyy',
-          'ar',
-        ).format(date); // Arabic locale if supported or default
-      } catch (e) {
-        dateStr = review.createdAt!;
-      }
-    }
-
-    return Container(
-      padding: EdgeInsets.symmetric(horizontal: 8.w),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Quote Icon
-              Icon(
-                Icons.format_quote,
-                color: AppColor.primaryBlue,
-                size: 32.sp,
-              ),
-
-              // Author Info
-              Row(
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    children: [
-                      Text(
-                        review.authorName ?? "Anonymous",
-                        style: AppTextStyle.setelMessiriBlack(
-                          fontSize: 14,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      Row(
-                        children: List.generate(5, (index) {
-                          return Icon(
-                            index < (review.rate ?? 0)
-                                ? Icons.star
-                                : Icons.star_border,
-                            color: Colors.amber,
-                            size: 14.sp,
-                          );
-                        }),
-                      ),
-                    ],
-                  ),
-                  SizedBox(width: 10.w),
-                  CircleAvatar(
-                    backgroundColor: Colors.grey.shade200,
-                    child: Text(
-                      (review.authorName != null &&
-                              review.authorName!.isNotEmpty)
-                          ? review.authorName![0].toUpperCase()
-                          : "U",
-                      style: AppTextStyle.setelMessiriBlack(
-                        fontSize: 14,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 12.h),
-          Text(
-            review.content ?? "",
-            style: AppTextStyle.setelMessiriSecondlightGrey(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ).copyWith(fontStyle: FontStyle.italic),
-            maxLines: 3,
-            overflow: TextOverflow.ellipsis,
-            textAlign: TextAlign.right,
-          ),
-          const Spacer(),
-          Align(
-            alignment: Alignment.bottomLeft,
-            child: Text(
-              dateStr,
-              style: TextStyle(color: Colors.grey, fontSize: 10.sp),
             ),
-          ),
-        ],
+          );
+        },
       ),
     );
   }

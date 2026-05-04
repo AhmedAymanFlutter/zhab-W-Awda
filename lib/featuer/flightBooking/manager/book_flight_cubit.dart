@@ -57,7 +57,7 @@ class BookFlightCubit extends Cubit<BookFlightState> {
       );
 
       await _repository.bookFlight(requestModel);
-      emit(BookFlightSuccess());
+      emit(BookFlightSuccess(requestModel));
     } catch (e) {
       emit(BookFlightError(e.toString()));
     }

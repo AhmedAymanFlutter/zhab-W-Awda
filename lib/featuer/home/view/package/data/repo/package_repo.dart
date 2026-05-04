@@ -1,7 +1,7 @@
 import 'package:flutter_application_1/featuer/home/view/package/data/model/get_all_packages_model.dart';
 import '../../../../../../core/network/api_endpoiont.dart';
 import '../../../../../../core/network/api_helper.dart';
-import '../model/get_package_id_model.dart';
+import '../model/package_details_model.dart';
 import '../model/get_reviews_model.dart';
 
 class PackagesRepository {
@@ -24,7 +24,7 @@ class PackagesRepository {
     }
   }
 
-  Future<PackageIdData> getPackageById(String id) async {
+  Future<PackageDetailsData> getPackageById(String id) async {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.packages}admin/$id',
@@ -32,7 +32,7 @@ class PackagesRepository {
       );
 
       if (response.status == true && response.data != null) {
-        final model = GetPackageIdModel.fromJson(response.data);
+        final model = GetPackageDetailsModel.fromJson(response.data);
         if (model.data != null) {
           return model.data!;
         } else {
@@ -46,7 +46,7 @@ class PackagesRepository {
     }
   }
 
-  Future<PackageIdData> getPackageDetailsBySlug(
+  Future<PackageDetailsData> getPackageDetailsBySlug(
     String packageTypeSlug,
     String packageSlug,
   ) async {
@@ -60,7 +60,7 @@ class PackagesRepository {
 
       // The new response structure has success: true/false
       if (response.data != null && response.data['success'] == true) {
-        final model = GetPackageIdModel.fromJson(response.data);
+        final model = GetPackageDetailsModel.fromJson(response.data);
         if (model.data != null) {
           return model.data!;
         } else {

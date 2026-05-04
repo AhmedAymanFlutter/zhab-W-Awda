@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/featuer/flightBooking/manager/book_flight_cubit.dart';
 import 'package:flutter_application_1/featuer/flightBooking/manager/book_flight_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -23,13 +24,11 @@ class BookFlightView extends StatelessWidget {
         body: BlocListener<BookFlightCubit, BookFlightState>(
           listener: (context, state) {
             if (state is BookFlightSuccess) {
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text("تم إرسال طلب الحجز بنجاح ✅"),
-                  backgroundColor: Colors.green,
-                ),
+              Navigator.pushNamed(
+                context,
+                Routes.flightBookingSuccessView,
+                arguments: state.requestModel,
               );
-              Navigator.pop(context);
             } else if (state is BookFlightError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(
@@ -50,9 +49,7 @@ class BookFlightView extends StatelessWidget {
                       horizontal: 20.w,
                       vertical: 10.h,
                     ),
-                    child: MainAppHeader(
-                      title: "ذهاب وعودة",
-                    ),
+                    child: MainAppHeader(title: "ذهاب وعودة"),
                   ),
                   const FlightHeaderSection(),
                   SizedBox(height: 10.h),

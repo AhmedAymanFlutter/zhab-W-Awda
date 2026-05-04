@@ -4,10 +4,13 @@ import 'package:flutter_application_1/featuer/Cities/data/repo/cities_repo.dart'
 import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
 import 'package:flutter_application_1/featuer/Cities/manager/cities_state.dart';
 import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
+import 'package:flutter_application_1/core/widgets/html_content_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
+import '../../../../core/theme/app_text_style.dart';
+import 'widgets/city_weather_card.dart';
+import 'widgets/city_info_grid.dart';
 
 class CityDetailsView extends StatelessWidget {
   final String citySlug;
@@ -17,16 +20,11 @@ class CityDetailsView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (context) =>
-          CitiesCubit(CitiesRepository())..getCityDetails(citySlug),
+      create: (context) => CitiesCubit(CitiesRepository())..getCityDetails(citySlug),
       child: Scaffold(
-        bottomNavigationBar: OfferBookingBar(),
-        backgroundColor: Colors.white,
+        bottomNavigationBar: const OfferBookingBar(),
+        backgroundColor: const Color(0xFFF8F9FB),
         body: BlocBuilder<CitiesCubit, CitiesState>(
-          buildWhen: (previous, current) =>
-              current is CityDetailsLoading ||
-              current is CityDetailsSuccess ||
-              current is CityDetailsError,
           builder: (context, state) {
             if (state is CityDetailsLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -34,180 +32,151 @@ class CityDetailsView extends StatelessWidget {
               return Center(child: Text(state.message));
             } else if (state is CityDetailsSuccess) {
               final city = state.cityData.city;
+              final weather = state.cityData.cityWeather;
               if (city == null) return const Center(child: Text("No Data"));
 
               return CustomScrollView(
+                physics: const BouncingScrollPhysics(),
                 slivers: [
-                  // --- 1. AppBar Image ---
+                  // --- 1. Modern Immersive AppBar ---
                   SliverAppBar(
-                    expandedHeight: 500.h,
+                    expandedHeight: 450.h,
                     pinned: true,
                     stretch: true,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: AppColor.primaryBlue,
                     leading: Container(
                       margin: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
                     flexibleSpace: FlexibleSpaceBar(
-                      stretchModes: const [
-                        StretchMode.zoomBackground,
-                        StretchMode.blurBackground,
-                      ],
-                      background: Padding(
-                        padding: EdgeInsets.only(
-                          left: 12.w,
-                          top: 20.h,
-                          right: 12.w,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(30.r)),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    city.imageCover ??
-                                    "https://via.placeholder.com/200",
-                                fit: BoxFit.cover,
-                                width: double.infinity,
-                                placeholder: (context, url) => const Center(
-                                  child: Icon(FontAwesomeIcons.image),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(FontAwesomeIcons.image),
-                              ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ],
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: city.imageCover ?? "https://via.placeholder.com/800",
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(color: Colors.grey[200]),
+                            errorWidget: (context, url, error) => Container(
+                              color: Colors.grey[300],
+                              child: const Icon(Icons.image_not_supported_outlined, color: Colors.grey, size: 50),
+                            ),
                           ),
-                        ),
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.2),
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.8),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 40.h,
+                            left: 24.w,
+                            right: 24.w,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                if (city.country != null)
+                                  Container(
+                                    padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                    decoration: BoxDecoration(
+                                      color: AppColor.primaryBlue,
+                                      borderRadius: BorderRadius.circular(20.r),
+                                    ),
+                                    child: Text(
+                                      city.country!.name ?? "",
+                                      style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 12.sp,
+                                        fontWeight: FontWeight.bold,
+                                      ),
+                                    ),
+                                  ),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  city.name ?? "اسم المدينة",
+                                  style: AppTextStyle.setelMessiriBlack(
+                                    fontSize: 34,
+                                    fontWeight: FontWeight.bold,
+                                  ).copyWith(color: Colors.white),
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
 
-                  // --- 2. Content ---
+                  // --- 2. Content Sections ---
                   SliverToBoxAdapter(
                     child: Container(
-                      transform: Matrix4.translationValues(0, -20, 0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.r),
-                          topRight: Radius.circular(30.r),
-                        ),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(32.r)),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 25.h,
-                        ),
+                        padding: EdgeInsets.all(24.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Title
+                            if (weather != null) CityWeatherCard(weather: weather),
+                            SizedBox(height: 32.h),
+                            CityInfoGrid(city: city),
+                            SizedBox(height: 32.h),
                             Text(
-                              city.name ?? "اسم المدينة",
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
-                              ),
+                              "اكتشف ${city.name}",
+                              style: AppTextStyle.setelMessiriBlack(fontSize: 22, fontWeight: FontWeight.bold),
                             ),
-                            SizedBox(height: 8.h),
-
-                            // Country Name
-                            if (city.country != null)
-                              Row(
-                                children: [
-                                  Icon(
-                                    Icons.location_on,
-                                    color: AppColor.primaryBlue,
-                                    size: 16.sp,
-                                  ),
-                                  SizedBox(width: 4.w),
-                                  Text(
-                                    city.country!.name ?? "",
-                                    style: TextStyle(
-                                      color: Colors.grey[600],
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                ],
-                              ),
-
-                            SizedBox(height: 25.h),
-                            Divider(color: Colors.grey.withOpacity(0.2)),
-                            SizedBox(height: 15.h),
-
-                            // Description
-                            Text(
-                              "عن المدينة",
-                              style: TextStyle(
-                                fontSize: 18.sp,
-                                fontWeight: FontWeight.bold,
-                              ),
+                            SizedBox(height: 12.h),
+                            HtmlContentWidget(
+                              htmlContent: city.description ?? city.descText ?? "استكشف جمال وتاريخ هذه المدينة الرائعة.",
+                              fontSize: 15.sp,
                             ),
-                            SizedBox(height: 10.h),
-                            Text(
-                              city.description ??
-                                  city.descText ??
-                                  "لا يوجد وصف متاح.",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[600],
-                                height: 1.6,
-                              ),
-                            ),
-
-                            SizedBox(height: 20.h),
-
-                            // Best time to visit
-                            if (city.favTime != null &&
-                                city.favTime!.isNotEmpty) ...[
+                            SizedBox(height: 32.h),
+                            if (city.images != null && city.images!.isNotEmpty) ...[
                               Text(
-                                "أفضل وقت للزيارة",
-                                style: TextStyle(
-                                  fontSize: 18.sp,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                                "معالم المدينة",
+                                style: AppTextStyle.setelMessiriBlack(fontSize: 22, fontWeight: FontWeight.bold),
                               ),
-                              SizedBox(height: 10.h),
-                              Wrap(
-                                spacing: 8.w,
-                                runSpacing: 8.h,
-                                children: city.favTime!
-                                    .map(
-                                      (time) => Chip(
-                                        label: Text(time),
-                                        backgroundColor: AppColor.primaryBlue
-                                            .withOpacity(0.1),
-                                        labelStyle: TextStyle(
-                                          color: AppColor.primaryBlue,
+                              SizedBox(height: 16.h),
+                              SizedBox(
+                                height: 180.h,
+                                child: ListView.separated(
+                                  scrollDirection: Axis.horizontal,
+                                  physics: const BouncingScrollPhysics(),
+                                  itemCount: city.images!.length,
+                                  separatorBuilder: (context, index) => SizedBox(width: 12.w),
+                                  itemBuilder: (context, index) {
+                                    return ClipRRect(
+                                      borderRadius: BorderRadius.circular(20.r),
+                                      child: CachedNetworkImage(
+                                        imageUrl: city.images![index],
+                                        width: 280.w,
+                                        fit: BoxFit.cover,
+                                        errorWidget: (context, url, error) => Container(
+                                          color: Colors.grey[200],
+                                          child: const Icon(Icons.broken_image_outlined, color: Colors.grey),
                                         ),
                                       ),
-                                    )
-                                    .toList(),
+                                    );
+                                  },
+                                ),
                               ),
                             ],
-
-                            SizedBox(height: 50.h),
+                            SizedBox(height: 100.h),
                           ],
                         ),
                       ),

@@ -16,6 +16,7 @@ class Routes {
   static const String cityDetailsView = '/CityDetailsView';
   static const String hotelDetailsView = '/HotelDetailsView';
   static const String tourDetailsView = '/TourDetailsView';
+  static const String tourGuideDetailsView = '/TourGuideDetailsView';
   static const String packageTypeDetailsView = '/PackageTypeDetailsView';
   static const String packagesInCountryView = '/PackagesInCountryView';
   static const String contactUsView = '/ContactUsView';
@@ -27,4 +28,5 @@ class Routes {
   static const String hotelCountriesView = '/HotelCountriesView';
   static const String toursView = '/ToursView';
   static const String moreView = '/MoreView';
+  static const String flightBookingSuccessView = '/FlightBookingSuccessView';
 }

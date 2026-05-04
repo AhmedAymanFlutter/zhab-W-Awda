@@ -14,7 +14,7 @@ class GetCityDetailsModel {
 
 class CityDetailsData {
   CityObj? city;
-  List<dynamic>? packages; // Changed to dynamic for safety
+  List<dynamic>? packages; 
   CityWeather? cityWeather;
 
   CityDetailsData({this.city, this.packages, this.cityWeather});
@@ -82,15 +82,27 @@ class CityObj {
   }
 }
 
-// --- Sub Classes ---
-
 class Seo {
   String? metaTitle;
   String? metaDescription;
+  String? keywords;
+  double? priority;
+  String? changeFrequency;
+  String? noIndex;
+  String? noFollow;
+  String? noArchive;
+  String? noSnippet;
 
   Seo.fromJson(Map<String, dynamic> json) {
     metaTitle = json['metaTitle'];
     metaDescription = json['metaDescription'];
+    keywords = json['keywords'];
+    priority = (json['priority'] as num?)?.toDouble();
+    changeFrequency = json['changeFrequency'];
+    noIndex = json['noIndex'];
+    noFollow = json['noFollow'];
+    noArchive = json['noArchive'];
+    noSnippet = json['noSnippet'];
   }
 }
 
@@ -107,11 +119,25 @@ class Country {
 }
 
 class CityWeather {
-  dynamic cod; // Could be String or Int
-  String? message;
+  double? temp;
+  double? feelsLike;
+  int? humidity;
+  String? description;
+  String? icon;
+  String? cityName;
+  dynamic cod;
 
   CityWeather.fromJson(Map<String, dynamic> json) {
+    if (json['main'] != null) {
+      temp = (json['main']['temp'] as num?)?.toDouble();
+      feelsLike = (json['main']['feels_like'] as num?)?.toDouble();
+      humidity = (json['main']['humidity'] as num?)?.toInt();
+    }
+    if (json['weather'] != null && (json['weather'] as List).isNotEmpty) {
+      description = json['weather'][0]['description'];
+      icon = json['weather'][0]['icon'];
+    }
+    cityName = json['name'];
     cod = json['cod'];
-    message = json['message'];
   }
 }

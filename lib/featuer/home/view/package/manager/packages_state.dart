@@ -1,6 +1,5 @@
 import 'package:flutter_application_1/featuer/home/view/package/data/model/get_all_packages_model.dart';
-
-import '../data/model/get_package_id_model.dart';
+import '../data/model/package_details_model.dart';
 
 abstract class PackagesState {}
 
@@ -21,7 +20,7 @@ class PackagesError extends PackagesState {
 class PackageDetailsLoading extends PackagesState {}
 
 class PackageDetailsSuccess extends PackagesState {
-  final PackageIdData package;
+  final PackageDetailsData package;
   PackageDetailsSuccess(this.package);
 }
 

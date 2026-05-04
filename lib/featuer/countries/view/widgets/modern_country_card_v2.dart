@@ -1,10 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/countries/data/model/get_countries_model.dart';
-import 'package:flutter_application_1/featuer/countries/view/country_details_view.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_text_style.dart';
+import 'package:flutter_application_1/core/router/routes.dart';
 
 class ModernCountryCardV2 extends StatelessWidget {
   final CountryItem country;
@@ -16,11 +16,10 @@ class ModernCountryCardV2 extends StatelessWidget {
     return InkWell(
       onTap: () {
         if (country.slug != null) {
-          Navigator.push(
+          Navigator.pushNamed(
             context,
-            MaterialPageRoute(
-              builder: (context) => CountryDetailsView(countrySlug: country.slug!),
-            ),
+            Routes.tourGuideDetailsView,
+            arguments: country.slug,
           );
         }
       },

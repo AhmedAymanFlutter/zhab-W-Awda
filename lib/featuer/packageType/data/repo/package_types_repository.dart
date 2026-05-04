@@ -55,7 +55,7 @@ class PackageTypesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint:
-            '${EndPoints.packageTypes}/$packageTypeSlug/packages/$countrySlug',
+            '${EndPoints.packageTypes}/$packageTypeSlug/packages/slug/$countrySlug',
         isProtected: false,
       );
 

@@ -6,8 +6,17 @@ class TourStatsRow extends StatelessWidget {
   final String? days;
   final String? people;
   final String? type;
+  final int? duration;
+  final double? rating;
 
-  const TourStatsRow({super.key, this.days, this.people, this.type});
+  const TourStatsRow({
+    super.key,
+    this.days,
+    this.people,
+    this.type,
+    this.duration,
+    this.rating,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -22,21 +31,21 @@ class TourStatsRow extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buildModernStatItem(
-            Icons.calendar_month_rounded,
+            Icons.access_time_rounded,
             "المدة",
-            "${days ?? 1} أيام",
+            duration != null ? "$duration ساعات" : "${days ?? 1} أيام",
           ),
-          Container(width: 1, height: 40.h, color: Colors.grey[300]),
+          Container(width: 1, height: 40.h, color: Colors.grey[200]),
+          _buildModernStatItem(
+            Icons.star_rounded,
+            "التقييم",
+            rating != null ? "$rating" : "4.5",
+          ),
+          Container(width: 1, height: 40.h, color: Colors.grey[200]),
           _buildModernStatItem(
             Icons.groups_rounded,
             "المجموعة",
             "${people ?? 1} أفراد",
-          ),
-          Container(width: 1, height: 40.h, color: Colors.grey[300]),
-          _buildModernStatItem(
-            Icons.category_rounded,
-            "النوع",
-            type ?? "ترفيهي",
           ),
         ],
       ),

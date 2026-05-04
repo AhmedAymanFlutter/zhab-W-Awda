@@ -5,11 +5,11 @@ import '../../../../../core/theme/app_text_style.dart';
 import '../data/repo/package_repo.dart';
 import '../manager/packages_cubit.dart';
 import '../manager/packages_state.dart';
-import 'widgets/booking_bottom_bar.dart';
 import 'widgets/glass_button.dart';
-import 'widgets/package_branch_tabs.dart';
 import 'widgets/package_content_view.dart';
 import 'widgets/package_header_image.dart';
+import 'widgets/package_branch_card.dart';
+import 'widgets/package_booking_panel.dart';
 import 'widgets/rate_package/rate_package_dialog.dart';
 
 class PackageDetailsView extends StatefulWidget {
@@ -151,170 +151,129 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
     final pkg = packageData.pkg;
     final branches = packageData.branches ?? [];
 
-    if (branches.isNotEmpty) {
-      _initializeTabController(branches.length);
-    }
+    final currentBranch = branches.isNotEmpty ? branches[_selectedBranchIndex] : null;
 
-    final _ = branches.isNotEmpty ? branches[_selectedBranchIndex] : null;
-
-    final packageSlug = args.packageSlug ?? pkg?.slug;
-
-    return Stack(
-      children: [
-        // 1. Header Image
-        Positioned(
-          top: 0,
-          left: 0,
-          right: 0,
-          height: 0.45.sh,
-          child: PackageHeaderImage(imageUrl: pkg?.imageCover),
-        ),
-
-        // 2. Back & Favorite/Rate Buttons (SafeArea)
-        Positioned(
-          top: MediaQuery.of(context).padding.top + 10.h,
-          left: 20.w,
-          right: 20.w,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              GlassButton(
-                icon: Icons.arrow_back_ios_new,
-                onPressed: () => Navigator.pop(context),
-                iconColor: Colors.white,
-              ),
-              GlassButton(
-                icon: Icons.star_border,
-                onPressed: () => _showRateDialog(pkg?.sId),
-                iconColor: Colors.white,
-              ),
-            ],
-          ),
-        ),
-
-        // 3. Content Sheet
-        Positioned.fill(
-          top: 0.30.sh, // Increased space for details (was 0.35)
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 20,
-                  offset: const Offset(0, -5),
-                ),
-              ],
-            ),
-            child: Column(
-              children: [
-                SizedBox(height: 12.h),
-
-                // Handle Indicator
-                Container(
-                  width: 40.w,
-                  height: 4.h,
-                  decoration: BoxDecoration(
-                    color: Colors.grey[300],
-                    borderRadius: BorderRadius.circular(2.r),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Stack(
+        children: [
+          // 1. Content
+          Scaffold(
+            backgroundColor: Colors.white,
+            body: CustomScrollView(
+              slivers: [
+                // Header Image
+                SliverToBoxAdapter(
+                  child: SizedBox(
+                    height: 300.h,
+                    child: PackageHeaderImage(imageUrl: pkg?.imageCover),
                   ),
                 ),
-                SizedBox(height: 20.h),
 
-                // Package Name Header & Rating
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Row(
+                // Package Info & Branches
+                SliverToBoxAdapter(
+                  child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      // Title
-                      Expanded(
-                        child: Text(
-                          pkg?.name ?? "اسم الباقة غير متوفر",
-                          style: AppTextStyle.setelMessiriBlack(
-                            fontSize: 18, // Reduced from 22
-                            fontWeight: FontWeight.bold,
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ),
-                      SizedBox(width: 8.w),
-                      // Rating (Next to title)
-                      Container(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.w,
-                          vertical: 4.h,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Colors.amber.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(8.r),
-                        ),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
+                      Padding(
+                        padding: EdgeInsets.all(24.w),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                            SizedBox(width: 4.w),
                             Text(
-                              "${pkg?.ratingsAverage ?? 4.5}",
-                              style: TextStyle(
-                                fontSize: 12.sp,
+                              pkg?.name ?? "",
+                              style: AppTextStyle.setelMessiriBlack(
+                                fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                              ),
+                            ),
+                            SizedBox(height: 8.h),
+                            Text(
+                              pkg?.cities?.map((c) => c.name).join('، ') ?? "",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                color: Colors.grey[600],
                               ),
                             ),
                           ],
                         ),
                       ),
+
+                      // Branches List
+                      if (branches.isNotEmpty) ...[
+                        Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 24.w),
+                          child: Text(
+                            "اختر الفرع المناسب",
+                            style: AppTextStyle.setelMessiriBlack(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ),
+                          ),
+                        ),
+                        SizedBox(height: 16.h),
+                        SizedBox(
+                          height: 300.h,
+                          child: ListView.separated(
+                            scrollDirection: Axis.horizontal,
+                            padding: EdgeInsets.symmetric(horizontal: 24.w),
+                            itemCount: branches.length,
+                            separatorBuilder: (context, index) => SizedBox(width: 16.w),
+                            itemBuilder: (context, index) {
+                              return PackageBranchCard(
+                                branch: branches[index],
+                                isSelected: _selectedBranchIndex == index,
+                                onTap: () {
+                                  setState(() {
+                                    _selectedBranchIndex = index;
+                                  });
+                                },
+                              );
+                            },
+                          ),
+                        ),
+                        SizedBox(height: 24.h),
+                      ],
+
+                      // Branch Details Content
+                      PackageContentView(
+                        pkg: pkg,
+                        branch: currentBranch,
+                      ),
                     ],
                   ),
                 ),
-                SizedBox(height: 24.h),
+              ],
+            ),
+            bottomNavigationBar: PackageBookingPanel(
+              price: currentBranch?.price,
+              packageName: pkg?.name,
+            ),
+          ),
 
-                // Modern Branch Tabs (Only if branches exist)
-                if (branches.isNotEmpty) ...[
-                  PackageBranchTabs(
-                    branches: branches,
-                    tabController: _tabController,
-                    onTabChanged: (index) {
-                      setState(() {
-                        _selectedBranchIndex = index;
-                      });
-                    },
-                  ),
-                  Divider(color: Colors.grey[100], thickness: 1, height: 30.h),
-                ] else ...[
-                  Divider(color: Colors.grey[100], thickness: 1, height: 30.h),
-                ],
-
-                // Tab View OR Single Content
-                Expanded(
-                  child: branches.isNotEmpty
-                      ? TabBarView(
-                          controller: _tabController,
-                          children: branches.map((branch) {
-                            return PackageContentView(
-                              pkg: pkg,
-                              branch: branch,
-                              packageSlug: packageSlug,
-                            );
-                          }).toList(),
-                        )
-                      : PackageContentView(
-                          pkg: pkg,
-                          branch: null,
-                          packageSlug: packageSlug,
-                        ),
+          // 2. Overlay Buttons (Back, Rate)
+          Positioned(
+            top: MediaQuery.of(context).padding.top + 10.h,
+            left: 20.w,
+            right: 20.w,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                GlassButton(
+                  icon: Icons.arrow_back_ios_new,
+                  onPressed: () => Navigator.pop(context),
+                  iconColor: Colors.white,
                 ),
-
-                // Footer Booking Bar
-                BookingBottomBar(packageName: pkg?.name ?? "Package"),
+                GlassButton(
+                  icon: Icons.star_border,
+                  onPressed: () => _showRateDialog(pkg?.sId),
+                  iconColor: Colors.white,
+                ),
               ],
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

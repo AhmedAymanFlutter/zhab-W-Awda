@@ -1,5 +1,5 @@
 abstract class EndPoints {
-  static const String baseUrl = 'http://192.168.1.230:3002/api/v1/';
+  static const String baseUrl = 'http://192.168.1.230:3000/api/v1/';
   static const String offers = 'offers/';
   static const String packages = 'packages/';
   static const String hotels = 'hotels';
@@ -12,4 +12,5 @@ abstract class EndPoints {
   static const String packageTypes = 'packageTypes';
   static const String settings = 'settings';
   static const String hotelsCountries = 'hotels/countries';
+  static const String tourGuides = 'tourguides';
 }

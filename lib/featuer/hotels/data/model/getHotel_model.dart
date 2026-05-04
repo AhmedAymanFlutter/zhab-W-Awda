@@ -76,7 +76,11 @@ class HotelItem {
 
   HotelItem.fromJson(Map<String, dynamic> json) {
     try {
-      price = json['price'];
+      if (json['price'] is num) {
+        price = json['price'];
+      } else if (json['price'] is Map) {
+        price = num.tryParse(json['price']['min']?.toString() ?? '0');
+      }
       sId = json['_id'];
       hotelId = json['hotel_id']?.toString();
 

@@ -7,10 +7,11 @@ import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
+import '../../../../core/theme/app_text_style.dart';
 import '../data/repo/countries_repository.dart';
 
 class CountryDetailsView extends StatelessWidget {
-  final String countrySlug; // Using slug as per API
+  final String countrySlug;
 
   const CountryDetailsView({super.key, required this.countrySlug});
 
@@ -21,12 +22,8 @@ class CountryDetailsView extends StatelessWidget {
           CountriesCubit(CountriesRepository())..getCountryDetails(countrySlug),
       child: Scaffold(
         bottomNavigationBar: OfferBookingBar(),
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xFFF8F9FB),
         body: BlocBuilder<CountriesCubit, CountriesState>(
-          buildWhen: (previous, current) =>
-              current is CountryDetailsLoading ||
-              current is CountryDetailsSuccess ||
-              current is CountryDetailsError,
           builder: (context, state) {
             if (state is CountryDetailsLoading) {
               return const Center(child: CircularProgressIndicator());
@@ -36,21 +33,22 @@ class CountryDetailsView extends StatelessWidget {
               final country = state.country;
 
               return CustomScrollView(
+                physics: const BouncingScrollPhysics(),
                 slivers: [
-                  // --- 1. AppBar Image ---
+                  // --- Header Image with Parallax ---
                   SliverAppBar(
-                    expandedHeight: 500.h,
+                    expandedHeight: 400.h,
                     pinned: true,
                     stretch: true,
-                    backgroundColor: Colors.transparent,
+                    backgroundColor: AppColor.primaryBlue,
                     leading: Container(
                       margin: EdgeInsets.all(8.w),
                       decoration: BoxDecoration(
-                        color: Colors.white.withOpacity(0.3),
+                        color: Colors.black.withOpacity(0.2),
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
@@ -59,167 +57,158 @@ class CountryDetailsView extends StatelessWidget {
                         StretchMode.zoomBackground,
                         StretchMode.blurBackground,
                       ],
-                      background: Padding(
-                        padding: EdgeInsets.only(
-                          left: 12.w,
-                          top: 20.h,
-                          right: 12.w,
-                        ),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.all(Radius.circular(30.r)),
-                          child: Stack(
-                            fit: StackFit.expand,
-                            children: [
-                              CachedNetworkImage(
-                                imageUrl:
-                                    country.imageCover ??
-                                    "https://via.placeholder.com/300",
-                                fit: BoxFit.cover,
-                                placeholder: (context, url) => const Center(
-                                  child: CircularProgressIndicator(),
-                                ),
-                                errorWidget: (context, url, error) =>
-                                    const Icon(Icons.error),
+                      background: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          CachedNetworkImage(
+                            imageUrl: country.imageCover ?? "https://via.placeholder.com/800",
+                            fit: BoxFit.cover,
+                            placeholder: (context, url) => Container(color: Colors.grey[200]),
+                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                          ),
+                          DecoratedBox(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.3),
+                                  Colors.transparent,
+                                  Colors.black.withOpacity(0.7),
+                                ],
                               ),
-                              Container(
-                                decoration: BoxDecoration(
-                                  gradient: LinearGradient(
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                    colors: [
-                                      Colors.transparent,
-                                      Colors.black.withOpacity(0.7),
-                                    ],
+                            ),
+                          ),
+                          Positioned(
+                            bottom: 40.h,
+                            left: 20.w,
+                            right: 20.w,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.primaryBlue,
+                                    borderRadius: BorderRadius.circular(20.r),
+                                  ),
+                                  child: Text(
+                                    country.continent ?? "وجهة سياحية",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 12.sp,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
+                                SizedBox(height: 12.h),
+                                Text(
+                                  country.name ?? "اسم الدولة",
+                                  style: AppTextStyle.setelMessiriBlack(
+                                    fontSize: 32,
+                                    fontWeight: FontWeight.bold,
+                                  ).copyWith(color: Colors.white),
+                                ),
+                                if (country.code != null) ...[
+                                  SizedBox(height: 4.h),
+                                  Text(
+                                    "رمز الدولة: ${country.code}",
+                                    style: TextStyle(
+                                      color: Colors.white.withOpacity(0.8),
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                ],
+                              ],
+                            ),
                           ),
-                        ),
+                        ],
                       ),
                     ),
                   ),
 
-                  // --- 2. Details Content ---
+                  // --- Details Content ---
                   SliverToBoxAdapter(
                     child: Container(
-                      transform: Matrix4.translationValues(0, -20, 0),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(30.r),
-                          topRight: Radius.circular(30.r),
-                        ),
+                        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
                       ),
                       child: Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 20.w,
-                          vertical: 25.h,
-                        ),
+                        padding: EdgeInsets.all(24.w),
                         child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            // Title
-                            Text(
-                              country.name ?? "اسم الدولة",
-                              style: TextStyle(
-                                fontSize: 24.sp,
-                                fontWeight: FontWeight.bold,
-                                color: Colors.black87,
+                            // Quick Info Grid
+                            Container(
+                              padding: EdgeInsets.all(20.w),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFFF8F9FB),
+                                borderRadius: BorderRadius.circular(24.r),
+                              ),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                children: [
+                                  _buildModernInfoItem(Icons.language_rounded, "اللغة", country.language ?? "-"),
+                                  _buildDivider(),
+                                  _buildModernInfoItem(Icons.currency_exchange_rounded, "العملة", country.currency ?? "-"),
+                                  _buildDivider(),
+                                  _buildModernInfoItem(Icons.calendar_month_rounded, "أفضل شهر", country.favMonth?.isNotEmpty == true ? country.favMonth!.first : "-"),
+                                ],
                               ),
                             ),
-                            SizedBox(height: 20.h),
-
-                            // Key Info Grid
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Expanded(
-                                  child: _buildInfoItem(
-                                    Icons.public,
-                                    "القارة",
-                                    country.continent ?? "-",
-                                  ),
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 40.h,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                                Expanded(
-                                  child: _buildInfoItem(
-                                    Icons.language,
-                                    "اللغة",
-                                    country.language ?? "-",
-                                  ),
-                                ),
-                                Container(
-                                  width: 1,
-                                  height: 40.h,
-                                  color: Colors.grey.withOpacity(0.2),
-                                ),
-                                Expanded(
-                                  child: _buildInfoItem(
-                                    Icons.attach_money,
-                                    "العملة",
-                                    country.currency ?? "-",
-                                  ),
-                                ),
-                              ],
-                            ),
-
-                            SizedBox(height: 25.h),
-                            Divider(color: Colors.grey.withOpacity(0.2)),
-                            SizedBox(height: 15.h),
-
-                            // Description
+                            
+                            SizedBox(height: 32.h),
+                            
+                            // Description Section
                             Text(
                               "عن الدولة",
-                              style: TextStyle(
-                                fontSize: 18.sp,
+                              style: AppTextStyle.setelMessiriBlack(
+                                fontSize: 20,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
-                            SizedBox(height: 10.h),
+                            SizedBox(height: 12.h),
                             HtmlContentWidget(
-                              htmlContent:
-                                  country.description ??
-                                  country.descText ??
-                                  "لا يوجد وصف متاح.",
-                              fontSize: 14.sp,
+                              htmlContent: country.description ?? country.descText ?? "لا يوجد وصف متاح حالياً لهذه الدولة.",
+                              fontSize: 15.sp,
                             ),
-                            SizedBox(height: 20.h),
-
-                            // Best Time to Visit (if available)
-                            if (country.favTime != null &&
-                                country.favTime!.isNotEmpty) ...[
+                            
+                            SizedBox(height: 32.h),
+                            
+                            // Best Time to Visit Chips
+                            if (country.favTime?.isNotEmpty == true) ...[
                               Text(
                                 "أفضل وقت للزيارة",
-                                style: TextStyle(
-                                  fontSize: 18.sp,
+                                style: AppTextStyle.setelMessiriBlack(
+                                  fontSize: 20,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
-                              SizedBox(height: 10.h),
+                              SizedBox(height: 16.h),
                               Wrap(
-                                spacing: 8.w,
-                                runSpacing: 8.h,
-                                children: country.favTime!
-                                    .map(
-                                      (time) => Chip(
-                                        label: Text(time),
-                                        backgroundColor: AppColor.primaryBlue
-                                            .withOpacity(0.1),
-                                        labelStyle: TextStyle(
-                                          color: AppColor.primaryBlue,
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                spacing: 10.w,
+                                runSpacing: 10.h,
+                                children: country.favTime!.map((time) => Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+                                  decoration: BoxDecoration(
+                                    color: AppColor.primaryBlue.withOpacity(0.05),
+                                    borderRadius: BorderRadius.circular(12.r),
+                                    border: Border.all(color: AppColor.primaryBlue.withOpacity(0.1)),
+                                  ),
+                                  child: Text(
+                                    time,
+                                    style: TextStyle(
+                                      color: AppColor.primaryBlue,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: 14.sp,
+                                    ),
+                                  ),
+                                )).toList(),
                               ),
                             ],
-
-                            SizedBox(height: 50.h),
+                            
+                            SizedBox(height: 100.h), // Space for bottom bar
                           ],
                         ),
                       ),
@@ -235,32 +224,37 @@ class CountryDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildInfoItem(IconData icon, String title, String value) {
+  Widget _buildModernInfoItem(IconData icon, String label, String value) {
     return Column(
       children: [
-        Container(
-          padding: EdgeInsets.all(10.w),
-          decoration: BoxDecoration(
-            color: AppColor.primaryBlue.withOpacity(0.1),
-            shape: BoxShape.circle,
-          ),
-          child: Icon(icon, color: AppColor.primaryBlue, size: 20.sp),
-        ),
+        Icon(icon, color: AppColor.primaryBlue, size: 24.sp),
         SizedBox(height: 8.h),
         Text(
-          title,
-          style: TextStyle(fontSize: 12.sp, color: Colors.grey),
-          textAlign: TextAlign.center,
+          label,
+          style: TextStyle(
+            fontSize: 12.sp,
+            color: Colors.grey.shade600,
+            fontWeight: FontWeight.w500,
+          ),
         ),
         SizedBox(height: 4.h),
         Text(
           value,
-          style: TextStyle(fontSize: 14.sp, fontWeight: FontWeight.bold),
-          textAlign: TextAlign.center,
-          maxLines: 2,
-          overflow: TextOverflow.ellipsis,
+          style: TextStyle(
+            fontSize: 14.sp,
+            color: Colors.black,
+            fontWeight: FontWeight.bold,
+          ),
         ),
       ],
+    );
+  }
+
+  Widget _buildDivider() {
+    return Container(
+      width: 1,
+      height: 40.h,
+      color: Colors.grey.withOpacity(0.2),
     );
   }
 }

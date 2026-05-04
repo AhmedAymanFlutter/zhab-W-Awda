@@ -23,8 +23,8 @@ class TourIdData {
   String? title;
   String? description;
   String? descText;
-  String? city; // String in this endpoint
-  String? country; // String in this endpoint
+  String? city;
+  String? country;
   List<String>? includes;
   List<String>? excludes;
   Header? header;
@@ -38,7 +38,11 @@ class TourIdData {
   int? iV;
   String? updatedBy;
   String? id;
-  String? price;
+  TourPrice? price;
+  TourRating? rating;
+  int? duration;
+  List<String>? tags;
+  List<ProductOption>? productOptions;
 
   TourIdData({
     this.seo,
@@ -62,6 +66,10 @@ class TourIdData {
     this.updatedBy,
     this.id,
     this.price,
+    this.rating,
+    this.duration,
+    this.tags,
+    this.productOptions,
   });
 
   TourIdData.fromJson(Map<String, dynamic> json) {
@@ -70,20 +78,28 @@ class TourIdData {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
-    price = json['price']?.toString();
+    
+    if (json['price'] != null) {
+      if (json['price'] is Map<String, dynamic>) {
+        price = TourPrice.fromJson(json['price']);
+      } else {
+        price = TourPrice(amount: (json['price'] as num?)?.toDouble());
+      }
+    }
 
-    // Handle dynamic types just in case (sometimes API returns Object, sometimes String)
+    if (json['rating'] != null) {
+      rating = TourRating.fromJson(json['rating']);
+    }
+
+    duration = (json['duration'] as num?)?.toInt();
+    tags = json['tags'] != null ? List<String>.from(json['tags']) : [];
+
+    // Handle dynamic types just in case
     city = json['city'] is Map ? json['city']['name'] : json['city'];
-    country = json['country'] is Map
-        ? json['country']['name']
-        : json['country'];
+    country = json['country'] is Map ? json['country']['name'] : json['country'];
 
-    includes = json['includes'] != null
-        ? List<String>.from(json['includes'])
-        : [];
-    excludes = json['excludes'] != null
-        ? List<String>.from(json['excludes'])
-        : [];
+    includes = json['includes'] != null ? List<String>.from(json['includes']) : [];
+    excludes = json['excludes'] != null ? List<String>.from(json['excludes']) : [];
 
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
 
@@ -91,6 +107,13 @@ class TourIdData {
       paths = <Paths>[];
       json['paths'].forEach((v) {
         paths!.add(Paths.fromJson(v));
+      });
+    }
+
+    if (json['productOptions'] != null) {
+      productOptions = <ProductOption>[];
+      json['productOptions'].forEach((v) {
+        productOptions!.add(ProductOption.fromJson(v));
       });
     }
 
@@ -111,9 +134,65 @@ class TourIdData {
   }
 }
 
-// --- Sub Classes (Reused or Defined locally) ---
+class TourPrice {
+  double? amount;
+  String? currency;
+
+  TourPrice({this.amount, this.currency});
+
+  TourPrice.fromJson(Map<String, dynamic> json) {
+    amount = (json['amount'] as num?)?.toDouble();
+    currency = json['currency'];
+  }
+}
+
+class TourRating {
+  double? average;
+  int? count;
+
+  TourRating({this.average, this.count});
+
+  TourRating.fromJson(Map<String, dynamic> json) {
+    average = (json['average'] as num?)?.toDouble();
+    count = (json['count'] as num?)?.toInt();
+  }
+}
+
+class ProductOption {
+  String? optionCode;
+  String? title;
+  List<String>? packageDescription;
+  List<String>? termsAndConditions;
+  List<String>? howToUse;
+  double? price;
+  String? currency;
+  String? id;
+
+  ProductOption({
+    this.optionCode,
+    this.title,
+    this.packageDescription,
+    this.termsAndConditions,
+    this.howToUse,
+    this.price,
+    this.currency,
+    this.id,
+  });
+
+  ProductOption.fromJson(Map<String, dynamic> json) {
+    optionCode = json['optionCode'];
+    title = json['title'];
+    packageDescription = json['packageDescription'] != null ? List<String>.from(json['packageDescription']) : [];
+    termsAndConditions = json['termsAndConditions'] != null ? List<String>.from(json['termsAndConditions']) : [];
+    howToUse = json['howToUse'] != null ? List<String>.from(json['howToUse']) : [];
+    price = (json['price'] as num?)?.toDouble();
+    currency = json['currency'];
+    id = json['id'];
+  }
+}
 
 class Seo {
+  double? priority;
   String? changeFrequency;
   String? noIndex;
   String? noFollow;
@@ -121,6 +200,7 @@ class Seo {
   String? noSnippet;
 
   Seo.fromJson(Map<String, dynamic> json) {
+    priority = (json['priority'] as num?)?.toDouble();
     changeFrequency = json['changeFrequency'];
     noIndex = json['noIndex'];
     noFollow = json['noFollow'];

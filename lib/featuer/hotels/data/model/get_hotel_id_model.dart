@@ -101,7 +101,11 @@ class HotelIdData {
 
   HotelIdData.fromJson(Map<String, dynamic> json) {
     try {
-      price = json['price'];
+      if (json['price'] is num) {
+        price = json['price'];
+      } else if (json['price'] is Map) {
+        price = num.tryParse(json['price']['min']?.toString() ?? '0');
+      }
       sId = json['_id'];
       hotelId = json['hotel_id']?.toString();
       name = json['hotel_name'] ?? json['name'];
@@ -144,8 +148,8 @@ class HotelIdData {
       state = json['state'];
       latitude = (json['latitude'] as num?)?.toDouble();
       longitude = (json['longitude'] as num?)?.toDouble();
-      numberOfReviews = json['number_of_reviews'];
-      ratingAverage = json['rating_average'];
+      numberOfReviews = (json['number_of_reviews'] as num?)?.toInt();
+      ratingAverage = (json['rating_average'] as num?)?.toDouble();
       url = json['url'];
 
       // Handle images or photo1

@@ -7,7 +7,7 @@ class GetCitiesModel {
 
   GetCitiesModel.fromJson(Map<String, dynamic> json) {
     status = json['status'];
-    results = json['results'];
+    results = (json['results'] as num?)?.toInt();
     data = json['data'] != null
         ? CitiesDataWrapper.fromJson(json['data'])
         : null;
@@ -30,9 +30,8 @@ class CitiesDataWrapper {
 }
 
 class CityItem {
-  Coordinates? coordinates;
   Seo? seo;
-  List<dynamic>? relatedCities; // Changed to dynamic to be safe
+  List<dynamic>? relatedCities;
   String? sId;
   String? name;
   Country? country;
@@ -42,15 +41,10 @@ class CityItem {
   List<String>? favMonth;
   List<String>? images;
   String? slug;
-  String? createdBy;
-  String? createdAt;
-  String? updatedAt;
   String? alt;
   String? imageCover;
-  String? updatedBy;
 
   CityItem({
-    this.coordinates,
     this.seo,
     this.relatedCities,
     this.sId,
@@ -62,24 +56,14 @@ class CityItem {
     this.favMonth,
     this.images,
     this.slug,
-    this.createdBy,
-    this.createdAt,
-    this.updatedAt,
     this.alt,
     this.imageCover,
-    this.updatedBy,
   });
 
   CityItem.fromJson(Map<String, dynamic> json) {
-    coordinates = json['coordinates'] != null
-        ? Coordinates.fromJson(json['coordinates'])
-        : null;
     seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     if (json['relatedCities'] != null) {
-      relatedCities = [];
-      json['relatedCities'].forEach((v) {
-        relatedCities!.add(v);
-      });
+      relatedCities = List<dynamic>.from(json['relatedCities']);
     }
     sId = json['_id'];
     name = json['name'];
@@ -94,34 +78,32 @@ class CityItem {
         : [];
     images = json['images'] != null ? List<String>.from(json['images']) : [];
     slug = json['slug'];
-    createdBy = json['createdBy'];
-    createdAt = json['createdAt'];
-    updatedAt = json['updatedAt'];
     alt = json['alt'];
     imageCover = json['imageCover'];
-    updatedBy = json['updatedBy'];
-  }
-}
-
-// --- Sub Classes ---
-
-class Coordinates {
-  String? lat;
-  String? lng;
-
-  Coordinates.fromJson(Map<String, dynamic> json) {
-    lat = json['lat'];
-    lng = json['lng'];
   }
 }
 
 class Seo {
   String? metaTitle;
   String? metaDescription;
+  String? keywords;
+  double? priority;
+  String? changeFrequency;
+  String? noIndex;
+  String? noFollow;
+  String? noArchive;
+  String? noSnippet;
 
   Seo.fromJson(Map<String, dynamic> json) {
     metaTitle = json['metaTitle'];
     metaDescription = json['metaDescription'];
+    keywords = json['keywords'];
+    priority = (json['priority'] as num?)?.toDouble();
+    changeFrequency = json['changeFrequency'];
+    noIndex = json['noIndex'];
+    noFollow = json['noFollow'];
+    noArchive = json['noArchive'];
+    noSnippet = json['noSnippet'];
   }
 }
 

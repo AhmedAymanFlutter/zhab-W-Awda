@@ -35,6 +35,9 @@ class CountryDetailsData {
   String? slug;
   int? iV;
   String? id;
+  String? bestTimeToVisit;
+  String? requiredVisaDocuments;
+  String? tripDuration;
 
   CountryDetailsData({
     this.seo,
@@ -57,6 +60,9 @@ class CountryDetailsData {
     this.slug,
     this.iV,
     this.id,
+    this.bestTimeToVisit,
+    this.requiredVisaDocuments,
+    this.tripDuration,
   });
 
   CountryDetailsData.fromJson(Map<String, dynamic> json) {
@@ -69,6 +75,9 @@ class CountryDetailsData {
     language = json['language'];
     description = json['description'];
     descText = json['descText'];
+    bestTimeToVisit = json['bestTimeToVisit'];
+    requiredVisaDocuments = json['requiredVisaDocuments'];
+    tripDuration = json['tripDuration'];
 
     favTime = json['favTime'] != null ? List<String>.from(json['favTime']) : [];
     favMonth = json['favMonth'] != null
@@ -96,6 +105,7 @@ class CountryDetailsData {
 // --- Sub Classes ---
 
 class Seo {
+  double? priority;
   String? changeFrequency;
   String? noIndex;
   String? noFollow;
@@ -106,6 +116,7 @@ class Seo {
   String? keywords;
 
   Seo.fromJson(Map<String, dynamic> json) {
+    priority = (json['priority'] as num?)?.toDouble();
     changeFrequency = json['changeFrequency'];
     noIndex = json['noIndex'];
     noFollow = json['noFollow'];

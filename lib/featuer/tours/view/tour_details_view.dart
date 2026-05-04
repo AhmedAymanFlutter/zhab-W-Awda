@@ -8,6 +8,7 @@ import 'widgets/tour_details_app_bar.dart';
 import 'widgets/tour_info_section.dart';
 import 'widgets/tour_stats_row.dart';
 import 'widgets/tour_timeline.dart';
+import 'widgets/tour_product_options.dart';
 import 'package:flutter_application_1/core/widgets/offer_booking_bar.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_state.dart';
@@ -81,6 +82,8 @@ class TourDetailsView extends StatelessWidget {
                             days: tour.header?.days,
                             people: tour.header?.people,
                             type: tour.header?.type,
+                            duration: tour.duration,
+                            rating: tour.rating?.average,
                           ),
 
                           SizedBox(height: 32.h),
@@ -111,6 +114,12 @@ class TourDetailsView extends StatelessWidget {
                           // Timeline
                           if (tour.paths != null && tour.paths!.isNotEmpty)
                             TourTimeline(paths: tour.paths!),
+
+                          SizedBox(height: 32.h),
+
+                          // Product Options
+                          if (tour.productOptions != null && tour.productOptions!.isNotEmpty)
+                            TourProductOptions(options: tour.productOptions!),
 
                           SizedBox(height: 100.h), // Bottom padding
                         ],

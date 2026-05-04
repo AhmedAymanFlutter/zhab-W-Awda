@@ -17,8 +17,19 @@ class TourInfoSection extends StatelessWidget {
     this.description,
   });
 
+  bool _isId(String? text) {
+    if (text == null) return false;
+    // Check if it's a 24-character hex string (MongoDB ID)
+    final idRegex = RegExp(r'^[a-fA-F0-9]{24}$');
+    return idRegex.hasMatch(text);
+  }
+
   @override
   Widget build(BuildContext context) {
+    final displayCity = _isId(city) ? null : city;
+    final displayCountry = _isId(country) ? null : country;
+    final hasLocation = displayCity != null || displayCountry != null;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -38,7 +49,7 @@ class TourInfoSection extends StatelessWidget {
                     ).copyWith(height: 1.2),
                   ),
                   SizedBox(height: 8.h),
-                  if (city != null || country != null)
+                  if (hasLocation)
                     Row(
                       children: [
                         Icon(
@@ -47,12 +58,15 @@ class TourInfoSection extends StatelessWidget {
                           color: AppColor.primaryBlue,
                         ),
                         SizedBox(width: 4.w),
-                        Text(
-                          "${city ?? ''}, ${country ?? ''}",
-                          style: TextStyle(
-                            fontSize: 14.sp,
-                            color: Colors.grey[600],
-                            fontWeight: FontWeight.w500,
+                        Expanded(
+                          child: Text(
+                            "${displayCity ?? ''}${displayCity != null && displayCountry != null ? ', ' : ''}${displayCountry ?? ''}",
+                            style: TextStyle(
+                              fontSize: 14.sp,
+                              color: Colors.grey[600],
+                              fontWeight: FontWeight.w500,
+                            ),
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                       ],
