@@ -1,3 +1,4 @@
+import 'package:flutter_application_1/featuer/hotels/data/model/get_hotel_details_model.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/get_hotel_id_model.dart';
 
@@ -28,6 +29,11 @@ class HotelDetailsSuccess extends HotelsState {
 class HotelDetailsError extends HotelsState {
   final String message;
   HotelDetailsError(this.message);
+}
+
+class HotelSlugDetailsSuccess extends HotelsState {
+  final HotelDetailsData hotelDetails;
+  HotelSlugDetailsSuccess(this.hotelDetails);
 }
 
 class HotelCountriesLoading extends HotelsState {}

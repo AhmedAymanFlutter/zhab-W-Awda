@@ -118,7 +118,8 @@ class TourDetailsView extends StatelessWidget {
                           SizedBox(height: 32.h),
 
                           // Product Options
-                          if (tour.productOptions != null && tour.productOptions!.isNotEmpty)
+                          if (tour.productOptions != null &&
+                              tour.productOptions!.isNotEmpty)
                             TourProductOptions(options: tour.productOptions!),
 
                           SizedBox(height: 100.h), // Bottom padding

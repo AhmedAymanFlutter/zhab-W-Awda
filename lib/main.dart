@@ -67,17 +67,16 @@ class MyApp extends StatelessWidget {
                   ServicesCubit(ServicesRepository())..fetchServices(),
             ),
             BlocProvider(
-              create: (context) =>
-                  ToursCubit(ToursRepository())..fetchTours(),
+              create: (context) => ToursCubit(ToursRepository())..fetchTours(),
             ),
             BlocProvider(
               create: (context) =>
                   CitiesCubit(CitiesRepository())..fetchCities(),
             ),
             BlocProvider(
-              create: (context) => ReviewsCubit(
-                ReviewsRepositoryImpl(LocalReviewsDataSource()),
-              )..fetchReviews(),
+              create: (context) =>
+                  ReviewsCubit(ReviewsRepositoryImpl(LocalReviewsDataSource()))
+                    ..fetchReviews(),
             ),
           ],
           child: MaterialApp(

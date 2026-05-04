@@ -29,4 +29,5 @@ class Routes {
   static const String toursView = '/ToursView';
   static const String moreView = '/MoreView';
   static const String flightBookingSuccessView = '/FlightBookingSuccessView';
+  static const String hotelDetailsSlugView = '/HotelDetailsSlugView';
 }

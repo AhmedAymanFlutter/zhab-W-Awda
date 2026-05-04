@@ -20,11 +20,12 @@ class ToursDataWrapper {
   ToursDataWrapper({this.tours});
 
   ToursDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final toursList = json['data'] ?? json['tours'];
+    if (toursList != null && toursList is List) {
       tours = <TourItem>[];
-      json['data'].forEach((v) {
+      for (var v in toursList) {
         tours!.add(TourItem.fromJson(v));
-      });
+      }
     }
   }
 }

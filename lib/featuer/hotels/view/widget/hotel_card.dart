@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
@@ -18,8 +19,8 @@ class HotelCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          Routes.hotelDetailsView,
-          arguments: hotel.hotelId ?? hotel.sId,
+          Routes.hotelDetailsSlugView,
+          arguments: hotel.slug,
         );
       },
       child: Container(
@@ -134,12 +135,35 @@ class HotelCard extends StatelessWidget {
                       ),
                     const Spacer(),
                     if (hotel.price != null)
-                      Text(
-                        "يبدأ من ${hotel.price} ج.م",
-                        style: AppTextStyle.setelMessiriTextStyle(
-                          fontSize: 12,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.primaryBlue,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          children: [
+                            Text(
+                              "يبدأ من ",
+                              style: TextStyle(
+                                fontSize: 10.sp,
+                                color: AppColor.secondaryGrey,
+                              ),
+                            ),
+                            Text(
+                              "${hotel.price}",
+                              style: TextStyle(
+                                fontSize: 14.sp,
+                                fontWeight: FontWeight.bold,
+                                color: AppColor.primaryBlue,
+                              ),
+                            ),
+                            SizedBox(width: 4.w),
+                            SvgPicture.asset(
+                              'assets/icon/RSA.svg',
+                              height: 14.h,
+                              colorFilter: const ColorFilter.mode(
+                                AppColor.primaryBlue,
+                                BlendMode.srcIn,
+                              ),
+                            ),
+                          ],
                         ),
                       ),
                   ],

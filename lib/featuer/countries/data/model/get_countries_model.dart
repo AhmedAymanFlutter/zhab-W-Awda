@@ -20,11 +20,12 @@ class CountriesDataWrapper {
   CountriesDataWrapper({this.countries});
 
   CountriesDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final countriesList = json['data'] ?? json['countries'];
+    if (countriesList != null && countriesList is List) {
       countries = <CountryItem>[];
-      json['data'].forEach((v) {
+      for (var v in countriesList) {
         countries!.add(CountryItem.fromJson(v));
-      });
+      }
     }
   }
 }

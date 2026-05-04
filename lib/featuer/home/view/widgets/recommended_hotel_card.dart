@@ -5,6 +5,7 @@ import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class RecommendedHotelCard extends StatelessWidget {
   final HotelItem hotel;
@@ -17,8 +18,8 @@ class RecommendedHotelCard extends StatelessWidget {
       onTap: () {
         Navigator.pushNamed(
           context,
-          Routes.hotelDetailsView,
-          arguments: hotel.hotelId ?? hotel.sId,
+          Routes.hotelDetailsSlugView,
+          arguments: hotel.slug,
         );
       },
       child: Container(
@@ -152,20 +153,29 @@ class RecommendedHotelCard extends StatelessWidget {
                   SizedBox(height: 4.h),
 
                   // --- Price ---
-                  RichText(
-                    text: TextSpan(
+                  FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Row(
                       children: [
-                        TextSpan(
-                          text: "\$${hotel.price ?? 120}",
+                        Text(
+                          "${hotel.price ?? 1200}",
                           style: TextStyle(
                             color: AppColor.primaryBlue,
                             fontSize: 16.sp,
                             fontWeight: FontWeight.bold,
-                            fontFamily: 'elMessiri',
                           ),
                         ),
-                        TextSpan(
-                          text: " / يوم",
+                        SizedBox(width: 4.w),
+                        SvgPicture.asset(
+                          'assets/icon/RSA.svg',
+                          height: 14.h,
+                          colorFilter: const ColorFilter.mode(
+                            AppColor.primaryBlue,
+                            BlendMode.srcIn,
+                          ),
+                        ),
+                        Text(
+                          " / يوم",
                           style: AppTextStyle.setelMessiriSecondlightGrey(
                             fontSize: 12,
                             fontWeight: FontWeight.normal,

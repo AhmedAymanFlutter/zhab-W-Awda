@@ -97,8 +97,6 @@ class HotelsCubit extends Cubit<HotelsState> {
     emit(HotelDetailsLoading());
     try {
       final result = await _repository.getHotelById(id);
-
-      // ✅ التحقق هنا أيضاً
       if (!isClosed) {
         if (result.data != null) {
           emit(
@@ -112,7 +110,24 @@ class HotelsCubit extends Cubit<HotelsState> {
         }
       }
     } catch (e) {
-      // ✅ وهنا
+      if (!isClosed) {
+        emit(HotelDetailsError(e.toString()));
+      }
+    }
+  }
+
+  Future<void> fetchHotelBySlug(String slug) async {
+    emit(HotelDetailsLoading());
+    try {
+      final result = await _repository.getHotelBySlug(slug);
+      if (!isClosed) {
+        if (result.data != null) {
+          emit(HotelSlugDetailsSuccess(result.data!));
+        } else {
+          emit(HotelDetailsError("لم يتم العثور على تفاصيل الفندق"));
+        }
+      }
+    } catch (e) {
       if (!isClosed) {
         emit(HotelDetailsError(e.toString()));
       }

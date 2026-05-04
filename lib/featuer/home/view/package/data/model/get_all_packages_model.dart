@@ -20,11 +20,12 @@ class PackagesDataWrapper {
   PackagesDataWrapper({this.packages});
 
   PackagesDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final list = json['data'] ?? json['packages'];
+    if (list != null && list is List) {
       packages = <PackageItem>[];
-      json['data'].forEach((v) {
+      for (var v in list) {
         packages!.add(PackageItem.fromJson(v));
-      });
+      }
     }
   }
 }

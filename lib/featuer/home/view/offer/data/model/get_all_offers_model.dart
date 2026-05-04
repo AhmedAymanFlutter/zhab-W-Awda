@@ -22,11 +22,12 @@ class OfferDataWrapper {
   OfferDataWrapper({this.offersList});
 
   OfferDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final list = json['data'] ?? json['offers'];
+    if (list != null && list is List) {
       offersList = <OfferItem>[];
-      json['data'].forEach((v) {
+      for (var v in list) {
         offersList!.add(OfferItem.fromJson(v));
-      });
+      }
     }
   }
 }

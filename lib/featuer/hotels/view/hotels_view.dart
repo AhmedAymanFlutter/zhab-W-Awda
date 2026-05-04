@@ -24,110 +24,107 @@ class HotelsView extends StatelessWidget {
           HotelsCubit(HotelsRepository())..fetchHotels(country: countryName),
       child: Scaffold(
         backgroundColor: AppColor.primaryWhite,
-        body: SafeArea(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              children: [
-                SizedBox(height: 16.h),
-
-                Builder(
-                  builder: (context) {
-                    return ReusableSearchBar(
-                      onSearchChanged: (value) {
-                        HotelsCubit.get(context).fetchHotels(query: value);
-                      },
-                      onFilterTap: () {
-                        final cubit = HotelsCubit.get(context);
-                        showModalBottomSheet(
-                          context: context,
-                          isScrollControlled: true,
-                          backgroundColor: Colors.transparent,
-                          builder: (context) {
-                            return HotelFilterBottomSheet(
-                              onApply:
-                                  (
-                                    city,
-                                    search,
-                                    checkIn,
-                                    checkOut,
-                                    adults,
-                                    children,
-                                  ) {
-                                    cubit.fetchHotels(
-                                      city: city,
-                                      query: search,
-                                      checkIn: checkIn,
-                                      checkOut: checkOut,
-                                      adults: adults,
-                                      children: children,
-                                    );
-                                  },
-                            );
-                          },
-                        );
-                      },
-                      hintText: "Search hotels...",
-                      useDebounce: true,
-                    );
-                  },
-                ),
-
-                SizedBox(height: 16.h),
-                Expanded(
-                  child: BlocBuilder<HotelsCubit, HotelsState>(
-                    builder: (context, state) {
-                      if (state is HotelsLoading) {
-                        return Skeletonizer(
-                          enabled: true,
-                          child: GridView.builder(
-                            physics: const BouncingScrollPhysics(),
-                            itemCount: 4,
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                                  crossAxisCount: 2,
-                                  crossAxisSpacing: 12.w,
-                                  mainAxisSpacing: 12.h,
-                                  childAspectRatio: 0.75,
-                                ),
-                            itemBuilder: (context, index) {
-                              return RecommendedHotelCard(
-                                hotel: HotelItem(name: "Loading"),
+        body: Directionality(
+          textDirection: TextDirection.rtl,
+          child: SafeArea(
+            child: Padding(
+              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              child: Column(
+                children: [
+                  SizedBox(height: 16.h),
+                  Builder(
+                    builder: (context) {
+                      return ReusableSearchBar(
+                        onSearchChanged: (value) {
+                          HotelsCubit.get(context).fetchHotels(query: value);
+                        },
+                        onFilterTap: () {
+                          final cubit = HotelsCubit.get(context);
+                          showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            builder: (context) {
+                              return HotelFilterBottomSheet(
+                                onApply: (
+                                  city,
+                                  search,
+                                  checkIn,
+                                  checkOut,
+                                  adults,
+                                  children,
+                                ) {
+                                  cubit.fetchHotels(
+                                    city: city,
+                                    query: search,
+                                    checkIn: checkIn,
+                                    checkOut: checkOut,
+                                    adults: adults,
+                                    children: children,
+                                  );
+                                },
                               );
                             },
-                          ),
-                        );
-                      } else if (state is HotelsError) {
-                        return Center(child: Text(state.message));
-                      } else if (state is HotelsSuccess) {
-                        if (state.hotels.isEmpty) {
-                          return const Center(
-                            child: Text("No hotels found matching your search"),
                           );
-                        }
-
-                        return GridView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: state.hotels.length,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
+                        },
+                        hintText: "ابحث عن الفنادق...",
+                        useDebounce: true,
+                      );
+                    },
+                  ),
+                  SizedBox(height: 16.h),
+                  Expanded(
+                    child: BlocBuilder<HotelsCubit, HotelsState>(
+                      builder: (context, state) {
+                        if (state is HotelsLoading) {
+                          return Skeletonizer(
+                            enabled: true,
+                            child: GridView.builder(
+                              physics: const BouncingScrollPhysics(),
+                              itemCount: 4,
+                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
                                 crossAxisCount: 2,
                                 crossAxisSpacing: 12.w,
                                 mainAxisSpacing: 12.h,
-                                childAspectRatio: 0.6,
+                                childAspectRatio: 0.75,
                               ),
-                          itemBuilder: (context, index) {
-                            return RecommendedHotelCard(
-                              hotel: state.hotels[index],
+                              itemBuilder: (context, index) {
+                                return RecommendedHotelCard(
+                                  hotel: HotelItem(name: "Loading"),
+                                );
+                              },
+                            ),
+                          );
+                        } else if (state is HotelsError) {
+                          return Center(child: Text(state.message));
+                        } else if (state is HotelsSuccess) {
+                          if (state.hotels.isEmpty) {
+                            return const Center(
+                              child: Text("لم يتم العثور على فنادق تطابق بحثك"),
                             );
-                          },
-                        );
-                      }
-                      return const SizedBox();
-                    },
+                          }
+                          return GridView.builder(
+                            physics: const BouncingScrollPhysics(),
+                            itemCount: state.hotels.length,
+                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                              crossAxisCount: 2,
+                              crossAxisSpacing: 12.w,
+                              mainAxisSpacing: 12.h,
+                              childAspectRatio: 0.6,
+                            ),
+                            itemBuilder: (context, index) {
+                              return RecommendedHotelCard(
+                                hotel: state.hotels[index],
+                              );
+                            },
+                          );
+                        }
+                        return const SizedBox();
+                      },
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ),

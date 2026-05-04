@@ -10,8 +10,19 @@ import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
 
-class ServicesView extends StatelessWidget {
+class ServicesView extends StatefulWidget {
   const ServicesView({super.key});
+
+  @override
+  State<ServicesView> createState() => _ServicesViewState();
+}
+
+class _ServicesViewState extends State<ServicesView> {
+  @override
+  void initState() {
+    super.initState();
+    context.read<ServicesCubit>().fetchServices();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +49,7 @@ class ServicesView extends StatelessWidget {
                   ),
                   Text(
                     " « الرئيسية ",
-                    style: TextStyle(
-                      fontSize: 14.sp,
-                      color: Colors.grey,
-                    ),
+                    style: TextStyle(fontSize: 14.sp, color: Colors.grey),
                   ),
                 ],
               ),
@@ -69,20 +77,30 @@ class ServicesView extends StatelessWidget {
               SizedBox(height: 40.h),
               // Grid of Services
               BlocBuilder<ServicesCubit, ServicesState>(
-                buildWhen: (previousState, currentState) {
-                  return currentState is ServicesLoading ||
-                      currentState is ServicesSuccess ||
-                      currentState is ServicesError ||
-                      currentState is ServicesInitial;
-                },
                 builder: (context, state) {
                   if (state is ServicesLoading) {
                     return Skeletonizer(
                       enabled: true,
-                      child: _buildServicesGrid(List.generate(7, (index) => null)),
+                      child: _buildServicesGrid(
+                        List.generate(
+                          8,
+                          (index) => null,
+                        ), // Showing 8 skeletons
+                      ),
                     );
                   } else if (state is ServicesError) {
-                    return Center(child: Text(state.message));
+                    return Center(
+                      child: Column(
+                        children: [
+                          Text(state.message),
+                          TextButton(
+                            onPressed: () =>
+                                context.read<ServicesCubit>().fetchServices(),
+                            child: const Text("إعادة المحاولة"),
+                          ),
+                        ],
+                      ),
+                    );
                   } else if (state is ServicesSuccess) {
                     return _buildServicesGrid(state.services);
                   }

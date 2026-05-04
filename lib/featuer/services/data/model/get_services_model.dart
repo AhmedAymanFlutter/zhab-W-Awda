@@ -19,11 +19,12 @@ class ServicesDataWrapper {
   ServicesDataWrapper({this.services, this.settings});
 
   ServicesDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final servicesList = json['data'] ?? json['services'];
+    if (servicesList != null && servicesList is List) {
       services = <ServiceItem>[];
-      json['data'].forEach((v) {
+      for (var v in servicesList) {
         services!.add(ServiceItem.fromJson(v));
-      });
+      }
     }
     settings = json['settings'] != null
         ? Settings.fromJson(json['settings'])

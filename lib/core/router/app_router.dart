@@ -15,7 +15,7 @@ import 'package:flutter_application_1/featuer/global_setting/view/contact_us_vie
 import 'package:flutter_application_1/featuer/home/view/home_view.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/view/offer_details_view.dart';
 import 'package:flutter_application_1/featuer/home/view/package/view/package_details_view.dart';
-import 'package:flutter_application_1/featuer/hotels/view/hotel_details_view.dart';
+import 'package:flutter_application_1/featuer/hotels/view/hotel_details_slug_view.dart';
 import 'package:flutter_application_1/featuer/hotels/view/hotels_view.dart';
 import 'package:flutter_application_1/featuer/layout/view/layout_view.dart';
 import 'package:flutter_application_1/featuer/onboarding/onboarding_screen.dart';
@@ -32,7 +32,6 @@ import '../../featuer/onboarding/SplashScreen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/more_view.dart';
 import 'package:flutter_application_1/featuer/tour_guide/view/tour_guide_details_view.dart';
-
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -106,11 +105,11 @@ class AppRouter {
         final citySlug = settings.arguments as String;
         return RouterTransitions.buildFade(CityDetailsView(citySlug: citySlug));
 
-      case Routes.hotelDetailsView:
-        final hotelSlug = settings.arguments as String;
-        return RouterTransitions.buildFade(
-          HotelDetailsView(hotelId: hotelSlug),
-        );
+      // case Routes.hotelDetailsView:
+      //   final hotelSlug = settings.arguments as String;
+      //   return RouterTransitions.buildFade(
+      //     HotelDetailsView(hotelId: hotelSlug),
+      //   );
 
       case Routes.tourDetailsView:
         final tourId = settings.arguments as String;
@@ -164,7 +163,12 @@ class AppRouter {
         return RouterTransitions.buildFade(const MoreView());
       case Routes.flightBookingSuccessView:
         final args = settings.arguments as BookFlightRequestModel;
-        return RouterTransitions.buildFade(FlightBookingSuccessView(bookingDetails: args));
+        return RouterTransitions.buildFade(
+          FlightBookingSuccessView(bookingDetails: args),
+        );
+      case Routes.hotelDetailsSlugView:
+        final slug = settings.arguments as String;
+        return RouterTransitions.buildFade(HotelDetailsSlugView(slug: slug));
       default:
         return RouterTransitions.build(
           const Scaffold(body: Center(child: Text("No Route Found"))),

@@ -1,3 +1,4 @@
+import '../model/get_hotel_details_model.dart';
 import '../../../../core/network/api_endpoiont.dart';
 import '../../../../core/network/api_helper.dart';
 import '../model/getHotel_model.dart';
@@ -55,6 +56,22 @@ class HotelsRepository {
 
       if (response.status == true && response.data != null) {
         return GetHotelIdModel.fromJson(response.data);
+      } else {
+        throw Exception(response.message);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+  Future<GetHotelDetailsModel> getHotelBySlug(String slug) async {
+    try {
+      final response = await _apiHelper.getRequest(
+        endPoint: '${EndPoints.hotels}/slug/$slug',
+        isProtected: false,
+      );
+
+      if (response.status == true && response.data != null) {
+        return GetHotelDetailsModel.fromJson(response.data);
       } else {
         throw Exception(response.message);
       }

@@ -20,11 +20,12 @@ class CitiesDataWrapper {
   CitiesDataWrapper({this.cities});
 
   CitiesDataWrapper.fromJson(Map<String, dynamic> json) {
-    if (json['data'] != null) {
+    final citiesList = json['data'] ?? json['cities'];
+    if (citiesList != null && citiesList is List) {
       cities = <CityItem>[];
-      json['data'].forEach((v) {
+      for (var v in citiesList) {
         cities!.add(CityItem.fromJson(v));
-      });
+      }
     }
   }
 }
