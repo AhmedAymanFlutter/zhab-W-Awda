@@ -32,22 +32,6 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
     super.dispose();
   }
 
-  void _initializeTabController(int branchCount) {
-    if (_tabController == null || _tabController!.length != branchCount) {
-      _tabController?.dispose();
-      _tabController = TabController(length: branchCount, vsync: this);
-      _tabController!.addListener(_onTabChange);
-    }
-  }
-
-  void _onTabChange() {
-    if (_tabController!.indexIsChanging) {
-      setState(() {
-        _selectedBranchIndex = _tabController!.index;
-      });
-    }
-  }
-
   void _showRateDialog(String? packageId) {
     if (packageId == null) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -151,7 +135,9 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
     final pkg = packageData.pkg;
     final branches = packageData.branches ?? [];
 
-    final currentBranch = branches.isNotEmpty ? branches[_selectedBranchIndex] : null;
+    final currentBranch = branches.isNotEmpty
+        ? branches[_selectedBranchIndex]
+        : null;
 
     return Directionality(
       textDirection: TextDirection.rtl,
@@ -218,7 +204,8 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.symmetric(horizontal: 24.w),
                             itemCount: branches.length,
-                            separatorBuilder: (context, index) => SizedBox(width: 16.w),
+                            separatorBuilder: (context, index) =>
+                                SizedBox(width: 16.w),
                             itemBuilder: (context, index) {
                               return PackageBranchCard(
                                 branch: branches[index],
@@ -236,10 +223,7 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
                       ],
 
                       // Branch Details Content
-                      PackageContentView(
-                        pkg: pkg,
-                        branch: currentBranch,
-                      ),
+                      PackageContentView(pkg: pkg, branch: currentBranch),
                     ],
                   ),
                 ),

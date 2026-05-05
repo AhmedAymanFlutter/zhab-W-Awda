@@ -25,19 +25,16 @@ class AppTextFormField extends StatelessWidget {
   Widget build(BuildContext context) {
     return TextFormField(
       controller: controller,
-      // validator: validator,
       obscureText: isObscureText ?? false,
       keyboardType: keyboardType,
-      // ستايل الكلام اللي اليوزر بيكتبه
       style: AppTextStyle.setelMessiriBlack(
         fontSize: 14,
         fontWeight: FontWeight.w500,
       ),
       decoration: InputDecoration(
         isDense: true,
-        contentPadding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 18.h),
+        contentPadding: EdgeInsets.fromLTRB(14.w, 27.h, 14.w, 27.h),
         hintText: hintText,
-        // ستايل الكلام التوضيحي (Hint)
         hintStyle: AppTextStyle.setelMessirisecondaryGery(
           fontSize: 14,
           fontWeight: FontWeight.normal,

@@ -48,7 +48,7 @@ class _SplashscreenState extends State<Splashscreen>
     if (userCubit.state.name.isNotEmpty) {
       Navigator.pushReplacementNamed(context, Routes.layout);
     } else {
-      Navigator.pushReplacementNamed(context, Routes.onboarding);
+      Navigator.pushReplacementNamed(context, Routes.loginView);
     }
   }
 

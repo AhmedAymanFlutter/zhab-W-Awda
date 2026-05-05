@@ -4,6 +4,9 @@ import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/widgets/ExitConfirmWrapper_widget.dart';
 import 'package:flutter_application_1/featuer/Auth/view/log_in_view.dart';
 import 'package:flutter_application_1/featuer/Auth/view/sign_up_view.dart';
+import 'package:flutter_application_1/featuer/Auth/view/forgot_password_view.dart';
+import 'package:flutter_application_1/featuer/Auth/view/otp_view.dart';
+import 'package:flutter_application_1/featuer/Auth/view/reset_password_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
 import 'package:flutter_application_1/featuer/countries/view/countries_view.dart';
@@ -18,7 +21,6 @@ import 'package:flutter_application_1/featuer/home/view/package/view/package_det
 import 'package:flutter_application_1/featuer/hotels/view/hotel_details_slug_view.dart';
 import 'package:flutter_application_1/featuer/hotels/view/hotels_view.dart';
 import 'package:flutter_application_1/featuer/layout/view/layout_view.dart';
-import 'package:flutter_application_1/featuer/onboarding/onboarding_screen.dart';
 import 'package:flutter_application_1/featuer/packageType/view/package_type_details_view.dart';
 import 'package:flutter_application_1/featuer/packageType/view/packages_in_country_view.dart';
 import 'package:flutter_application_1/featuer/profile/profile_view.dart';
@@ -28,7 +30,7 @@ import 'package:flutter_application_1/featuer/services/view/service_details_view
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
-import '../../featuer/onboarding/SplashScreen.dart';
+import 'package:flutter_application_1/featuer/splash/view/splash_screen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/more_view.dart';
 import 'package:flutter_application_1/featuer/tour_guide/view/tour_guide_details_view.dart';
@@ -56,10 +58,21 @@ class AppRouter {
           ExitConfirmWrapper(child: const SignUpView()),
         );
 
-      case Routes.onboarding:
+      case Routes.forgotPassword:
         return RouterTransitions.buildFade(
-          ExitConfirmWrapper(child: const OnboardingScreen()),
+          const ForgotPasswordView(),
         );
+
+      case Routes.otp:
+        return RouterTransitions.buildFade(
+          const OTPView(),
+        );
+
+      case Routes.resetPassword:
+        return RouterTransitions.buildFade(
+          const ResetPasswordView(),
+        );
+
 
       case Routes.layout:
         return RouterTransitions.buildFade(

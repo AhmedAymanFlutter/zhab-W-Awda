@@ -161,11 +161,9 @@ class HotelDetailsSlugView extends StatelessWidget {
                                     ],
                                   ),
                                   SizedBox(height: 20.h),
-
                                   // Gallery
                                   HotelGallerySection(images: hotel.images),
                                   SizedBox(height: 24.h),
-
                                   // Overview / Description
                                   Text(
                                     "نظرة عامة للفندق",
@@ -184,17 +182,14 @@ class HotelDetailsSlugView extends StatelessWidget {
                                     ),
                                   ),
                                   SizedBox(height: 24.h),
-
                                   // Amenities
                                   HotelAmenitiesSection(
                                     amenities: hotel.includes,
                                   ),
                                   SizedBox(height: 32.h),
-
                                   // Rooms
                                   HotelRoomsSection(rooms: hotel.rooms),
                                   SizedBox(height: 32.h),
-
                                   // Location
                                   Text(
                                     "الموقع الذي سنقيم فيه",
@@ -210,7 +205,6 @@ class HotelDetailsSlugView extends StatelessWidget {
                                     address: hotel.addressline1,
                                   ),
                                   SizedBox(height: 32.h),
-
                                   // Policies
                                   HotelPoliciesSection(
                                     policies: hotel.policies,
@@ -237,7 +231,6 @@ class HotelDetailsSlugView extends StatelessWidget {
                         ),
                       ],
                     ),
-
                     // Bottom Bar
                     Align(
                       alignment: Alignment.bottomCenter,

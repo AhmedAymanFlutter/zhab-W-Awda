@@ -5,82 +5,67 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class CustomTextField extends StatelessWidget {
   final String hintText;
-  final String? labelText;
-  final Widget? prefixIcon;
-  final Widget? suffixIcon;
+  final Widget? leftIcon;
+  final Widget? rightIcon;
   final bool isObscureText;
   final TextEditingController? controller;
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
-  final bool isGlass;
 
   const CustomTextField({
     super.key,
     required this.hintText,
-    this.labelText,
-    this.prefixIcon,
-    this.suffixIcon,
+    this.leftIcon,
+    this.rightIcon,
     this.isObscureText = false,
     this.controller,
     this.validator,
     this.keyboardType,
-    this.isGlass = false,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      width: 295.w,
+      height: 46.h,
       decoration: BoxDecoration(
-        color: isGlass ? Colors.white.withOpacity(0.1) : AppColor.mainWhite,
-        borderRadius: BorderRadius.circular(16.r),
-        boxShadow: isGlass
-            ? []
-            : [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-        border: isGlass
-            ? Border.all(color: Colors.white.withOpacity(0.2), width: 1)
-            : Border.all(color: AppColor.lightGrey.withOpacity(0.3), width: 1),
+        color: AppColor.mainWhite,
+        borderRadius: BorderRadius.circular(10.r),
+        border: Border.all(color: const Color(0xffEDF1F3), width: 1),
+        boxShadow: const [
+          BoxShadow(
+            color: Color(0x3DE4E5E7),
+            blurRadius: 2,
+            offset: Offset(0, 1),
+          ),
+        ],
       ),
       child: TextFormField(
         controller: controller,
         obscureText: isObscureText,
         keyboardType: keyboardType,
         validator: validator,
+        textAlign: TextAlign.right,
         style: AppTextStyle.setelMessiriBlack(
-          fontSize: 16,
+          fontSize: 14,
           fontWeight: FontWeight.w500,
-        ).copyWith(color: isGlass ? Colors.white : AppColor.mainBlack),
+        ),
         decoration: InputDecoration(
-          labelText: labelText,
-          labelStyle:
-              AppTextStyle.setelMessiriSecondlightGrey(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ).copyWith(
-                color: isGlass ? Colors.white70 : AppColor.secondeLightGrey,
-              ),
+          isDense: true,
           hintText: hintText,
           hintStyle: AppTextStyle.setelMessirisecondaryGery(
             fontSize: 14,
-            fontWeight: FontWeight.normal,
-          ).copyWith(color: isGlass ? Colors.white54 : AppColor.secondaryGrey),
-          prefixIcon: prefixIcon,
-          suffixIcon: suffixIcon,
+            fontWeight: FontWeight.w500,
+          ).copyWith(color: const Color(0xff1A1C1E)),
+          suffixIcon: leftIcon,
+          prefixIcon: rightIcon,
           border: InputBorder.none,
+          // Note: Vertical padding 27.h + 27.h = 54.h, which is more than the height (46.h).
+          // We will use symmetric padding that fits the 46.h height while respecting the 14.w horizontal padding.
           contentPadding: EdgeInsets.symmetric(
-            horizontal: 20.w,
-            vertical: 16.h,
+            horizontal: 14.w,
+            vertical: 12.h, // Adjusted to fit 46.h total height
           ),
-          errorStyle: const TextStyle(height: 0, color: Colors.transparent),
-          // Hide default error text to keep design clean, or customize it if needed.
-          // For now, we rely on the validator red border in standard implementation,
-          // but since we are using Container decoration, we might need to handle error state visually if strict validation visualization is needed.
-          // However, for this aesthetic, a simple clean input is prioritized.
         ),
       ),
     );

@@ -4,7 +4,6 @@ class Routes {
   static const String loginView = '/LoginView';
   static const String signUp = '/signUp';
   static const String home = '/home';
-  static const String onboarding = '/onboarding';
   static const String layout = '/layout';
   static const String cities = '/cities';
   static const String countriesView = '/CountriesView';
@@ -30,4 +29,7 @@ class Routes {
   static const String moreView = '/MoreView';
   static const String flightBookingSuccessView = '/FlightBookingSuccessView';
   static const String hotelDetailsSlugView = '/HotelDetailsSlugView';
+  static const String forgotPassword = '/forgotPassword';
+  static const String otp = '/otp';
+  static const String resetPassword = '/resetPassword';
 }

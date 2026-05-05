@@ -1,95 +1,61 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class AuthBackground extends StatelessWidget {
   final Widget child;
-  final String title;
-  final String subtitle;
 
   const AuthBackground({
     super.key,
     required this.child,
-    required this.title,
-    required this.subtitle,
   });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColor.mainWhite, // Light background
-      body: Stack(
-        children: [
-          // Decorative Circle 1 (Top Left)
-          Positioned(
-            top: -100.h,
-            left: -100.w,
-            child: Container(
-              width: 300.w,
-              height: 300.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColor.primaryBlue.withOpacity(0.05),
+      body: Container(
+        width: double.infinity,
+        height: double.infinity,
+        decoration: const BoxDecoration(
+          gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+            colors: [
+              Color(0xff94BCEB),
+              Color(0xffF8FAFF),
+              Color(0xffE2E7FF),
+            ],
+          ),
+        ),
+        child: Stack(
+          children: [
+            // Back button
+            Positioned(
+              top: 50.h,
+              right: 20.w,
+              child: IconButton(
+                icon: const Icon(Icons.arrow_forward, color: Colors.black),
+                onPressed: () => Navigator.maybePop(context),
               ),
             ),
-          ),
-          // Decorative Circle 2 (Top Right)
-          Positioned(
-            top: -50.h,
-            right: -80.w,
-            child: Container(
-              width: 200.w,
-              height: 200.w,
-              decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                color: AppColor.lightBlue.withOpacity(0.05),
+            // Main Container at exact design position
+            Positioned(
+              top: 125.h,
+              left: 16.w,
+              right: 16.w,
+              child: Container(
+                width: 343.w,
+                height: 564.h,
+                padding: EdgeInsets.all(24.w),
+                decoration: BoxDecoration(
+                  color: const Color(0x99FFFFFF),
+                  borderRadius: BorderRadius.circular(12.r),
+                  border: Border.all(color: Colors.white, width: 1),
+                ),
+                child: child,
               ),
             ),
-          ),
-
-          SafeArea(
-            child: Column(
-              children: [
-                SizedBox(height: 40.h),
-                // Header Section
-                Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        title,
-                        style: Theme.of(context).textTheme.headlineMedium
-                            ?.copyWith(
-                              fontFamily: 'elMessiri',
-                              fontWeight: FontWeight.bold,
-                              color: AppColor.primaryBlue,
-                            ),
-                      ),
-                      SizedBox(height: 8.h),
-                      Text(
-                        subtitle,
-                        style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          fontFamily: 'elMessiri',
-                          color: AppColor.secondaryGrey,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(height: 40.h),
-                // Main Content
-                Expanded(
-                  child: Container(
-                    width: double.infinity,
-                    padding: EdgeInsets.symmetric(horizontal: 24.w),
-                    child: SingleChildScrollView(child: child),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
