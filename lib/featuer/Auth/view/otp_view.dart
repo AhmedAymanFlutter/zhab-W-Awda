@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
@@ -9,7 +10,7 @@ import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class OTPView extends StatelessWidget {
+class OTPView extends StatefulWidget {
   final String phone;
   final String countryCode;
   final String purpose;
@@ -22,9 +23,50 @@ class OTPView extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
-    final controllers = List.generate(6, (_) => TextEditingController());
+  State<OTPView> createState() => _OTPViewState();
+}
 
+class _OTPViewState extends State<OTPView> {
+  final List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
+  Timer? _timer;
+  int _secondsRemaining = 30;
+  bool _canResend = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _startTimer();
+  }
+
+  void _startTimer() {
+    _secondsRemaining = 30;
+    _canResend = false;
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_secondsRemaining > 0) {
+        setState(() {
+          _secondsRemaining--;
+        });
+      } else {
+        setState(() {
+          _canResend = true;
+          _timer?.cancel();
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    for (var controller in controllers) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return AuthBackground(
       child: BlocConsumer<UserCubit, AuthState>(
         listener: (context, state) {
@@ -42,6 +84,11 @@ class OTPView extends StatelessWidget {
               Routes.resetPassword,
               arguments: state.resetToken,
             );
+          } else if (state is AuthResendOtpSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+            _startTimer();
           } else if (state is AuthError) {
             ScaffoldMessenger.of(context).showSnackBar(
               SnackBar(content: Text(state.message), backgroundColor: Colors.red),
@@ -94,7 +141,7 @@ class OTPView extends StatelessWidget {
                   ),
                   SizedBox(width: 8.w),
                   Text(
-                    "$countryCode $phone",
+                    "${widget.countryCode} ${widget.phone}",
                     style: AppTextStyle.setelMessiriBlack(
                       fontSize: 13,
                       fontWeight: FontWeight.bold,
@@ -134,7 +181,9 @@ class OTPView extends StatelessWidget {
 
               // Resend info
               Text(
-                "يمكنك إعادة إرسال الكود خلال 12ث",
+                _canResend
+                    ? "يمكنك الآن إعادة إرسال الرمز"
+                    : "يمكنك إعادة إرسال الكود خلال ${_secondsRemaining}ث",
                 style: AppTextStyle.setelMessiriSecondlightGrey(
                   fontSize: 11,
                   fontWeight: FontWeight.w500,
@@ -151,10 +200,10 @@ class OTPView extends StatelessWidget {
                         String otp = controllers.map((e) => e.text).join();
                         if (otp.length == 6) {
                           context.read<UserCubit>().verifyOtp(
-                                countryCode: countryCode,
-                                phone: phone,
+                                countryCode: widget.countryCode,
+                                phone: widget.phone,
                                 code: otp,
-                                purpose: purpose,
+                                purpose: widget.purpose,
                               );
                         } else {
                           ScaffoldMessenger.of(context).showSnackBar(
@@ -170,13 +219,23 @@ class OTPView extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   InkWell(
-                    onTap: () {},
+                    onTap: _canResend
+                        ? () {
+                            context.read<UserCubit>().resendOtp(
+                                  countryCode: widget.countryCode,
+                                  phone: widget.phone,
+                                  purpose: widget.purpose,
+                                );
+                          }
+                        : null,
                     child: Text(
                       'إعادة الإرسال',
                       style: AppTextStyle.setelMessiriBlack(
                         fontSize: 13,
                         fontWeight: FontWeight.bold,
-                      ).copyWith(color: const Color(0xff00276C)),
+                      ).copyWith(
+                        color: _canResend ? const Color(0xff00276C) : Colors.grey,
+                      ),
                     ),
                   ),
                   Text(

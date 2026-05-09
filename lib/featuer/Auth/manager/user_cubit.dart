@@ -87,6 +87,25 @@ class UserCubit extends Cubit<AuthState> {
     }
   }
 
+  Future<void> resendOtp({
+    required String countryCode,
+    required String phone,
+    required String purpose,
+  }) async {
+    emit(AuthLoading());
+    final response = await _authRepository.resendOtp(
+      countryCode: countryCode,
+      phone: phone,
+      purpose: purpose,
+    );
+
+    if (response.status) {
+      emit(AuthResendOtpSuccess(response.message));
+    } else {
+      emit(AuthError(response.message));
+    }
+  }
+
   Future<void> verifyOtp({
     required String countryCode,
     required String phone,

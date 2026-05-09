@@ -1,16 +1,17 @@
 import '../../../../core/network/api_endpoiont.dart';
 import '../../../../core/network/api_helper.dart';
+import '../../../../core/network/api_response.dart';
 import '../model/get_all_tours_model.dart';
 import '../model/get_tour_id_model.dart';
 
 class ToursRepository {
   final APIHelper _apiHelper = APIHelper();
 
-  Future<GetAllToursModel> getTours() async {
+  Future<GetAllToursModel> getTours({Map<String, dynamic>? queryParameters}) async {
     try {
-      // Assuming EndPoints.tours = 'tours'
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.tours,
+        queryParameters: queryParameters,
         isProtected: false,
       );
 
@@ -42,6 +43,17 @@ class ToursRepository {
       } else {
         throw Exception(response.message);
       }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> getCities() async {
+    try {
+      return await _apiHelper.getRequest(
+        endPoint: EndPoints.cities,
+        isProtected: false,
+      );
     } catch (e) {
       rethrow;
     }

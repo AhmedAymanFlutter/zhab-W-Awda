@@ -73,6 +73,23 @@ class AuthRepository {
     );
   }
 
+  Future<ApiResponse> resendOtp({
+    required String countryCode,
+    required String phone,
+    required String purpose,
+  }) async {
+    return await _apiHelper.postRequest(
+      endPoint: EndPoints.authResendOtp,
+      data: {
+        "countryCode": countryCode,
+        "phone": phone,
+        "purpose": purpose,
+      },
+      isFormData: false,
+      isAuthorized: false,
+    );
+  }
+
   Future<ApiResponse> verifyOtp({
     required String countryCode,
     required String phone,

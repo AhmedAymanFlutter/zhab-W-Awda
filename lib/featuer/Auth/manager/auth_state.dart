@@ -26,6 +26,11 @@ class AuthResetPasswordSuccess extends AuthState {
   AuthResetPasswordSuccess(this.message);
 }
 
+class AuthResendOtpSuccess extends AuthState {
+  final String message;
+  AuthResendOtpSuccess(this.message);
+}
+
 class AuthVerifySuccess extends AuthState {
   final UserModel user;
   AuthVerifySuccess(this.user);

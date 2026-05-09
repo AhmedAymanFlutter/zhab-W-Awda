@@ -6,6 +6,7 @@ import 'cities_state.dart';
 class CitiesCubit extends Cubit<CitiesState> {
   final CitiesRepository _repository;
   List<CityItem> _allCities = [];
+  List<CityItem> get cities => _allCities;
   CitiesCubit(this._repository) : super(CitiesInitial());
 
   static CitiesCubit get(context) => BlocProvider.of(context);

@@ -1,32 +1,71 @@
 class GetAllToursModel {
-  String? status;
-  int? results;
+  String? message;
+  bool? success;
   ToursDataWrapper? data;
 
-  GetAllToursModel({this.status, this.results, this.data});
+  GetAllToursModel({this.message, this.success, this.data});
 
   GetAllToursModel.fromJson(Map<String, dynamic> json) {
-    status = json['status'];
-    results = json['results'];
-    data = json['data'] != null
-        ? ToursDataWrapper.fromJson(json['data'])
-        : null;
+    message = json['message'];
+    success = json['success'] ?? json['status'] == 'success' || json['status'] == true;
+    
+    if (json['data'] != null) {
+      if (json['data'] is List) {
+        data = ToursDataWrapper(tours: []);
+        for (var v in (json['data'] as List)) {
+          data!.tours!.add(TourItem.fromJson(v));
+        }
+      } else {
+        data = ToursDataWrapper.fromJson(json['data']);
+      }
+    }
   }
 }
 
 class ToursDataWrapper {
   List<TourItem>? tours;
+  Pagination? pagination;
 
-  ToursDataWrapper({this.tours});
+  ToursDataWrapper({this.tours, this.pagination});
 
   ToursDataWrapper.fromJson(Map<String, dynamic> json) {
-    final toursList = json['data'] ?? json['tours'];
+    final toursList = json['data'] ?? json['tours'] ?? (json is List ? json : null);
     if (toursList != null && toursList is List) {
       tours = <TourItem>[];
       for (var v in toursList) {
         tours!.add(TourItem.fromJson(v));
       }
     }
+    if (json['pagination'] != null) {
+      pagination = Pagination.fromJson(json['pagination']);
+    }
+  }
+}
+
+class Pagination {
+  int? currentPage;
+  int? totalPages;
+  int? totalRecords;
+  int? recordsPerPage;
+  bool? hasNextPage;
+  bool? hasPrevPage;
+
+  Pagination({
+    this.currentPage,
+    this.totalPages,
+    this.totalRecords,
+    this.recordsPerPage,
+    this.hasNextPage,
+    this.hasPrevPage,
+  });
+
+  Pagination.fromJson(Map<String, dynamic> json) {
+    currentPage = json['currentPage'];
+    totalPages = json['totalPages'];
+    totalRecords = json['totalRecords'];
+    recordsPerPage = json['recordsPerPage'];
+    hasNextPage = json['hasNextPage'];
+    hasPrevPage = json['hasPrevPage'];
   }
 }
 
@@ -53,6 +92,7 @@ class TourItem {
   String? alt;
   String? price;
   String? originPrice;
+  int? duration;
 
   TourItem({
     this.seo,
@@ -77,6 +117,7 @@ class TourItem {
     this.alt,
     this.price,
     this.originPrice,
+    this.duration,
   });
 
   TourItem.fromJson(Map<String, dynamic> json) {
@@ -85,12 +126,13 @@ class TourItem {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
+    duration = json['duration'];
     
     // Handle complex price object {amount: 100, currency: AED}
     if (json['price'] != null) {
       if (json['price'] is Map) {
         final amt = json['price']['amount'];
-        final curr = json['price']['currency'];
+        final curr = json['price']['currency'] ?? "";
         price = amt?.toString();
         originPrice = "$amt $curr";
       } else {
@@ -112,6 +154,12 @@ class TourItem {
         : [];
 
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
+    
+    // If duration is provided but header is null, sync duration to header.days for backward compatibility with UI
+    if (duration != null && header == null) {
+      header = Header(days: duration.toString());
+    }
+
     if (json['paths'] != null) {
       paths = <Paths>[];
       json['paths'].forEach((v) {
@@ -125,7 +173,7 @@ class TourItem {
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
     updatedBy = json['updatedBy'];
-    id = json['id'];
+    id = json['id'] ?? json['_id'];
     alt = json['alt'];
   }
 }
@@ -199,6 +247,8 @@ class Header {
   String? people;
   String? type;
   String? sId;
+
+  Header({this.days, this.people, this.type, this.sId});
 
   Header.fromJson(dynamic json) {
     if (json is Map<String, dynamic>) {

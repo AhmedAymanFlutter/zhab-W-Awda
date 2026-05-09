@@ -10,7 +10,8 @@ class ToursLoading extends ToursState {}
 
 class ToursSuccess extends ToursState {
   final List<TourItem> tours;
-  ToursSuccess(this.tours);
+  final Pagination? pagination;
+  ToursSuccess(this.tours, {this.pagination});
 }
 
 class ToursError extends ToursState {
