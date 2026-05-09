@@ -4,7 +4,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class MoreMenuItem extends StatelessWidget {
   final String title;
-  final String iconPath;
+  final String? iconPath;
+  final IconData? iconData;
   final VoidCallback onTap;
   final bool isSvg;
   final Color? iconColor;
@@ -12,11 +13,12 @@ class MoreMenuItem extends StatelessWidget {
   const MoreMenuItem({
     super.key,
     required this.title,
-    required this.iconPath,
+    this.iconPath,
+    this.iconData,
     required this.onTap,
     this.isSvg = true,
     this.iconColor,
-  });
+  }) : assert(iconPath != null || iconData != null, 'Either iconPath or iconData must be provided');
 
   @override
   Widget build(BuildContext context) {
@@ -43,20 +45,22 @@ class MoreMenuItem extends StatelessWidget {
                 color: Colors.grey[100],
                 borderRadius: BorderRadius.circular(10.r),
               ),
-              child: isSvg
-                  ? SvgPicture.asset(
-                      iconPath,
-                      width: 20.r,
-                      height: 20.r,
-                      colorFilter: iconColor != null
-                          ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
-                          : null,
-                    )
-                  : Image.asset(
-                      iconPath,
-                      width: 20.r,
-                      height: 20.r,
-                    ),
+              child: iconData != null
+                  ? Icon(iconData, size: 20.r, color: iconColor)
+                  : isSvg
+                      ? SvgPicture.asset(
+                          iconPath!,
+                          width: 20.r,
+                          height: 20.r,
+                          colorFilter: iconColor != null
+                              ? ColorFilter.mode(iconColor!, BlendMode.srcIn)
+                              : null,
+                        )
+                      : Image.asset(
+                          iconPath!,
+                          width: 20.r,
+                          height: 20.r,
+                        ),
             ),
           ],
         ),

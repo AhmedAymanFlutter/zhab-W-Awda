@@ -4,6 +4,8 @@ import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/core/widgets/main_app_header.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/widgets/more_menu_item.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/widgets/profile_card.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class MoreView extends StatelessWidget {
@@ -140,6 +142,24 @@ class MoreView extends StatelessWidget {
                             iconColor: Colors.deepOrange,
                             onTap: () {
                               Navigator.pushNamed(context, Routes.changePasswordView);
+                            },
+                          ),
+                          const Divider(height: 1),
+                          MoreMenuItem(
+                            title: "تسجيل الخروج",
+                            iconData: Icons.logout_rounded,
+                            iconColor: Colors.red,
+                            onTap: () async {
+                              // Call logout
+                              await context.read<UserCubit>().logout();
+                              // Navigate to login view
+                              if (context.mounted) {
+                                Navigator.pushNamedAndRemoveUntil(
+                                  context,
+                                  Routes.loginView,
+                                  (route) => false,
+                                );
+                              }
                             },
                           ),
                         ],
