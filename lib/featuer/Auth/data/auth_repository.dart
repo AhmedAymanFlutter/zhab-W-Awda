@@ -31,11 +31,7 @@ class AuthRepository {
   }) async {
     return await _apiHelper.postRequest(
       endPoint: EndPoints.authLogin,
-      data: {
-        "countryCode": countryCode,
-        "phone": phone,
-        "password": password,
-      },
+      data: {"countryCode": countryCode, "phone": phone, "password": password},
       isFormData: false,
       isAuthorized: false,
     );
@@ -47,10 +43,7 @@ class AuthRepository {
   }) async {
     return await _apiHelper.postRequest(
       endPoint: EndPoints.authForgotPassword,
-      data: {
-        "countryCode": countryCode,
-        "phone": phone,
-      },
+      data: {"countryCode": countryCode, "phone": phone},
       isFormData: false,
       isAuthorized: false,
     );
@@ -80,11 +73,7 @@ class AuthRepository {
   }) async {
     return await _apiHelper.postRequest(
       endPoint: EndPoints.authResendOtp,
-      data: {
-        "countryCode": countryCode,
-        "phone": phone,
-        "purpose": purpose,
-      },
+      data: {"countryCode": countryCode, "phone": phone, "purpose": purpose},
       isFormData: false,
       isAuthorized: false,
     );
@@ -106,6 +95,23 @@ class AuthRepository {
       },
       isFormData: false,
       isAuthorized: false,
+    );
+  }
+
+  Future<ApiResponse> changePassword({
+    required String password,
+    required String newPassword,
+    required String passwordConfirm,
+  }) async {
+    return await _apiHelper.patchRequest(
+      endPoint: EndPoints.authChangePassword,
+      data: {
+        "password": password,
+        "newPassword": newPassword,
+        "passwordConfirm": passwordConfirm,
+      },
+      isFormData: false,
+      isAuthorized: true,
     );
   }
 }

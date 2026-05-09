@@ -14,7 +14,7 @@ class ServicesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.services,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -34,7 +34,7 @@ class ServicesRepository {
       // Use '${EndPoints.services}/$id' if public API
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.services}/$id',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {

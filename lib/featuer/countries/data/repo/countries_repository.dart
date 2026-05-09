@@ -14,7 +14,7 @@ class CountriesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.countries,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -32,7 +32,7 @@ class CountriesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.countries}/slug/$slug',
-        isProtected: false,
+        isProtected: true,
       );
 
       if ((response.data['success'] == true || response.status == true) &&

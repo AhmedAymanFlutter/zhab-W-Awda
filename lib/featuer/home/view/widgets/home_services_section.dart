@@ -63,6 +63,12 @@ class HomeServicesSection extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              Icon(
+                Icons.arrow_back_ios_new,
+                size: 14.sp,
+                color: AppColor.primaryBlue2,
+              ),
+              SizedBox(width: 8.w),
               Text(
                 "عرض جميع الخدمات",
                 style: AppTextStyle.setelMessiriTextStyle(
@@ -70,12 +76,6 @@ class HomeServicesSection extends StatelessWidget {
                   fontWeight: FontWeight.bold,
                   color: AppColor.primaryBlue2,
                 ),
-              ),
-              SizedBox(width: 8.w),
-              Icon(
-                Icons.arrow_back_ios_new,
-                size: 14.sp,
-                color: AppColor.primaryBlue2,
               ),
             ],
           ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/network/local_data.dart';
 import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_color.dart';
@@ -25,7 +26,10 @@ import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  // Load token from FlutterSecureStorage before the app starts
+  await LocalData.loadTokens();
   runApp(MyApp(appRouter: AppRouter()));
 }
 

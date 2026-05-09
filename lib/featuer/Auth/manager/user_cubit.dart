@@ -44,7 +44,7 @@ class UserCubit extends Cubit<AuthState> {
 
     if (response.status) {
       final user = UserModel.fromJson(response.data['data']);
-      await saveUser(user);
+      await _saveUser(user);
       emit(AuthVerifySuccess(user));
     } else {
       emit(AuthError(response.message));
@@ -126,7 +126,7 @@ class UserCubit extends Cubit<AuthState> {
         emit(AuthVerifyOtpForResetSuccess(resetToken));
       } else {
         final user = UserModel.fromJson(response.data['data']);
-        await saveUser(user);
+        await _saveUser(user);
         emit(AuthVerifySuccess(user));
       }
     } else {
@@ -134,30 +134,54 @@ class UserCubit extends Cubit<AuthState> {
     }
   }
 
-  Future<void> saveUser(UserModel user) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setString("user_id", user.id);
-    await prefs.setString("user_name", user.name);
-    await prefs.setString("user_phone", user.phone);
-    await prefs.setString("user_token", user.token);
-    LocalData.accessToken = user.token;
+  Future<void> changePassword({
+    required String password,
+    required String newPassword,
+    required String passwordConfirm,
+  }) async {
+    emit(AuthLoading());
+    final response = await _authRepository.changePassword(
+      password: password,
+      newPassword: newPassword,
+      passwordConfirm: passwordConfirm,
+    );
+    if (response.status) {
+      emit(AuthChangePasswordSuccess(response.message));
+    } else {
+      emit(AuthError(response.message));
+    }
   }
 
-  Future<void> loadUser() async {
+  // ─── Save user to SharedPreferences + token to SecureStorage ─────────
+  Future<void> _saveUser(UserModel user) async {
+    // Save token securely
+    await LocalData.saveToken(user.token);
+
+    // Save non-sensitive profile data in SharedPreferences
     final prefs = await SharedPreferences.getInstance();
-    final token = prefs.getString("user_token");
-    final name = prefs.getString("user_name");
-    final id = prefs.getString("user_id");
-    final phone = prefs.getString("user_phone");
+    await prefs.setString('user_id', user.id);
+    await prefs.setString('user_name', user.name);
+    await prefs.setString('user_phone', user.phone);
+  }
+
+  // ─── Load user on app start ───────────────────────────────────────────
+  Future<void> loadUser() async {
+    // Load token from SecureStorage
+    await LocalData.loadTokens();
+
+    final prefs = await SharedPreferences.getInstance();
+    final name = prefs.getString('user_name');
+    final id = prefs.getString('user_id');
+    final phone = prefs.getString('user_phone');
+    final token = LocalData.accessToken;
 
     if (token != null && name != null && id != null && phone != null) {
-      LocalData.accessToken = token;
       final user = UserModel(
         id: id,
         name: name,
         phone: phone,
         token: token,
-        countryCode: '', 
+        countryCode: '',
         role: 'user',
         isEmailVerified: false,
         isPhoneVerified: true,
@@ -167,10 +191,19 @@ class UserCubit extends Cubit<AuthState> {
     }
   }
 
+  // ─── Logout ───────────────────────────────────────────────────────────
   Future<void> logout() async {
+    // Clear token from SecureStorage
+    await LocalData.clearTokens();
+
+    // Clear profile data from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
-    LocalData.accessToken = null;
+
     emit(AuthInitial());
   }
+
+  // ─── Legacy alias kept for backward compatibility ─────────────────────
+  @Deprecated('Use _saveUser internally. Token is now saved in SecureStorage.')
+  Future<void> saveUser(UserModel user) => _saveUser(user);
 }

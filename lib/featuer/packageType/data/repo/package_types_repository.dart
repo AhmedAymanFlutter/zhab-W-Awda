@@ -13,7 +13,7 @@ class PackageTypesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.packageTypes,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -32,7 +32,7 @@ class PackageTypesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.packageTypes}/slug/$slug',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.data['success'] == true && response.data['data'] != null) {
@@ -56,7 +56,7 @@ class PackageTypesRepository {
       final response = await _apiHelper.getRequest(
         endPoint:
             '${EndPoints.packageTypes}/$packageTypeSlug/packages/slug/$countrySlug',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.data['success'] == true && response.data['data'] != null) {

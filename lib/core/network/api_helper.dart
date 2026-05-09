@@ -55,7 +55,10 @@ class APIHelper {
         finalEndpoint,
         queryParameters: queryParameters,
         options: Options(
-          headers: {},
+          headers: {
+            if (isProtected && LocalData.accessToken != null)
+              "Authorization": "Bearer ${LocalData.accessToken}",
+          },
           validateStatus: (status) {
             // ✅ قبول جميع الحالات لنتمكن من معالجتها
             return status != null && status < 600;
@@ -135,6 +138,30 @@ class APIHelper {
             'Content-Type': isFormData
                 ? 'multipart/form-data'
                 : 'application/json',
+          },
+        ),
+      );
+      return ApiResponse.fromResponse(response);
+    } catch (e) {
+      return ApiResponse.fromError(e);
+    }
+  }
+
+  // PATCH request
+  Future<ApiResponse> patchRequest({
+    required String endPoint,
+    Map<String, dynamic>? data,
+    bool isFormData = true,
+    bool isAuthorized = true,
+  }) async {
+    try {
+      var response = await dio.patch(
+        endPoint,
+        data: isFormData ? FormData.fromMap(data ?? {}) : data,
+        options: Options(
+          headers: {
+            if (isAuthorized)
+              "Authorization": "Bearer ${LocalData.accessToken}",
           },
         ),
       );

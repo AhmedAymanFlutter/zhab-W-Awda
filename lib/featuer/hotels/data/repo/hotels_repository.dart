@@ -12,7 +12,7 @@ class HotelsRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.hotelsCountries,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -33,7 +33,7 @@ class HotelsRepository {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.hotels,
         queryParameters: queryParameters,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -50,7 +50,7 @@ class HotelsRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.hotels}/$id',
-        isProtected: false,
+        isProtected: true,
         isFormData: false,
       );
 
@@ -67,7 +67,7 @@ class HotelsRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.hotels}/slug/$slug',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {

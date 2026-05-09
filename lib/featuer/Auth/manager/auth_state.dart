@@ -40,3 +40,8 @@ class AuthError extends AuthState {
   final String message;
   AuthError(this.message);
 }
+
+class AuthChangePasswordSuccess extends AuthState {
+  final String message;
+  AuthChangePasswordSuccess(this.message);
+}

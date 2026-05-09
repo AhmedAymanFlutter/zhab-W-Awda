@@ -12,7 +12,7 @@ class ToursRepository {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.tours,
         queryParameters: queryParameters,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -30,7 +30,7 @@ class ToursRepository {
       // Endpoint: /tours/admin/:id
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.tours}/$id',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -52,7 +52,7 @@ class ToursRepository {
     try {
       return await _apiHelper.getRequest(
         endPoint: EndPoints.cities,
-        isProtected: false,
+        isProtected: true,
       );
     } catch (e) {
       rethrow;

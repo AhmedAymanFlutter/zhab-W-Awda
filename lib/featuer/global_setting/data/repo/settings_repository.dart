@@ -11,7 +11,7 @@ class SettingsRepository {
       final response = await _apiHelper.getRequest(
         endPoint:
             EndPoints.settings, // Ensure this is defined in your endpoints
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {

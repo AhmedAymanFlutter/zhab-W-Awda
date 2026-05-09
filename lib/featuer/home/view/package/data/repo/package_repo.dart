@@ -11,7 +11,7 @@ class PackagesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.packages, // Ensure this endpoint exists
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -28,7 +28,7 @@ class PackagesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.packages}admin/$id',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -55,7 +55,7 @@ class PackagesRepository {
       final response = await _apiHelper.getRequest(
         endPoint:
             '${EndPoints.packageTypes}/$packageTypeSlug/${EndPoints.packages}$packageSlug',
-        isProtected: false,
+        isProtected: true,
       );
 
       // The new response structure has success: true/false
@@ -111,7 +111,7 @@ class PackagesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: 'rates/package/$slug',
-        isProtected: false,
+        isProtected: true,
       );
       if (response.status == true && response.data != null) {
         return GetReviewsResponse.fromJson(response.data);

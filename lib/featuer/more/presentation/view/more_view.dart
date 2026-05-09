@@ -117,6 +117,34 @@ class MoreView extends StatelessWidget {
                         ],
                       ),
                     ),
+                    SizedBox(height: 20.h),
+
+                    // Account section
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16.r),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.05),
+                            blurRadius: 10,
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          MoreMenuItem(
+                            title: "تغيير كلمة المرور",
+                            iconPath: "assets/icon/RSA.svg",
+                            iconColor: Colors.deepOrange,
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.changePasswordView);
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
                   ],
                 ),
               ),

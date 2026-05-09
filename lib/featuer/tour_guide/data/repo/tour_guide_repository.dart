@@ -9,7 +9,7 @@ class TourGuideRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.tourGuides}/$slug',
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.data['success'] == true && response.data != null) {

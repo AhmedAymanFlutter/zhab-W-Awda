@@ -7,6 +7,7 @@ import 'package:flutter_application_1/featuer/Auth/view/sign_up_view.dart';
 import 'package:flutter_application_1/featuer/Auth/view/forgot_password_view.dart';
 import 'package:flutter_application_1/featuer/Auth/view/otp_view.dart';
 import 'package:flutter_application_1/featuer/Auth/view/reset_password_view.dart';
+import 'package:flutter_application_1/featuer/Auth/view/change_password_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
 import 'package:flutter_application_1/featuer/countries/view/countries_view.dart';
@@ -188,6 +189,10 @@ class AppRouter {
       case Routes.hotelDetailsSlugView:
         final slug = settings.arguments as String;
         return RouterTransitions.buildFade(HotelDetailsSlugView(slug: slug));
+
+      case Routes.changePasswordView:
+        return RouterTransitions.buildFade(const ChangePasswordView());
+
       default:
         return RouterTransitions.build(
           const Scaffold(body: Center(child: Text("No Route Found"))),

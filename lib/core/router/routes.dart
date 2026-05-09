@@ -32,4 +32,5 @@ class Routes {
   static const String forgotPassword = '/forgotPassword';
   static const String otp = '/otp';
   static const String resetPassword = '/resetPassword';
+  static const String changePasswordView = '/ChangePasswordView';
 }

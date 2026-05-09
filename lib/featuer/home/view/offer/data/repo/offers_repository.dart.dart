@@ -12,7 +12,7 @@ class OffersRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.offers,
-        isProtected: false, // Set true if token is required
+        isProtected: true, // Set true if token is required
       );
 
       if (response.status == true && response.data != null) {

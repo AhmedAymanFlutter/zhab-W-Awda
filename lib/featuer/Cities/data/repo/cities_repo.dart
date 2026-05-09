@@ -14,7 +14,7 @@ class CitiesRepository {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.cities,
-        isProtected: false,
+        isProtected: true,
       );
 
       if (response.status == true && response.data != null) {
@@ -33,7 +33,7 @@ class CitiesRepository {
       // Endpoint: /cities/:citySlug
       final response = await _apiHelper.getRequest(
         endPoint: '${EndPoints.cities}/$slug',
-        isProtected: false,
+        isProtected: true,
       );
 
       // Check success flag (API returns 'success': true)
