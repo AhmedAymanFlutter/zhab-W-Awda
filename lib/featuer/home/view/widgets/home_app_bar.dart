@@ -1,5 +1,5 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -12,8 +12,12 @@ class HomeAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserState>(
+    return BlocBuilder<UserCubit, AuthState>(
       builder: (context, state) {
+        String name = "";
+        if (state is AuthVerifySuccess) {
+          name = state.user.name;
+        }
         return Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
@@ -21,7 +25,7 @@ class HomeAppBar extends StatelessWidget {
             children: [
               // Name
               Text(
-                state.name,
+                name,
                 style: AppTextStyle.setelMessiriBlack(
                   fontSize: 13.sp,
                   fontWeight: FontWeight.w600,
@@ -35,15 +39,10 @@ class HomeAppBar extends StatelessWidget {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: AppColor.primaryBlue, width: 1.5),
-                  image: state.imagePath != null
-                      ? DecorationImage(
-                          image: FileImage(File(state.imagePath!)),
-                          fit: BoxFit.cover,
-                        )
-                      : const DecorationImage(
-                          image: AssetImage("assets/photo/mainLogo.webp"),
-                          fit: BoxFit.cover,
-                        ),
+                  image: const DecorationImage(
+                    image: AssetImage("assets/photo/mainLogo.webp"),
+                    fit: BoxFit.cover,
+                  ),
                 ),
               ),
             ],

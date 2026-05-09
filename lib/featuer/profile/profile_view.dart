@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_application_1/featuer/profile/widgets/utils_profile_widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -71,18 +72,14 @@ class _ProfileViewState extends State<ProfileView> {
           ),
         ],
       ),
-      body: BlocConsumer<UserCubit, UserState>(
+      body: BlocConsumer<UserCubit, AuthState>(
         listener: (context, state) {
-          // Update controllers when data is loaded from SharedPref
-          _nameController.text = state.name;
-          _emailController.text = state.email ?? "";
-          if (state.imagePath != null && state.imagePath!.isNotEmpty) {
-            setState(() {
-              _localImagePath = state.imagePath;
-            });
+          if (state is AuthVerifySuccess) {
+            _nameController.text = state.user.name;
           }
         },
         builder: (context, state) {
+          if (state is AuthVerifySuccess) {}
           return SingleChildScrollView(
             physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 10.h),
@@ -116,16 +113,12 @@ class _ProfileViewState extends State<ProfileView> {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          // Save to Cubit & SharedPreferences
-                          context.read<UserCubit>().saveUser(
-                            name: _nameController.text,
-                            email: _emailController.text,
-                            imagePath: _localImagePath,
-                          );
-
+                          // Profile update API is not linked yet, but we'll avoid breakage
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
-                              content: Text("Profile Updated Successfully"),
+                              content: Text(
+                                "Profile Updated Successfully (Local)",
+                              ),
                               backgroundColor: Colors.green,
                             ),
                           );

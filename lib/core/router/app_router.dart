@@ -64,13 +64,19 @@ class AppRouter {
         );
 
       case Routes.otp:
+        final args = settings.arguments as Map<String, dynamic>;
         return RouterTransitions.buildFade(
-          const OTPView(),
+          OTPView(
+            phone: args['phone'],
+            countryCode: args['countryCode'],
+            purpose: args['purpose'] ?? 'signup',
+          ),
         );
 
       case Routes.resetPassword:
+        final resetToken = settings.arguments as String;
         return RouterTransitions.buildFade(
-          const ResetPasswordView(),
+          ResetPasswordView(resetToken: resetToken),
         );
 
 

@@ -1,6 +1,6 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/theme/app_color.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
@@ -10,8 +10,14 @@ class ProfileCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<UserCubit, UserState>(
+    return BlocBuilder<UserCubit, AuthState>(
       builder: (context, state) {
+        String name = "منصور عبد الرحمن";
+        String phone = "01148089617";
+        if (state is AuthVerifySuccess) {
+          name = state.user.name;
+          phone = state.user.phone;
+        }
         return Container(
           padding: EdgeInsets.all(16.w),
           decoration: BoxDecoration(
@@ -32,7 +38,7 @@ class ProfileCard extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
                     Text(
-                      state.name.isNotEmpty ? state.name : "منصور عبد الرحمن",
+                      name,
                       style: TextStyle(
                         fontSize: 18.sp,
                         fontWeight: FontWeight.bold,
@@ -42,7 +48,7 @@ class ProfileCard extends StatelessWidget {
                     ),
                     SizedBox(height: 4.h),
                     Text(
-                      state.email ?? "Mansor932@gmai.com",
+                      phone,
                       style: TextStyle(
                         fontSize: 14.sp,
                         color: Colors.grey[600],
@@ -59,12 +65,7 @@ class ProfileCard extends StatelessWidget {
                   CircleAvatar(
                     radius: 35.r,
                     backgroundColor: Colors.grey[200],
-                    backgroundImage: state.imagePath != null
-                        ? FileImage(File(state.imagePath!))
-                        : null,
-                    child: state.imagePath == null
-                        ? Icon(Icons.person, size: 40.r, color: Colors.grey)
-                        : null,
+                    child: Icon(Icons.person, size: 40.r, color: Colors.grey),
                   ),
                   Container(
                     padding: EdgeInsets.all(4.w),
@@ -73,11 +74,7 @@ class ProfileCard extends StatelessWidget {
                       shape: BoxShape.circle,
                       border: Border.all(color: Colors.white, width: 2),
                     ),
-                    child: Icon(
-                      Icons.edit,
-                      size: 14.r,
-                      color: Colors.white,
-                    ),
+                    child: Icon(Icons.edit, size: 14.r, color: Colors.white),
                   ),
                 ],
               ),

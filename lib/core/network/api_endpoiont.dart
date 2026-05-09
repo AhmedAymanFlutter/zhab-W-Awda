@@ -13,4 +13,9 @@ abstract class EndPoints {
   static const String settings = 'settings';
   static const String hotelsCountries = 'hotels/countries';
   static const String tourGuides = 'tourguides';
+  static const String authRegister = 'auth/register';
+  static const String authLogin = 'auth/login';
+  static const String authVerifyOtp = 'auth/verify-otp';
+  static const String authForgotPassword = 'auth/forgot-password';
+  static const String authResetPassword = 'auth/reset-password';
 }

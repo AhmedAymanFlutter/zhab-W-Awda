@@ -5,6 +5,7 @@ import 'package:flutter_application_1/core/widgets/custom_button.dart';
 import 'package:flutter_application_1/core/widgets/custom_phone_field.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
 import 'package:flutter_application_1/core/widgets/social_login_button.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -22,194 +23,212 @@ class _LogInViewState extends State<LogInView> {
   final TextEditingController passwordController = TextEditingController();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   bool rememberMe = false;
+  String countryCode = '+20';
 
   @override
   Widget build(BuildContext context) {
     return AuthBackground(
-      child: Form(
-        key: formKey,
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            // Logo
-            Image.asset(
-              'assets/photo/mainLogo.webp',
-              height: 40.h,
-              fit: BoxFit.contain,
-            ),
-            SizedBox(height: 4.h), // Reduced from 8
-            // Title
-            Text(
-              "تسجيل الدخول",
-              style: AppTextStyle.setelMessiriBlack(
-                fontSize: 28,
-                fontWeight: FontWeight.w700,
-              ),
-            ),
-            SizedBox(height: 2.h), // Reduced from 4
-            // Subtitle
-            Text(
-              "سجل دخولك باستخدام رقم الهاتف وكلمة المرور.",
-              style: AppTextStyle.setelMessiriSecondlightGrey(
-                fontSize: 11,
-                fontWeight: FontWeight.w500,
-              ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 12.h),
+      child: BlocConsumer<UserCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthVerifySuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(content: Text('تم تسجيل الدخول بنجاح')),
+            );
+            Navigator.pushReplacementNamed(context, Routes.layout);
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Form(
+            key: formKey,
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  // Logo
+                  Image.asset(
+                    'assets/photo/mainLogo.webp',
+                    height: 40.h,
+                    fit: BoxFit.contain,
+                  ),
+                  SizedBox(height: 4.h), // Reduced from 8
+                  // Title
+                  Text(
+                    "تسجيل الدخول",
+                    style: AppTextStyle.setelMessiriBlack(
+                      fontSize: 28,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  SizedBox(height: 2.h), // Reduced from 4
+                  // Subtitle
+                  Text(
+                    "سجل دخولك باستخدام رقم الهاتف وكلمة المرور.",
+                    style: AppTextStyle.setelMessiriSecondlightGrey(
+                      fontSize: 11,
+                      fontWeight: FontWeight.w500,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 12.h),
 
-            // Fields
-            CustomPhoneField(
-              hintText: '726-0592',
-              controller: phoneController,
-            ),
-            SizedBox(height: 8.h),
-            CustomTextField(
-              hintText: '*******',
-              controller: passwordController,
-              isObscureText: true,
-              leftIcon: Icon(
-                Icons.visibility_off_outlined,
-                color: const Color(0xff959595).withOpacity(0.5),
-                size: 18.sp,
-              ),
-            ),
-            SizedBox(height: 4.h),
+                  // Fields
+                  CustomPhoneField(
+                    hintText: '726-0592',
+                    controller: phoneController,
+                    onCountryChanged: (code) {
+                      countryCode = code.dialCode ?? '+20';
+                    },
+                  ),
+                  SizedBox(height: 8.h),
+                  CustomTextField(
+                    hintText: '*******',
+                    controller: passwordController,
+                    isObscureText: true,
+                    rightIcon: Icon(
+                      Icons.visibility_off_outlined,
+                      color: const Color(0xff959595).withOpacity(0.5),
+                      size: 18.sp,
+                    ),
+                  ),
+                  SizedBox(height: 4.h),
 
-            // Remember me & Forgot password
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
-                  children: [
-                    SizedBox(
-                      width: 20.w,
-                      height: 20.h,
-                      child: Checkbox(
-                        value: rememberMe,
-                        onChanged: (value) {
-                          setState(() {
-                            rememberMe = value ?? false;
-                          });
-                        },
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(4.r),
+                  // Remember me & Forgot password
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Row(
+                        children: [
+                          SizedBox(
+                            width: 20.w,
+                            height: 20.h,
+                            child: Checkbox(
+                              value: rememberMe,
+                              onChanged: (value) {
+                                setState(() {
+                                  rememberMe = value ?? false;
+                                });
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(4.r),
+                              ),
+                            ),
+                          ),
+                          Text(
+                            ' تذكرني',
+                            style: AppTextStyle.setelMessiriBlack(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w500,
+                            ).copyWith(color: const Color(0xff707070)),
+                          ),
+                        ],
+                      ),
+                      TextButton(
+                        onPressed: () =>
+                            Navigator.pushNamed(context, Routes.forgotPassword),
+                        style: TextButton.styleFrom(padding: EdgeInsets.zero),
+                        child: Text(
+                          'هل نسيت كلمة السر ؟',
+                          style: AppTextStyle.setelMessiriBlack(
+                            fontSize: 11,
+                            fontWeight: FontWeight.w700,
+                          ).copyWith(color: const Color(0xff00276C)),
                         ),
                       ),
-                    ),
-                    Text(
-                      ' تذكرني',
-                      style: AppTextStyle.setelMessiriBlack(
-                        fontSize: 11,
-                        fontWeight: FontWeight.w500,
-                      ).copyWith(color: const Color(0xff707070)),
-                    ),
-                  ],
-                ),
-                TextButton(
-                  onPressed: () => Navigator.pushNamed(context, Routes.forgotPassword),
-                  style: TextButton.styleFrom(padding: EdgeInsets.zero),
-                  child: Text(
-                    'هل نسيت كلمة السر ؟',
-                    style: AppTextStyle.setelMessiriBlack(
-                      fontSize: 11,
-                      fontWeight: FontWeight.w700,
-                    ).copyWith(color: const Color(0xff00276C)),
+                    ],
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 8.h), // Reduced from 12
-
-            // Button
-            CustomButton(
-              text: 'تسجيل الدخول',
-              onPressed: () {
-                if (formKey.currentState!.validate()) {
-                  context.read<UserCubit>().saveUser(
-                        name: "User",
-                        email: phoneController.text,
-                      );
-                  Navigator.pushReplacementNamed(context, Routes.layout);
-                }
-              },
-            ),
-            SizedBox(height: 12.h), // Reduced from 16
-
-            // Or sign in with
-            Text(
-              "أو سجل عبر",
-              style: AppTextStyle.setelMessiriSecondlightGrey(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-              ).copyWith(color: const Color(0xff959595)),
-            ),
-            SizedBox(height: 6.h), // Reduced from 8
-
-            // OAuth Buttons
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                SocialLoginButton(
-                  icon: 'assets/icon/mail-02.svg',
-                  onTap: () {},
-                ),
-                SocialLoginButton(
-                  icon: 'assets/icon/apple-logo-svgrepo-com 1.svg',
-                  onTap: () {},
-                ),
-                SocialLoginButton(
-                  icon: 'assets/icon/2021_Facebook_icon 1.svg',
-                  onTap: () {},
-                ),
-                SocialLoginButton(
-                  icon: 'assets/icon/google.svg',
-                  onTap: () {},
-                ),
-              ],
-            ),
-            SizedBox(height: 12.h), // Reduced from 16
-
-            // Footer Link
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'ليس لديك حساب؟ ',
-                  style: AppTextStyle.setelMessiriSecondaryBlack(
-                    fontSize: 12,
-                    fontWeight: FontWeight.normal,
-                  ),
-                ),
-                InkWell(
-                  onTap: () => Navigator.pushNamed(context, Routes.signUp),
-                  child: Text(
-                    'سجل الآن',
-                    style: AppTextStyle.setelMessiriBlack(
+                  SizedBox(height: 8.h), // Reduced from 12
+                  // Button
+                  state is AuthLoading
+                      ? const Center(child: CircularProgressIndicator())
+                      : CustomButton(
+                          text: 'تسجيل الدخول',
+                          onPressed: () {
+                            if (formKey.currentState!.validate()) {
+                              context.read<UserCubit>().login(
+                                    countryCode: countryCode,
+                                    phone: phoneController.text,
+                                    password: passwordController.text,
+                                  );
+                            }
+                          },
+                        ),
+                  SizedBox(height: 12.h), // Reduced from 16
+                  // Or sign in with
+                  Text(
+                    "أو سجل عبر",
+                    style: AppTextStyle.setelMessiriSecondlightGrey(
                       fontSize: 12,
-                      fontWeight: FontWeight.bold,
-                    ).copyWith(color: const Color(0xff00276C)),
+                      fontWeight: FontWeight.w500,
+                    ).copyWith(color: const Color(0xff959595)),
                   ),
-                ),
-              ],
-            ),
-            SizedBox(height: 4.h), // Reduced from 8
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'المتابعة كضيف',
-                  style: AppTextStyle.setelMessiriBlack(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
+                  SizedBox(height: 6.h), // Reduced from 8
+                  // OAuth Buttons
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      SocialLoginButton(
+                        icon: 'assets/icon/mail-02.svg',
+                        onTap: () {},
+                      ),
+                      SocialLoginButton(
+                        icon: 'assets/icon/apple-logo-svgrepo-com 1.svg',
+                        onTap: () {},
+                      ),
+                      SocialLoginButton(
+                        icon: 'assets/icon/2021_Facebook_icon 1.svg',
+                        onTap: () {},
+                      ),
+                      SocialLoginButton(icon: 'assets/icon/google.svg', onTap: () {}),
+                    ],
                   ),
-                ),
-                SizedBox(width: 8.w),
-                Icon(Icons.person_outline, size: 18.sp),
-              ],
+                  SizedBox(height: 12.h), // Reduced from 16
+                  // Footer Link
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'ليس لديك حساب؟ ',
+                        style: AppTextStyle.setelMessiriSecondaryBlack(
+                          fontSize: 12,
+                          fontWeight: FontWeight.normal,
+                        ),
+                      ),
+                      InkWell(
+                        onTap: () => Navigator.pushNamed(context, Routes.signUp),
+                        child: Text(
+                          'سجل الآن',
+                          style: AppTextStyle.setelMessiriBlack(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                          ).copyWith(color: const Color(0xff00276C)),
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 4.h), // Reduced from 8
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'المتابعة كضيف',
+                        style: AppTextStyle.setelMessiriBlack(
+                          fontSize: 12,
+                          fontWeight: FontWeight.w400,
+                        ),
+                      ),
+                      SizedBox(width: 8.w),
+                      Icon(Icons.person_outline, size: 18.sp),
+                    ],
+                  ),
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
   }

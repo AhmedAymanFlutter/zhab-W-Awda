@@ -3,103 +3,145 @@ import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_application_1/core/widgets/custom_button.dart';
 import 'package:flutter_application_1/core/widgets/custom_text_field.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
+import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class ResetPasswordView extends StatelessWidget {
-  const ResetPasswordView({super.key});
+class ResetPasswordView extends StatefulWidget {
+  final String resetToken;
+  const ResetPasswordView({super.key, required this.resetToken});
+
+  @override
+  State<ResetPasswordView> createState() => _ResetPasswordViewState();
+}
+
+class _ResetPasswordViewState extends State<ResetPasswordView> {
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    final TextEditingController passwordController = TextEditingController();
-    final TextEditingController confirmPasswordController = TextEditingController();
-
     return AuthBackground(
-      child: Column(
-        children: [
-          // Logo
-          Image.asset(
-            'assets/photo/mainLogo.webp',
-            height: 50.h,
-            fit: BoxFit.contain,
-          ),
-          SizedBox(height: 24.h),
-          // Title
-          Text(
-            "إعادة ضبط كلمة المرور",
-            style: AppTextStyle.setelMessiriBlack(
-              fontSize: 28,
-              fontWeight: FontWeight.w700,
-            ),
-          ),
-          SizedBox(height: 8.h),
-          // Subtitle
-          Text(
-            "أدخل كلمة المرور الجديدة لتحديث حسابك.",
-            style: AppTextStyle.setelMessiriSecondlightGrey(
-              fontSize: 12,
-              fontWeight: FontWeight.w500,
-            ),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: 40.h),
-
-          // New Password Label
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "* كلمة المرور الجديدة",
-              style: AppTextStyle.setelMessiriBlack(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+      child: BlocConsumer<UserCubit, AuthState>(
+        listener: (context, state) {
+          if (state is AuthResetPasswordSuccess) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message)),
+            );
+            Navigator.pushNamedAndRemoveUntil(context, Routes.loginView, (route) => false);
+          } else if (state is AuthError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(state.message), backgroundColor: Colors.red),
+            );
+          }
+        },
+        builder: (context, state) {
+          return Column(
+            children: [
+              // Logo
+              Image.asset(
+                'assets/photo/mainLogo.webp',
+                height: 50.h,
+                fit: BoxFit.contain,
               ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          CustomTextField(
-            hintText: '*******',
-            controller: passwordController,
-            isObscureText: true,
-            leftIcon: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color(0xff959595).withOpacity(0.5),
-              size: 20.sp,
-            ),
-          ),
-          SizedBox(height: 16.h),
-
-          // Confirm Password Label
-          Align(
-            alignment: Alignment.centerRight,
-            child: Text(
-              "* تأكيد كلمة المرور",
-              style: AppTextStyle.setelMessiriBlack(
-                fontSize: 14,
-                fontWeight: FontWeight.w600,
+              SizedBox(height: 24.h),
+              // Title
+              Text(
+                "إعادة ضبط كلمة المرور",
+                style: AppTextStyle.setelMessiriBlack(
+                  fontSize: 28,
+                  fontWeight: FontWeight.w700,
+                ),
               ),
-            ),
-          ),
-          SizedBox(height: 8.h),
-          CustomTextField(
-            hintText: '*******',
-            controller: confirmPasswordController,
-            isObscureText: true,
-            leftIcon: Icon(
-              Icons.visibility_off_outlined,
-              color: const Color(0xff959595).withOpacity(0.5),
-              size: 20.sp,
-            ),
-          ),
-          SizedBox(height: 40.h),
+              SizedBox(height: 8.h),
+              // Subtitle
+              Text(
+                "أدخل كلمة المرور الجديدة لتحديث حسابك.",
+                style: AppTextStyle.setelMessiriSecondlightGrey(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: 40.h),
 
-          // Button
-          CustomButton(
-            text: 'تأكيد',
-            onPressed: () {
-              Navigator.pushNamedAndRemoveUntil(context, Routes.loginView, (route) => false);
-            },
-          ),
-        ],
+              // New Password Label
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "* كلمة المرور الجديدة",
+                  style: AppTextStyle.setelMessiriBlack(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.h),
+              CustomTextField(
+                hintText: '*******',
+                controller: passwordController,
+                isObscureText: true,
+                leftIcon: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color(0xff959595).withOpacity(0.5),
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(height: 16.h),
+
+              // Confirm Password Label
+              Align(
+                alignment: Alignment.centerRight,
+                child: Text(
+                  "* تأكيد كلمة المرور",
+                  style: AppTextStyle.setelMessiriBlack(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              SizedBox(height: 8.h),
+              CustomTextField(
+                hintText: '*******',
+                controller: confirmPasswordController,
+                isObscureText: true,
+                leftIcon: Icon(
+                  Icons.visibility_off_outlined,
+                  color: const Color(0xff959595).withOpacity(0.5),
+                  size: 20.sp,
+                ),
+              ),
+              SizedBox(height: 40.h),
+
+              // Button
+              state is AuthLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : CustomButton(
+                      text: 'تأكيد',
+                      onPressed: () {
+                        if (passwordController.text.isNotEmpty &&
+                            passwordController.text == confirmPasswordController.text) {
+                          context.read<UserCubit>().resetPassword(
+                                resetToken: widget.resetToken,
+                                password: passwordController.text,
+                                passwordConfirm: confirmPasswordController.text,
+                              );
+                        } else if (passwordController.text != confirmPasswordController.text) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('كلمات المرور غير متطابقة'), backgroundColor: Colors.orange),
+                          );
+                        } else {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(content: Text('يرجى إدخال كلمة المرور'), backgroundColor: Colors.orange),
+                          );
+                        }
+                      },
+                    ),
+            ],
+          );
+        },
       ),
     );
   }

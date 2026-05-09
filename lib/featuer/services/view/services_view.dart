@@ -77,6 +77,10 @@ class _ServicesViewState extends State<ServicesView> {
               SizedBox(height: 40.h),
               // Grid of Services
               BlocBuilder<ServicesCubit, ServicesState>(
+                buildWhen: (previous, current) =>
+                    current is ServicesLoading ||
+                    current is ServicesSuccess ||
+                    current is ServicesError,
                 builder: (context, state) {
                   if (state is ServicesLoading) {
                     return Skeletonizer(

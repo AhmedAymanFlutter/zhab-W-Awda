@@ -60,11 +60,9 @@ class CustomTextField extends StatelessWidget {
           suffixIcon: leftIcon,
           prefixIcon: rightIcon,
           border: InputBorder.none,
-          // Note: Vertical padding 27.h + 27.h = 54.h, which is more than the height (46.h).
-          // We will use symmetric padding that fits the 46.h height while respecting the 14.w horizontal padding.
           contentPadding: EdgeInsets.symmetric(
             horizontal: 14.w,
-            vertical: 12.h, // Adjusted to fit 46.h total height
+            vertical: 12.h,
           ),
         ),
       ),
