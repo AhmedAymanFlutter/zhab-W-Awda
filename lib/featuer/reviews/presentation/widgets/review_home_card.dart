@@ -20,16 +20,17 @@ class ReviewHomeCard extends StatelessWidget {
     displayText = displayText.replaceAll('...More', '').trim();
 
     return Container(
-      width: 280.w, // Match horizontal card width
+      width: 272.w, // Match new specifications
+      height: 204.h, // Fixed height per specs
       padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16.r),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Color(0x26000000), // #00000026
+            blurRadius: 4,
+            offset: Offset(0, 4),
           ),
         ],
       ),

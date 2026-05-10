@@ -28,22 +28,18 @@ class HomeReviewsSection extends StatelessWidget {
           ),
           SizedBox(height: 8.h),
           Text(
-            "نفخر بثقة عملائنا وتجاربهم المميزة معنا. اطلع على تقييمات المسافرين\nالحقيقية عبر Google وشاهد كيف كانت رحلاتهم معنا من الحجز وحتى\nالعودة.",
+            "اكتشف تجارب عملائنا واستمتع بقصص نجاح رحلاتهم معنا.",
             textAlign: TextAlign.center,
-            style: AppTextStyle.setelMessiriBlack(
-              fontSize: 13,
-              fontWeight: FontWeight.normal,
-            ).copyWith(color: Colors.grey[700], height: 1.5),
+            style: AppTextStyle.setelMessiriSecondlightGrey(
+              fontSize: 14,
+              fontWeight: FontWeight.w400,
+            ).copyWith(color: const Color(0xFF667085)),
           ),
           SizedBox(height: 24.h),
 
-          // 2. Big Summary Card
-          _buildSummaryCard(),
-          SizedBox(height: 24.h),
-
-          // 3. Horizontal Reviews List
+          // 2. Horizontal Reviews List
           SizedBox(
-            height: 190.h,
+            height: 204.h,
             child: ListView.separated(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(horizontal: 8.w),
@@ -57,12 +53,18 @@ class HomeReviewsSection extends StatelessWidget {
           ),
           SizedBox(height: 24.h),
 
-          // 4. View All Button Footer
+          // 3. View All Button Footer
           InkWell(
             onTap: () => Navigator.pushNamed(context, Routes.reviewsView),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
+                Icon(
+                  Icons.arrow_back_ios, // Points left in RTL
+                  size: 14.sp,
+                  color: AppColor.primaryBlue,
+                ),
+                SizedBox(width: 8.w),
                 Text(
                   "عرض جميع التقييمات",
                   style: AppTextStyle.setelMessiriBlack(
@@ -70,141 +72,7 @@ class HomeReviewsSection extends StatelessWidget {
                     fontWeight: FontWeight.bold,
                   ).copyWith(color: AppColor.primaryBlue),
                 ),
-                SizedBox(width: 8.w),
-                Icon(
-                  Icons.arrow_back_ios, // Points left in RTL
-                  size: 16.sp,
-                  color: AppColor.primaryBlue,
-                ),
               ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildSummaryCard() {
-    return Container(
-      width: double.infinity,
-      padding: EdgeInsets.all(24.w),
-      decoration: BoxDecoration(
-        color: const Color(0xFF8EA1C0), // Light blue-grey from image
-        borderRadius: BorderRadius.circular(24.r),
-      ),
-      child: Column(
-        children: [
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              // Right side (RTL start): Text and Google certified
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "تقييم ممتاز استنادًا إلى +1,248 مراجعة\nموثقة من عملائنا وتجارب سفر ناجحة من\nالحجز وحتى العودة.",
-                      style: AppTextStyle.setelMessiriWhite(
-                        fontSize: 14,
-                        fontWeight: FontWeight.normal,
-                      ).copyWith(height: 1.5),
-                    ),
-                    SizedBox(height: 20.h),
-                    Row(
-                      children: [
-                        Container(
-                          width: 36.w,
-                          height: 36.w,
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: Colors.white,
-                          ),
-                          child: Center(
-                            child: Image.network(
-                                "https://cdn-icons-png.flaticon.com/512/2991/2991148.png",
-                                width: 20.w,
-                                height: 20.w,
-                                errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
-                            ),
-                          ),
-                        ),
-                        SizedBox(width: 12.w),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "معتمد من مراجعات",
-                              style: AppTextStyle.setelMessiriWhite(
-                                fontSize: 13,
-                                fontWeight: FontWeight.normal,
-                              ),
-                            ),
-                            Text(
-                              "Google",
-                              style: AppTextStyle.setelMessiriWhite(
-                                fontSize: 14,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              // Left side (RTL end): 4.9 and Stars
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  Text(
-                    "4.9",
-                    style: AppTextStyle.setelMessiriWhite(
-                      fontSize: 48,
-                      fontWeight: FontWeight.bold,
-                    ).copyWith(height: 1.0),
-                  ),
-                  SizedBox(height: 4.h),
-                  Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: List.generate(
-                      5,
-                      (index) => Icon(Icons.star, color: Colors.white, size: 16.w),
-                    ),
-                  ),
-                  SizedBox(height: 4.h),
-                  Text(
-                    "تقييمات موثقة",
-                    style: AppTextStyle.setelMessiriWhite(
-                      fontSize: 12,
-                      fontWeight: FontWeight.normal,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: 24.h),
-          // Button
-          SizedBox(
-            width: double.infinity,
-            height: 48.h,
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: const Color(0xFF032D60), // Dark blue from image
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24.r),
-                ),
-                elevation: 0,
-              ),
-              onPressed: () {},
-              child: Text(
-                "اكتب تقييمك الآن",
-                style: AppTextStyle.setelMessiriWhite(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
             ),
           ),
         ],

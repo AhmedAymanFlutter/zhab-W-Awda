@@ -28,7 +28,6 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // Load token from FlutterSecureStorage before the app starts
   await LocalData.loadTokens();
   runApp(MyApp(appRouter: AppRouter()));
 }

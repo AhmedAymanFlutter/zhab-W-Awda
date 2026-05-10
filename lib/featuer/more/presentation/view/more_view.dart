@@ -116,6 +116,24 @@ class MoreView extends StatelessWidget {
                               Navigator.pushNamed(context, Routes.servicesView);
                             },
                           ),
+                          const Divider(height: 1),
+                          MoreMenuItem(
+                            title: "الشروط والأحكام",
+                            iconData: Icons.description_outlined,
+                            iconColor: Colors.grey,
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.termsView);
+                            },
+                          ),
+                          const Divider(height: 1),
+                          MoreMenuItem(
+                            title: "سياسة الخصوصية",
+                            iconData: Icons.privacy_tip_outlined,
+                            iconColor: Colors.grey,
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.privacyView);
+                            },
+                          ),
                         ],
                       ),
                     ),

@@ -51,14 +51,12 @@ class PackagesRepository {
     String packageSlug,
   ) async {
     try {
-      // url: {{baseUrl}}/packageTypes/:packageTypeSlug/packages/:packageSlug
       final response = await _apiHelper.getRequest(
         endPoint:
-            '${EndPoints.packageTypes}/$packageTypeSlug/${EndPoints.packages}$packageSlug',
+            '${EndPoints.packageTypes}/$packageTypeSlug/packages/$packageSlug',
         isProtected: true,
       );
 
-      // The new response structure has success: true/false
       if (response.data != null && response.data['success'] == true) {
         final model = GetPackageDetailsModel.fromJson(response.data);
         if (model.data != null) {
@@ -82,8 +80,7 @@ class PackagesRepository {
   }) async {
     try {
       final response = await _apiHelper.postRequest(
-        endPoint:
-            'rates', // Assuming 'rates' is not in EndPoints yet or use literal
+        endPoint: 'rates',
         data: {
           "package": packageId,
           "rate": rating,
@@ -91,12 +88,10 @@ class PackagesRepository {
           "authorName": userName,
         },
         isAuthorized: false,
-        isFormData: false, // Send as JSON
+        isFormData: false,
       );
 
       if (response.data['success'] == true || response.status == true) {
-        // check both conventions
-        // Success
       } else {
         throw Exception(
           response.data['message'] ?? response.message ?? "Rating failed",

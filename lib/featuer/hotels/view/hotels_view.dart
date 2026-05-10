@@ -23,7 +23,7 @@ class HotelsView extends StatelessWidget {
       create: (context) =>
           HotelsCubit(HotelsRepository())..fetchHotels(country: countryName),
       child: Scaffold(
-        backgroundColor: AppColor.primaryWhite,
+        backgroundColor: AppColor.offWhite,
         body: Directionality(
           textDirection: TextDirection.rtl,
           child: SafeArea(
@@ -72,22 +72,42 @@ class HotelsView extends StatelessWidget {
                       );
                     },
                   ),
-                  SizedBox(height: 16.h),
+                  SizedBox(height: 24.h),
+                  // Title
+                  Text(
+                    "أفضل الفنادق لإقامة مريحة",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'ElMessiri', // Assuming this is the font family used
+                      fontSize: 22.sp,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87,
+                    ),
+                  ),
+                  SizedBox(height: 8.h),
+                  // Subtitle
+                  Text(
+                    "اختر من بين مجموعة مميزة من الفنادق والمنتجعات الفاخرة حول\nالعالم، توفر لك خيارات متنوعة تناسب العائلات ورحلات العمل\nوالاستجمام، مع مواقع مميزة وخدمات عالية الجودة لضمان\nإقامة لا تُنسى.",
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'ElMessiri',
+                      fontSize: 13.sp,
+                      height: 1.5,
+                      fontWeight: FontWeight.normal,
+                      color: Colors.black87.withOpacity(0.7),
+                    ),
+                  ),
+                  SizedBox(height: 24.h),
                   Expanded(
                     child: BlocBuilder<HotelsCubit, HotelsState>(
                       builder: (context, state) {
                         if (state is HotelsLoading) {
                           return Skeletonizer(
                             enabled: true,
-                            child: GridView.builder(
+                            child: ListView.separated(
                               physics: const BouncingScrollPhysics(),
                               itemCount: 4,
-                              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 12.w,
-                                mainAxisSpacing: 12.h,
-                                childAspectRatio: 0.75,
-                              ),
+                              separatorBuilder: (context, index) => SizedBox(height: 16.h),
                               itemBuilder: (context, index) {
                                 return RecommendedHotelCard(
                                   hotel: HotelItem(name: "Loading"),
@@ -103,15 +123,10 @@ class HotelsView extends StatelessWidget {
                               child: Text("لم يتم العثور على فنادق تطابق بحثك"),
                             );
                           }
-                          return GridView.builder(
+                          return ListView.separated(
                             physics: const BouncingScrollPhysics(),
                             itemCount: state.hotels.length,
-                            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 2,
-                              crossAxisSpacing: 12.w,
-                              mainAxisSpacing: 12.h,
-                              childAspectRatio: 0.6,
-                            ),
+                            separatorBuilder: (context, index) => SizedBox(height: 16.h),
                             itemBuilder: (context, index) {
                               return RecommendedHotelCard(
                                 hotel: state.hotels[index],

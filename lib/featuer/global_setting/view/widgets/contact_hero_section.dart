@@ -18,17 +18,8 @@ class ContactHeroSection extends StatelessWidget {
       ),
       child: Container(
         width: double.infinity,
-        decoration: const BoxDecoration(
-          image: DecorationImage(
-            image: AssetImage('assets/photo/onboarding.png'),
-            fit: BoxFit.cover,
-          ),
-        ),
+        decoration: const BoxDecoration(color: Color(0xff00153B)),
         child: Container(
-          // Dark overlay for readability
-          decoration: BoxDecoration(
-            color: AppColor.primaryBlue.withValues(alpha: 0.82),
-          ),
           padding: EdgeInsets.fromLTRB(20.w, 56.h, 20.w, 24.h),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,7 +52,10 @@ class ContactHeroSection extends StatelessWidget {
               InkWell(
                 onTap: onContactTap,
                 child: Container(
-                  padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 12.h),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24.w,
+                    vertical: 12.h,
+                  ),
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(20.r),
@@ -77,7 +71,11 @@ class ContactHeroSection extends StatelessWidget {
                         ).copyWith(color: AppColor.primaryBlue),
                       ),
                       SizedBox(width: 8.w),
-                      Icon(Icons.chevron_left, color: AppColor.primaryBlue, size: 18.sp),
+                      Icon(
+                        Icons.chevron_left,
+                        color: AppColor.primaryBlue,
+                        size: 18.sp,
+                      ),
                     ],
                   ),
                 ),
@@ -89,7 +87,10 @@ class ContactHeroSection extends StatelessWidget {
                 children: [
                   const StatBadge(number: "+200", label: "وجهة سفر حول العالم"),
                   SizedBox(width: 32.w),
-                  const StatBadge(number: "+150", label: "عميل راضٍ تجربة سياحية"),
+                  const StatBadge(
+                    number: "+150",
+                    label: "عميل راضٍ تجربة سياحية",
+                  ),
                 ],
               ),
             ],

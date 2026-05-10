@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ReusableSearchBar extends StatefulWidget {
   final Function(String) onSearchChanged;
@@ -24,15 +23,12 @@ class ReusableSearchBar extends StatefulWidget {
 class _ReusableSearchBarState extends State<ReusableSearchBar> {
   final TextEditingController _controller = TextEditingController();
   Timer? _debounce;
-  bool _showClearButton = false;
 
   @override
   void initState() {
     super.initState();
     _controller.addListener(() {
-      setState(() {
-        _showClearButton = _controller.text.isNotEmpty;
-      });
+      setState(() {});
     });
   }
 
@@ -56,58 +52,91 @@ class _ReusableSearchBarState extends State<ReusableSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16.0),
-      decoration: BoxDecoration(
-        color: Colors.grey[200], // Background color
-        borderRadius: BorderRadius.circular(12.0),
-      ),
-      child: Row(
-        children: [
-          Icon(FontAwesomeIcons.search, size: 16.sp),
-          const SizedBox(width: 8),
-          Expanded(
-            child: TextField(
-              controller: _controller,
-              onChanged: _onChanged,
-              decoration: InputDecoration(
-                hintText: widget.hintText,
-                border: InputBorder.none,
-                isDense: true,
-                hintStyle: TextStyle(color: Colors.grey[500]),
+    return Row(
+      children: [
+        // 1. Search Bar (Takes most of the space)
+        Expanded(
+          child: Container(
+            height: 50.h,
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20.r),
+              border: Border.all(color: const Color(0xFFEAE9EB), width: 1.5),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    controller: _controller,
+                    onChanged: _onChanged,
+                    textAlign: TextAlign.right,
+                    style: TextStyle(fontFamily: 'ElMessiri', fontSize: 14.sp),
+                    decoration: InputDecoration(
+                      hintText: widget.hintText,
+                      border: InputBorder.none,
+                      isDense: true,
+                      hintStyle: TextStyle(
+                        color: Colors.grey[400],
+                        fontFamily: 'ElMessiri',
+                        fontSize: 14.sp,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 8.w),
+                Icon(Icons.search, color: Colors.grey[400], size: 24.sp),
+              ],
+            ),
+          ),
+        ),
+
+        // 2. Vertical Divider
+        if (widget.onFilterTap != null)
+          Padding(
+            padding: EdgeInsets.symmetric(horizontal: 8.w),
+            child: Container(
+              height: 24.h,
+              width: 1.5,
+              color: const Color(0xFFEAE9EB),
+            ),
+          ),
+
+        // 3. Filter/Sort Button
+        if (widget.onFilterTap != null)
+          InkWell(
+            onTap: widget.onFilterTap,
+            child: Container(
+              height: 50.h,
+              padding: EdgeInsets.symmetric(horizontal: 12.w),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(12.r),
+                border: Border.all(color: const Color(0xFFEAE9EB), width: 1.5),
+              ),
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "تصنيف",
+                    style: TextStyle(
+                      fontFamily: 'ElMessiri',
+                      color: Colors.black87,
+                      fontSize: 14.sp,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                  SizedBox(width: 8.w),
+                  Icon(
+                    Icons.tune, // Matches the icon in the image
+                    size: 20.sp,
+                    color: Colors.black87,
+                  ),
+                ],
               ),
             ),
           ),
-          // Clear Button (only shows when text exists)
-          if (_showClearButton)
-            GestureDetector(
-              onTap: () {
-                _controller.clear();
-                _onChanged(''); // Reset search
-              },
-              child: Icon(Icons.close, color: Colors.grey[600]),
-            ),
-
-          // Optional Filter Button
-          if (widget.onFilterTap != null) ...[
-            const SizedBox(width: 8),
-            Container(
-              height: 24,
-              width: 1,
-              color: Colors.grey[400], // Divider
-            ),
-            const SizedBox(width: 8),
-            InkWell(
-              onTap: widget.onFilterTap,
-              child: Icon(
-                FontAwesomeIcons.filter,
-                size: 16.sp,
-                color: Theme.of(context).primaryColor,
-              ),
-            ),
-          ],
-        ],
-      ),
+      ],
     );
   }
 }

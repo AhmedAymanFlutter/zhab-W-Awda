@@ -23,168 +23,157 @@ class RecommendedHotelCard extends StatelessWidget {
         );
       },
       child: Container(
-        width: 220.w,
+        width: 343.w,
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16.r),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.grey.withOpacity(0.1),
-              blurRadius: 10,
-              offset: const Offset(0, 4),
-            ),
-          ],
+          border: Border.all(color: const Color(0xFFEAE9EB), width: 1),
         ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        child: Row(
           children: [
-            // --- Image & Heart Icon ---
-            Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.vertical(
-                    top: Radius.circular(16.r),
-                  ),
-                  child: CachedNetworkImage(
-                    imageUrl:
-                        hotel.imageCover ?? "https://via.placeholder.com/300",
-                    height: 120.h,
-                    width: double.infinity,
-                    fit: BoxFit.cover,
-                    placeholder: (context, url) =>
-                        Container(color: Colors.grey[200]),
-                    errorWidget: (context, url, error) =>
-                        const Icon(Icons.error),
-                  ),
-                ),
-                Positioned(
-                  top: 10.h,
-                  right: 10.w,
-                  child: Container(
-                    padding: EdgeInsets.all(6.w),
-                    decoration: const BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.favorite_border,
-                      size: 20.sp,
-                      color: Colors.grey,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-
+            // 1. Image (Right Side in RTL)
             Padding(
-              padding: EdgeInsets.all(12.w),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  // --- Tag & Rating ---
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Container(
+              padding: EdgeInsets.symmetric(horizontal: 6.w, vertical: 6.h),
+              child: ClipRRect(
+                borderRadius: BorderRadius.circular(10.r),
+                child: Stack(
+                  children: [
+                    CachedNetworkImage(
+                      imageUrl:
+                          hotel.imageCover ??
+                          "https://via.placeholder.com/125x137",
+                      width: 125.w,
+                      height: 137.h,
+                      fit: BoxFit.cover,
+                      placeholder: (context, url) =>
+                          Container(color: Colors.grey[200]),
+                      errorWidget: (context, url, error) =>
+                          const Center(child: Icon(Icons.error)),
+                    ),
+                    // Badge "جناح فاخر"
+                    Positioned(
+                      top: 8.h,
+                      right: 8.w,
+                      child: Container(
                         padding: EdgeInsets.symmetric(
                           horizontal: 8.w,
                           vertical: 4.h,
                         ),
                         decoration: BoxDecoration(
-                          color: Colors.orange.withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(4.r),
+                          color: Colors.black.withOpacity(0.3),
+                          borderRadius: BorderRadius.circular(20.r),
                         ),
                         child: Text(
-                          "خصم 10%",
-                          style: TextStyle(
-                            color: Colors.orange,
-                            fontSize: 10.sp,
-                            fontWeight: FontWeight.bold,
+                          "جناح فاخر",
+                          style: AppTextStyle.setelMessiriWhite(
+                            fontSize: 10,
+                            fontWeight: FontWeight.w600,
                           ),
                         ),
                       ),
-                      Row(
-                        children: [
-                          Icon(Icons.star, color: Colors.amber, size: 14.sp),
-                          SizedBox(width: 4.w),
-                          Text(
-                            hotel.rating?.toString() ?? "4.8",
-                            style: AppTextStyle.setelMessiriBlack(
-                              fontSize: 12,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // --- Title ---
-                  Text(
-                    hotel.name ?? "Hotel Name",
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
-                    style: AppTextStyle.setelMessiriBlack(
-                      fontSize: 16,
-                      fontWeight: FontWeight.bold,
                     ),
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // --- Location ---
-                  Row(
-                    children: [
-                      Icon(Icons.location_on, color: Colors.grey, size: 14.sp),
-                      SizedBox(width: 4.w),
-                      Expanded(
-                        child: Text(
-                          "${hotel.city?.name ?? 'City'}, ${hotel.country?.name ?? 'Country'}",
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                          style: AppTextStyle.setelMessiriSecondlightGrey(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
+                  ],
+                ),
+              ),
+            ),
+            // 2. Content (Left Side in RTL)
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(
+                  left: 12.w,
+                  right: 6.w,
+                  top: 12.h,
+                  bottom: 12.h,
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start, // Align to right (RTL start)
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      hotel.name ?? "اسم الفندق",
+                      textAlign: TextAlign.right,
+                      textDirection: TextDirection.rtl,
+                      style: AppTextStyle.setelMessiriBlack(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
                       ),
-                    ],
-                  ),
-                  SizedBox(height: 4.h),
-
-                  // --- Price ---
-                  FittedBox(
-                    fit: BoxFit.scaleDown,
-                    child: Row(
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8.h),
+                    Text(
+                      hotel.description ??
+                          "استمتع بإقامة هادئة مع إطلالات لا تُنسى.",
+                      textAlign: TextAlign.right,
+                      textDirection: TextDirection.rtl,
+                      style: AppTextStyle.setelMessiriSecondlightGrey(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w400,
+                      ).copyWith(color: const Color(0xFF667085)),
+                      maxLines: 2,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    SizedBox(height: 8.h),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
-                        Text(
-                          "${hotel.price ?? 1200}",
-                          style: TextStyle(
-                            color: AppColor.primaryBlue,
-                            fontSize: 16.sp,
-                            fontWeight: FontWeight.bold,
+                        Expanded(
+                          child: Text(
+                            "${hotel.city?.name ?? 'المدينة'}، ${hotel.country?.name ?? 'الدولة'}",
+                            textAlign: TextAlign.right,
+                            textDirection: TextDirection.rtl,
+                            style: AppTextStyle.setelMessiriSecondlightGrey(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ).copyWith(color: const Color(0xFF667085)),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                         ),
                         SizedBox(width: 4.w),
-                        SvgPicture.asset(
-                          'assets/icon/RSA.svg',
-                          height: 14.h,
-                          colorFilter: const ColorFilter.mode(
-                            AppColor.primaryBlue,
-                            BlendMode.srcIn,
-                          ),
-                        ),
-                        Text(
-                          " / يوم",
-                          style: AppTextStyle.setelMessiriSecondlightGrey(
-                            fontSize: 12,
-                            fontWeight: FontWeight.normal,
-                          ),
+                        Icon(
+                          Icons.location_on_outlined,
+                          size: 14.sp,
+                          color: const Color(0xFF667085),
                         ),
                       ],
                     ),
-                  ),
-                ],
+                    SizedBox(height: 8.h),
+                    // Price Row
+                    FittedBox(
+                      fit: BoxFit.scaleDown,
+                      alignment: AlignmentDirectional.centerStart,
+                      child: Row(
+                        children: [
+                          Text(
+                            "${hotel.price ?? 1500}",
+                            style: AppTextStyle.setelMessiriBlack(
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold,
+                            ).copyWith(color: AppColor.primaryBlue),
+                          ),
+                          SizedBox(width: 4.w),
+                          SvgPicture.asset(
+                            'assets/icon/RSA.svg',
+                            height: 16.h,
+                            colorFilter: const ColorFilter.mode(
+                              AppColor.primaryBlue,
+                              BlendMode.srcIn,
+                            ),
+                          ),
+                          SizedBox(width: 4.w),
+                          Text(
+                            "/ليلة",
+                            style: AppTextStyle.setelMessiriSecondlightGrey(
+                              fontSize: 12,
+                              fontWeight: FontWeight.w400,
+                            ).copyWith(color: const Color(0xFF667085)),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

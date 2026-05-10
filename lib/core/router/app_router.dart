@@ -35,6 +35,9 @@ import 'package:flutter_application_1/featuer/splash/view/splash_screen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/more_view.dart';
 import 'package:flutter_application_1/featuer/tour_guide/view/tour_guide_details_view.dart';
+import 'package:flutter_application_1/featuer/notifications/view/notifications_view.dart';
+import 'package:flutter_application_1/featuer/more/presentation/view/terms_view.dart';
+import 'package:flutter_application_1/featuer/more/presentation/view/privacy_view.dart';
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -192,6 +195,15 @@ class AppRouter {
 
       case Routes.changePasswordView:
         return RouterTransitions.buildFade(const ChangePasswordView());
+
+      case Routes.notificationsView:
+        return RouterTransitions.buildFade(const NotificationsView());
+
+      case Routes.termsView:
+        return RouterTransitions.buildFade(const TermsView());
+
+      case Routes.privacyView:
+        return RouterTransitions.buildFade(const PrivacyView());
 
       default:
         return RouterTransitions.build(

@@ -14,11 +14,6 @@ class ContactBanner extends StatelessWidget {
       decoration: BoxDecoration(
         color: AppColor.primaryBlue3, // Dark blue from the theme
         borderRadius: BorderRadius.circular(20.r),
-        image: const DecorationImage(
-          image: AssetImage('assets/photo/onboarding.png'), // Using a subtle background if needed, or just color
-          fit: BoxFit.cover,
-          opacity: 0.1,
-        ),
       ),
       child: Column(
         children: [

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_text_style.dart';
@@ -38,200 +39,215 @@ class HotelDetailsSlugView extends StatelessWidget {
 
                 return Stack(
                   children: [
-                    CustomScrollView(
-                      physics: const BouncingScrollPhysics(),
-                      slivers: [
-                        // Header with back button
-                        const SliverAppBar(
-                          backgroundColor: Colors.transparent,
-                          elevation: 0,
-                          leading: BackButton(color: Colors.black),
-                        ),
-
-                        SliverToBoxAdapter(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 12.w),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(13.r),
-                                border: Border.all(
-                                  color: const Color(0x121A1A1A),
-                                  width: 1,
-                                ),
-                                boxShadow: const [
-                                  BoxShadow(
-                                    color: Color(0x0D000000),
-                                    blurRadius: 4,
-                                    offset: Offset(0, 4),
-                                  ),
+                    // 1. Full-width Background Image Banner
+                    Positioned(
+                      top: 0,
+                      left: 0,
+                      right: 0,
+                      height: 320.h,
+                      child: Stack(
+                        fit: StackFit.expand,
+                        children: [
+                          (hotel.images != null && hotel.images!.isNotEmpty)
+                              ? CachedNetworkImage(
+                                  imageUrl: hotel.images!.last,
+                                  fit: BoxFit.cover,
+                                  placeholder: (context, url) => Container(color: Colors.grey[200]),
+                                  errorWidget: (context, url, error) => const Center(child: Icon(Icons.error)),
+                                )
+                              : Container(color: Colors.grey[300]),
+                          // Gradient to make top buttons visible
+                          Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black.withOpacity(0.5),
+                                  Colors.transparent,
+                                  Colors.transparent,
                                 ],
-                              ),
-                              padding: EdgeInsets.all(16.w),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  // --- Top Section: Title, Rating, and Share ---
-                                  Row(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Expanded(
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              hotel.hotelTranslatedName ??
-                                                  hotel.hotelName ??
-                                                  "",
-                                              style:
-                                                  AppTextStyle.setelMessiriBlack(
-                                                    fontSize: 20,
-                                                    fontWeight: FontWeight.bold,
-                                                  ),
-                                            ),
-                                            SizedBox(height: 8.h),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.star,
-                                                  color: Colors.amber,
-                                                  size: 16.sp,
-                                                ),
-                                                SizedBox(width: 4.w),
-                                                Text(
-                                                  "${hotel.ratingAverage ?? 0} (${hotel.starRating} نجوم)",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                            SizedBox(height: 4.h),
-                                            Row(
-                                              children: [
-                                                Icon(
-                                                  Icons.location_on_outlined,
-                                                  size: 14.sp,
-                                                  color: Colors.grey,
-                                                ),
-                                                SizedBox(width: 4.w),
-                                                Text(
-                                                  "${hotel.city?.name}, ${hotel.country?.name}",
-                                                  style: TextStyle(
-                                                    fontSize: 12.sp,
-                                                    color: Colors.grey[600],
-                                                  ),
-                                                ),
-                                              ],
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                      // Share Button
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                          horizontal: 12.w,
-                                          vertical: 6.h,
-                                        ),
-                                        decoration: BoxDecoration(
-                                          border: Border.all(
-                                            color: Colors.grey[300]!,
-                                          ),
-                                          borderRadius: BorderRadius.circular(
-                                            8.r,
-                                          ),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            Icon(
-                                              Icons.share_outlined,
-                                              size: 16.sp,
-                                            ),
-                                            SizedBox(width: 4.w),
-                                            Text(
-                                              "شارك",
-                                              style: TextStyle(fontSize: 12.sp),
-                                            ),
-                                          ],
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                  SizedBox(height: 20.h),
-                                  // Gallery
-                                  HotelGallerySection(images: hotel.images),
-                                  SizedBox(height: 24.h),
-                                  // Overview / Description
-                                  Text(
-                                    "نظرة عامة للفندق",
-                                    style: AppTextStyle.setelMessiriBlack(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 8.h),
-                                  Text(
-                                    hotel.overview ?? hotel.description ?? "",
-                                    style: TextStyle(
-                                      fontSize: 13.sp,
-                                      color: Colors.grey[700],
-                                      height: 1.6,
-                                    ),
-                                  ),
-                                  SizedBox(height: 24.h),
-                                  // Amenities
-                                  HotelAmenitiesSection(
-                                    amenities: hotel.includes,
-                                  ),
-                                  SizedBox(height: 32.h),
-                                  // Rooms
-                                  HotelRoomsSection(rooms: hotel.rooms),
-                                  SizedBox(height: 32.h),
-                                  // Location
-                                  Text(
-                                    "الموقع الذي سنقيم فيه",
-                                    style: AppTextStyle.setelMessiriBlack(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  SizedBox(height: 16.h),
-                                  HotelLocationSection(
-                                    latitude: hotel.latitude,
-                                    longitude: hotel.longitude,
-                                    address: hotel.addressline1,
-                                  ),
-                                  SizedBox(height: 32.h),
-                                  // Policies
-                                  HotelPoliciesSection(
-                                    policies: hotel.policies,
-                                  ),
-                                ],
+                                stops: const [0.0, 0.3, 1.0],
                               ),
                             ),
                           ),
-                        ),
-                        SliverToBoxAdapter(
-                          child: Column(
-                            children: [
-                              SizedBox(height: 32.h),
-                              Padding(
-                                padding: EdgeInsets.symmetric(horizontal: 16.w),
-                                child: HotelSimilarHotelsSection(
-                                  similarHotels:
-                                      state.hotelDetails.similarHotels,
+                        ],
+                      ),
+                    ),
+
+                    // 2. Scrollable Content
+                    CustomScrollView(
+                      physics: const BouncingScrollPhysics(),
+                      slivers: [
+                        // Transparent App Bar for the back button
+                        SliverAppBar(
+                          backgroundColor: Colors.transparent,
+                          elevation: 0,
+                          pinned: true,
+                          leading: Padding(
+                            padding: EdgeInsets.all(8.w),
+                            child: CircleAvatar(
+                              backgroundColor: Colors.white.withOpacity(0.3),
+                              child: const BackButton(color: Colors.white),
+                            ),
+                          ),
+                          actions: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 16.w),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.white.withOpacity(0.3),
+                                child: IconButton(
+                                  icon: const Icon(Icons.share_outlined, color: Colors.white),
+                                  onPressed: () {},
                                 ),
                               ),
-                              SizedBox(height: 120.h),
-                            ],
+                            ),
+                          ],
+                        ),
+
+                        // Spacing to push content down
+                        SliverToBoxAdapter(
+                          child: SizedBox(height: 200.h),
+                        ),
+
+                        // Main Content Card
+                        SliverToBoxAdapter(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              borderRadius: BorderRadius.only(
+                                topLeft: Radius.circular(32.r),
+                                topRight: Radius.circular(32.r),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.05),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, -5),
+                                ),
+                              ],
+                            ),
+                            padding: EdgeInsets.symmetric(horizontal: 20.w, vertical: 24.h),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                // --- Header: Title and Location ---
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            hotel.hotelTranslatedName ?? hotel.hotelName ?? "",
+                                            style: AppTextStyle.setelMessiriBlack(
+                                              fontSize: 22.sp,
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          SizedBox(height: 8.h),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.star, color: Colors.amber, size: 18.sp),
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                "${hotel.ratingAverage ?? 0} (${hotel.starRating} نجوم)",
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  color: Colors.grey[600],
+                                                  fontFamily: 'ElMessiri',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                          SizedBox(height: 6.h),
+                                          Row(
+                                            children: [
+                                              Icon(Icons.location_on_outlined, size: 16.sp, color: Colors.grey),
+                                              SizedBox(width: 4.w),
+                                              Text(
+                                                "${hotel.city?.name}, ${hotel.country?.name}",
+                                                style: TextStyle(
+                                                  fontSize: 14.sp,
+                                                  color: Colors.grey[600],
+                                                  fontFamily: 'ElMessiri',
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
+                                ),
+
+                                SizedBox(height: 24.h),
+                                // Gallery
+                                HotelGallerySection(images: hotel.images),
+                                SizedBox(height: 32.h),
+
+                                // Overview
+                                Text(
+                                  "نظرة عامة للفندق",
+                                  style: AppTextStyle.setelMessiriBlack(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 12.h),
+                                Text(
+                                  hotel.overview ?? hotel.description ?? "",
+                                  style: TextStyle(
+                                    fontSize: 14.sp,
+                                    color: Colors.grey[700],
+                                    height: 1.6,
+                                    fontFamily: 'ElMessiri',
+                                  ),
+                                ),
+                                SizedBox(height: 32.h),
+
+                                // Amenities
+                                HotelAmenitiesSection(amenities: hotel.includes),
+                                SizedBox(height: 32.h),
+
+                                // Rooms
+                                HotelRoomsSection(rooms: hotel.rooms),
+                                SizedBox(height: 32.h),
+
+                                // Location
+                                Text(
+                                  "الموقع الجغرافي",
+                                  style: AppTextStyle.setelMessiriBlack(
+                                    fontSize: 18.sp,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                                SizedBox(height: 16.h),
+                                HotelLocationSection(
+                                  latitude: hotel.latitude,
+                                  longitude: hotel.longitude,
+                                  address: hotel.addressline1,
+                                ),
+                                SizedBox(height: 32.h),
+
+                                // Policies
+                                HotelPoliciesSection(policies: hotel.policies),
+                                
+                                SizedBox(height: 32.h),
+                                // Similar Hotels
+                                HotelSimilarHotelsSection(
+                                  similarHotels: state.hotelDetails.similarHotels,
+                                ),
+                                SizedBox(height: 120.h),
+                              ],
+                            ),
                           ),
                         ),
                       ],
                     ),
-                    // Bottom Bar
+
+                    // 3. Sticky Bottom Booking Bar
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: HotelBookingBottomBar(
