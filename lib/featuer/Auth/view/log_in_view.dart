@@ -10,6 +10,7 @@ import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/validation/auth_validator.dart';
 
 class LogInView extends StatefulWidget {
   const LogInView({super.key});
@@ -79,6 +80,7 @@ class _LogInViewState extends State<LogInView> {
                   CustomPhoneField(
                     hintText: '726-0592',
                     controller: phoneController,
+                    validator: AuthValidator.validatePhone,
                     onCountryChanged: (code) {
                       countryCode = code.dialCode ?? '+20';
                     },
@@ -88,6 +90,7 @@ class _LogInViewState extends State<LogInView> {
                     hintText: '*******',
                     controller: passwordController,
                     isObscureText: true,
+                    validator: AuthValidator.validatePassword,
                     rightIcon: Icon(
                       Icons.visibility_off_outlined,
                       color: const Color(0xff959595).withOpacity(0.5),

@@ -3,12 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_application_1/core/widgets/custom_button.dart';
-import 'package:flutter_application_1/core/widgets/otp_input.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:pinput/pinput.dart';
+import 'package:flutter_application_1/core/theme/app_color.dart';
 
 class OTPView extends StatefulWidget {
   final String phone;
@@ -27,7 +28,7 @@ class OTPView extends StatefulWidget {
 }
 
 class _OTPViewState extends State<OTPView> {
-  final List<TextEditingController> controllers = List.generate(6, (_) => TextEditingController());
+  final TextEditingController otpController = TextEditingController();
   Timer? _timer;
   int _secondsRemaining = 30;
   bool _canResend = false;
@@ -59,14 +60,39 @@ class _OTPViewState extends State<OTPView> {
   @override
   void dispose() {
     _timer?.cancel();
-    for (var controller in controllers) {
-      controller.dispose();
-    }
+    otpController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final defaultPinTheme = PinTheme(
+      width: 48.w,
+      height: 52.h,
+      textStyle: AppTextStyle.setelMessiriBlack(
+        fontSize: 20,
+        fontWeight: FontWeight.bold,
+      ),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.r),
+        border: Border.all(color: const Color(0xFFE2E8F0)),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+    );
+
+    final focusedPinTheme = defaultPinTheme.copyWith(
+      decoration: defaultPinTheme.decoration!.copyWith(
+        border: Border.all(color: AppColor.primaryBlue2, width: 2),
+      ),
+    );
+
     return AuthBackground(
       child: BlocConsumer<UserCubit, AuthState>(
         listener: (context, state) {
@@ -175,8 +201,24 @@ class _OTPViewState extends State<OTPView> {
               ),
               SizedBox(height: 16.h),
 
-              // OTP Input
-              OTPInput(controllers: controllers),
+              // Pinput Input
+              Directionality(
+                textDirection: TextDirection.ltr,
+                child: Pinput(
+                  length: 6,
+                  controller: otpController,
+                  defaultPinTheme: defaultPinTheme,
+                  focusedPinTheme: focusedPinTheme,
+                  onCompleted: (pin) {
+                    context.read<UserCubit>().verifyOtp(
+                          countryCode: widget.countryCode,
+                          phone: widget.phone,
+                          code: pin,
+                          purpose: widget.purpose,
+                        );
+                  },
+                ),
+              ),
               SizedBox(height: 16.h),
 
               // Resend info
@@ -197,12 +239,11 @@ class _OTPViewState extends State<OTPView> {
                   : CustomButton(
                       text: 'التحقق من الرمز',
                       onPressed: () {
-                        String otp = controllers.map((e) => e.text).join();
-                        if (otp.length == 6) {
+                        if (otpController.text.length == 6) {
                           context.read<UserCubit>().verifyOtp(
                                 countryCode: widget.countryCode,
                                 phone: widget.phone,
-                                code: otp,
+                                code: otpController.text,
                                 purpose: widget.purpose,
                               );
                         } else {

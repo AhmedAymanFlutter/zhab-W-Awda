@@ -8,6 +8,7 @@ import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/validation/auth_validator.dart';
 
 class ResetPasswordView extends StatefulWidget {
   final String resetToken;
@@ -20,6 +21,7 @@ class ResetPasswordView extends StatefulWidget {
 class _ResetPasswordViewState extends State<ResetPasswordView> {
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +40,9 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
           }
         },
         builder: (context, state) {
-          return Column(
+          return Form(
+            key: formKey,
+            child: Column(
             children: [
               // Logo
               Image.asset(
@@ -83,6 +87,7 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 hintText: '*******',
                 controller: passwordController,
                 isObscureText: true,
+                validator: AuthValidator.validatePassword,
                 leftIcon: Icon(
                   Icons.visibility_off_outlined,
                   color: const Color(0xff959595).withOpacity(0.5),
@@ -107,6 +112,10 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 hintText: '*******',
                 controller: confirmPasswordController,
                 isObscureText: true,
+                validator: (value) => AuthValidator.validateConfirmPassword(
+                  value,
+                  passwordController.text,
+                ),
                 leftIcon: Icon(
                   Icons.visibility_off_outlined,
                   color: const Color(0xff959595).withOpacity(0.5),
@@ -121,25 +130,17 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                   : CustomButton(
                       text: 'تأكيد',
                       onPressed: () {
-                        if (passwordController.text.isNotEmpty &&
-                            passwordController.text == confirmPasswordController.text) {
+                        if (formKey.currentState!.validate()) {
                           context.read<UserCubit>().resetPassword(
                                 resetToken: widget.resetToken,
                                 password: passwordController.text,
                                 passwordConfirm: confirmPasswordController.text,
                               );
-                        } else if (passwordController.text != confirmPasswordController.text) {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('كلمات المرور غير متطابقة'), backgroundColor: Colors.orange),
-                          );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('يرجى إدخال كلمة المرور'), backgroundColor: Colors.orange),
-                          );
                         }
                       },
                     ),
-            ],
+              ],
+            ),
           );
         },
       ),

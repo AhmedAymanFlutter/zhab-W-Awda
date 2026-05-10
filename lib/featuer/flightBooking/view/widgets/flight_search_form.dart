@@ -8,7 +8,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'custom_flight_input.dart';
 
 class FlightSearchForm extends StatelessWidget {
-  const FlightSearchForm({Key? key}) : super(key: key);
+  const FlightSearchForm({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -50,13 +50,13 @@ class FlightSearchForm extends StatelessWidget {
 
             // Toggle - sits slightly above the card, aligned to the right (start in RTL)
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 16.w),
+              padding: EdgeInsets.symmetric(horizontal: 25.w),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.start, // Right side in RTL
                 textDirection: TextDirection.rtl,
                 children: [
                   Container(
-                    width: 230.w,
+                    width: 240.w,
                     height: 44.h,
                     decoration: BoxDecoration(
                       color: const Color(0xFFEAE9EB),

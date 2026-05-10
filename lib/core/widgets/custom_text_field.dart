@@ -27,7 +27,7 @@ class CustomTextField extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: 295.w,
-      height: 46.h,
+      constraints: BoxConstraints(minHeight: 46.h),
       decoration: BoxDecoration(
         color: AppColor.mainWhite,
         borderRadius: BorderRadius.circular(10.r),
@@ -64,6 +64,7 @@ class CustomTextField extends StatelessWidget {
             horizontal: 14.w,
             vertical: 12.h,
           ),
+          errorStyle: const TextStyle(height: 0),
         ),
       ),
     );

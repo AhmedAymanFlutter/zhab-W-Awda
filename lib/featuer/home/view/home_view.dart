@@ -11,7 +11,6 @@ import 'package:flutter_application_1/featuer/home/view/widgets/home_services_se
 import 'package:flutter_application_1/featuer/home/view/widgets/home_cities_section.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_reviews_section.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_tours_section.dart';
-import 'package:flutter_application_1/featuer/layout/logic/layout_cubit.dart';
 import 'widgets/recommended_hotel_card.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_destinations_section.dart';
 
@@ -30,7 +29,7 @@ class HomeView extends StatelessWidget {
           SliverToBoxAdapter(
             child: HomeServicesSection(
               onViewAllTap: () {
-                LayoutCubit.get(context).changeBottomNav(4);
+                Navigator.pushNamed(context, Routes.servicesView);
               },
             ),
           ),

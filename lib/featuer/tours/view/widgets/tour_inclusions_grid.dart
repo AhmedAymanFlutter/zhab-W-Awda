@@ -12,10 +12,10 @@ class TourInclusionsGrid extends StatelessWidget {
     if (includes.isEmpty) return const SizedBox.shrink();
 
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(
-          "ماذا تشمل الرحلة",
+          "أبرز المميزات",
           style: AppTextStyle.setelMessiriBlack(
             fontSize: 20,
             fontWeight: FontWeight.bold,
@@ -24,22 +24,25 @@ class TourInclusionsGrid extends StatelessWidget {
         SizedBox(height: 16.h),
         ListView.separated(
           shrinkWrap: true,
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: includes.length,
           separatorBuilder: (context, index) => SizedBox(height: 12.h),
           itemBuilder: (context, index) {
             return Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              textDirection: TextDirection.rtl,
               children: [
                 Container(
-                  padding: EdgeInsets.all(4.w),
-                  decoration: BoxDecoration(
-                    color: Colors.green[50],
+                  padding: EdgeInsets.all(6.w),
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD4F3E1),
                     shape: BoxShape.circle,
                   ),
                   child: Icon(
                     Icons.check_rounded,
-                    color: Colors.green[600],
+                    color: const Color(0xFF22C55E),
                     size: 16.sp,
                   ),
                 ),
@@ -47,10 +50,12 @@ class TourInclusionsGrid extends StatelessWidget {
                 Expanded(
                   child: Text(
                     includes[index],
+                    textDirection: TextDirection.rtl,
                     style: TextStyle(
                       fontSize: 14.sp,
-                      color: Colors.grey[800],
-                      height: 1.4,
+                      color: Colors.black87,
+                      fontWeight: FontWeight.w500,
+                      fontFamily: 'ElMessiri',
                     ),
                   ),
                 ),

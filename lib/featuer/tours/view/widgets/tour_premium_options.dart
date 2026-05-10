@@ -27,6 +27,7 @@ class TourPremiumOptions extends StatelessWidget {
         
         ListView.separated(
           shrinkWrap: true,
+          padding: EdgeInsets.zero,
           physics: const NeverScrollableScrollPhysics(),
           itemCount: options.length,
           separatorBuilder: (context, index) => SizedBox(height: 16.h),

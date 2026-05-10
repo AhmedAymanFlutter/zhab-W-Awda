@@ -7,6 +7,9 @@ import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/validation/auth_validator.dart';
+import '../../../core/validation/input_validator.dart';
+import '../../../core/validation/rules/required_rule.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({super.key});
@@ -123,6 +126,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     hintText: '••••••••',
                     controller: _currentPasswordController,
                     isObscureText: !_showCurrent,
+                    validator: (value) => InputValidator([RequiredRule(message: 'يرجى إدخال كلمة المرور الحالية')]).validate(value),
                     leftIcon: GestureDetector(
                       onTap: () => setState(() => _showCurrent = !_showCurrent),
                       child: Icon(
@@ -141,6 +145,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     hintText: '••••••••',
                     controller: _newPasswordController,
                     isObscureText: !_showNew,
+                    validator: AuthValidator.validatePassword,
                     leftIcon: GestureDetector(
                       onTap: () => setState(() => _showNew = !_showNew),
                       child: Icon(
@@ -159,6 +164,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                     hintText: '••••••••',
                     controller: _confirmPasswordController,
                     isObscureText: !_showConfirm,
+                    validator: (value) => AuthValidator.validateConfirmPassword(value, _newPasswordController.text),
                     leftIcon: GestureDetector(
                       onTap: () => setState(() => _showConfirm = !_showConfirm),
                       child: Icon(
@@ -203,50 +209,12 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   }
 
   void _submit() {
-    final current = _currentPasswordController.text.trim();
-    final newPass = _newPasswordController.text.trim();
-    final confirm = _confirmPasswordController.text.trim();
-
-    if (current.isEmpty || newPass.isEmpty || confirm.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('يرجى ملء جميع الحقول'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-      return;
+    if (_formKey.currentState!.validate()) {
+      context.read<UserCubit>().changePassword(
+            password: _currentPasswordController.text.trim(),
+            newPassword: _newPasswordController.text.trim(),
+            passwordConfirm: _confirmPasswordController.text.trim(),
+          );
     }
-
-    if (newPass != confirm) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('كلمات المرور الجديدة غير متطابقة'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-      return;
-    }
-
-    if (newPass.length < 6) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('كلمة المرور يجب أن تكون 6 أحرف على الأقل'),
-          backgroundColor: Colors.orange,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
-      return;
-    }
-
-    context.read<UserCubit>().changePassword(
-          password: current,
-          newPassword: newPass,
-          passwordConfirm: confirm,
-        );
   }
 }

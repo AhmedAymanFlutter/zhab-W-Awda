@@ -9,18 +9,21 @@ class CustomPhoneField extends StatelessWidget {
   final String hintText;
   final Function(CountryCode)? onCountryChanged;
 
+  final String? Function(String?)? validator;
+
   const CustomPhoneField({
     super.key,
     this.controller,
     required this.hintText,
     this.onCountryChanged,
+    this.validator,
   });
 
   @override
   Widget build(BuildContext context) {
     return Container(
       width: 295.w,
-      height: 46.h,
+      constraints: BoxConstraints(minHeight: 46.h),
       decoration: BoxDecoration(
         color: AppColor.mainWhite,
         borderRadius: BorderRadius.circular(10.r),
@@ -44,6 +47,7 @@ class CustomPhoneField extends StatelessWidget {
                 fontWeight: FontWeight.w500,
               ),
               textAlign: TextAlign.right,
+              validator: validator,
               decoration: InputDecoration(
                 isDense: true,
                 hintText: hintText,
@@ -53,6 +57,7 @@ class CustomPhoneField extends StatelessWidget {
                 ).copyWith(color: const Color(0xff1A1C1E)),
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.symmetric(horizontal: 14.w, vertical: 12.h),
+                errorStyle: const TextStyle(height: 0),
               ),
             ),
           ),

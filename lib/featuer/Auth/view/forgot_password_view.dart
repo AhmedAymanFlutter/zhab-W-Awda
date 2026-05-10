@@ -8,6 +8,7 @@ import 'package:flutter_application_1/featuer/Auth/manager/auth_state.dart';
 import 'package:flutter_application_1/featuer/Auth/view/widgets/auth_background.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../../core/validation/auth_validator.dart';
 
 class ForgotPasswordView extends StatefulWidget {
   const ForgotPasswordView({super.key});
@@ -18,6 +19,7 @@ class ForgotPasswordView extends StatefulWidget {
 
 class _ForgotPasswordViewState extends State<ForgotPasswordView> {
   final TextEditingController phoneController = TextEditingController();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   String countryCode = '+20';
 
   @override
@@ -45,7 +47,9 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
           }
         },
         builder: (context, state) {
-          return Column(
+          return Form(
+            key: formKey,
+            child: Column(
             children: [
               // Logo
               Image.asset(
@@ -91,6 +95,7 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
               CustomPhoneField(
                 hintText: '726-0592',
                 controller: phoneController,
+                validator: AuthValidator.validatePhone,
                 onCountryChanged: (code) {
                   countryCode = code.dialCode ?? '+20';
                 },
@@ -120,19 +125,16 @@ class _ForgotPasswordViewState extends State<ForgotPasswordView> {
                   : CustomButton(
                       text: 'ارسل رمز التحقق',
                       onPressed: () {
-                        if (phoneController.text.isNotEmpty) {
+                        if (formKey.currentState!.validate()) {
                           context.read<UserCubit>().forgotPassword(
                                 countryCode: countryCode,
                                 phone: phoneController.text,
                               );
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('يرجى إدخال رقم الهاتف'), backgroundColor: Colors.orange),
-                          );
                         }
                       },
                     ),
-            ],
+              ],
+            ),
           );
         },
       ),
