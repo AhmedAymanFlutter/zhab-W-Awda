@@ -78,7 +78,7 @@ class TourIdData {
     title = json['title'];
     description = json['description'];
     descText = json['descText'];
-    
+
     if (json['price'] != null) {
       if (json['price'] is Map<String, dynamic>) {
         price = TourPrice.fromJson(json['price']);
@@ -96,10 +96,16 @@ class TourIdData {
 
     // Handle dynamic types just in case
     city = json['city'] is Map ? json['city']['name'] : json['city'];
-    country = json['country'] is Map ? json['country']['name'] : json['country'];
+    country = json['country'] is Map
+        ? json['country']['name']
+        : json['country'];
 
-    includes = json['includes'] != null ? List<String>.from(json['includes']) : [];
-    excludes = json['excludes'] != null ? List<String>.from(json['excludes']) : [];
+    includes = json['includes'] != null
+        ? List<String>.from(json['includes'])
+        : [];
+    excludes = json['excludes'] != null
+        ? List<String>.from(json['excludes'])
+        : [];
 
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
 
@@ -182,9 +188,15 @@ class ProductOption {
   ProductOption.fromJson(Map<String, dynamic> json) {
     optionCode = json['optionCode'];
     title = json['title'];
-    packageDescription = json['packageDescription'] != null ? List<String>.from(json['packageDescription']) : [];
-    termsAndConditions = json['termsAndConditions'] != null ? List<String>.from(json['termsAndConditions']) : [];
-    howToUse = json['howToUse'] != null ? List<String>.from(json['howToUse']) : [];
+    packageDescription = json['packageDescription'] != null
+        ? List<String>.from(json['packageDescription'])
+        : [];
+    termsAndConditions = json['termsAndConditions'] != null
+        ? List<String>.from(json['termsAndConditions'])
+        : [];
+    howToUse = json['howToUse'] != null
+        ? List<String>.from(json['howToUse'])
+        : [];
     price = (json['price'] as num?)?.toDouble();
     currency = json['currency'];
     id = json['id'];

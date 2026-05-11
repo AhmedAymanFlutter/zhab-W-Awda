@@ -1,14 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/widgets/CustomHomeAppBar.dart';
-import 'package:flutter_application_1/featuer/services/view/widgets/service_details_bottom_sheet.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:flutter_application_1/featuer/services/manager/services_cubit.dart';
-import 'package:flutter_application_1/featuer/services/manager/services_state.dart';
-import 'package:flutter_application_1/featuer/services/view/widgets/service_detailed_card.dart';
 import 'package:flutter_application_1/featuer/services/view/widgets/contact_banner.dart';
+import 'package:flutter_application_1/featuer/services/view/widgets/services_list_view_section.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 import '../../../../core/theme/app_text_style.dart';
 
 class ServicesView extends StatefulWidget {
@@ -66,77 +62,11 @@ class _ServicesViewState extends State<ServicesView> {
             ),
             SizedBox(height: 24.h),
             // List of Services
-            BlocBuilder<ServicesCubit, ServicesState>(
-              buildWhen: (previous, current) =>
-                  current is ServicesLoading ||
-                  current is ServicesSuccess ||
-                  current is ServicesError,
-              builder: (context, state) {
-                if (state is ServicesLoading) {
-                  return Skeletonizer(
-                    enabled: true,
-                    child: _buildServicesList(
-                      List.generate(4, (index) => null), // Showing 4 skeletons
-                    ),
-                  );
-                } else if (state is ServicesError) {
-                  return Center(
-                    child: Column(
-                      children: [
-                        Text(state.message),
-                        TextButton(
-                          onPressed: () =>
-                              context.read<ServicesCubit>().fetchServices(),
-                          child: const Text("إعادة المحاولة"),
-                        ),
-                      ],
-                    ),
-                  );
-                } else if (state is ServicesSuccess) {
-                  return _buildServicesList(state.services);
-                }
-                return const SizedBox();
-              },
-            ),
+            const ServicesListViewSection(),
             SizedBox(height: 40.h),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildServicesList(List<dynamic> services) {
-    return ListView.separated(
-      shrinkWrap: true,
-      physics: const NeverScrollableScrollPhysics(),
-      itemCount: services.length,
-      separatorBuilder: (context, index) => SizedBox(height: 16.h),
-      itemBuilder: (context, index) {
-        final service = services[index];
-        return ServiceDetailedCard(
-          title: service?.name ?? "تحميل...",
-          description:
-              service?.description ??
-              "نقدم خدمة تأجير سيارات مريحة ومرنة لتسهيل تنقلك خلال رحلتك بأفضل الأسعار.",
-          iconUrl: service?.imageCover,
-          onDetailsTap: () {
-            showServiceDetailsBottomSheet(
-              context,
-              title: service?.name ?? "الخدمة",
-              description: service?.description ?? "وصف الخدمة غير متوفر.",
-            );
-          },
-          onBookTap: () async {
-            final title = service?.name ?? "الخدمة";
-            final Uri url = Uri.parse(
-              "https://wa.me/?text=مرحباً، أريد الاستفسار/الحجز عن خدمة: $title",
-            );
-            if (await canLaunchUrl(url)) {
-              await launchUrl(url, mode: LaunchMode.externalApplication);
-            }
-          },
-        );
-      },
     );
   }
 }

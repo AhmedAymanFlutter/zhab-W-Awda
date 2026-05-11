@@ -24,9 +24,7 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
   final TextEditingController _newPasswordController = TextEditingController();
   final TextEditingController _confirmPasswordController = TextEditingController();
 
-  bool _showCurrent = false;
-  bool _showNew = false;
-  bool _showConfirm = false;
+
 
   @override
   void dispose() {
@@ -125,16 +123,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   CustomTextField(
                     hintText: '••••••••',
                     controller: _currentPasswordController,
-                    isObscureText: !_showCurrent,
+                    isObscureText: true,
                     validator: (value) => InputValidator([RequiredRule(message: 'يرجى إدخال كلمة المرور الحالية')]).validate(value),
-                    leftIcon: GestureDetector(
-                      onTap: () => setState(() => _showCurrent = !_showCurrent),
-                      child: Icon(
-                        _showCurrent ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                        color: Colors.grey[400],
-                        size: 20.sp,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 20.h),
 
@@ -144,16 +134,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   CustomTextField(
                     hintText: '••••••••',
                     controller: _newPasswordController,
-                    isObscureText: !_showNew,
+                    isObscureText: true,
                     validator: AuthValidator.validatePassword,
-                    leftIcon: GestureDetector(
-                      onTap: () => setState(() => _showNew = !_showNew),
-                      child: Icon(
-                        _showNew ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                        color: Colors.grey[400],
-                        size: 20.sp,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 20.h),
 
@@ -163,16 +145,8 @@ class _ChangePasswordViewState extends State<ChangePasswordView> {
                   CustomTextField(
                     hintText: '••••••••',
                     controller: _confirmPasswordController,
-                    isObscureText: !_showConfirm,
+                    isObscureText: true,
                     validator: (value) => AuthValidator.validateConfirmPassword(value, _newPasswordController.text),
-                    leftIcon: GestureDetector(
-                      onTap: () => setState(() => _showConfirm = !_showConfirm),
-                      child: Icon(
-                        _showConfirm ? Icons.visibility_outlined : Icons.visibility_off_outlined,
-                        color: Colors.grey[400],
-                        size: 20.sp,
-                      ),
-                    ),
                   ),
                   SizedBox(height: 40.h),
 

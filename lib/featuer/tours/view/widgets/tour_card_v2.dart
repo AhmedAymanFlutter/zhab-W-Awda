@@ -45,16 +45,8 @@ class TourCardV2 extends StatelessWidget {
             children: [
               TourBackgroundImage(imageUrl: tour.imageCover),
               const TourGradientOverlay(),
-              const Positioned(
-                top: 16,
-                right: 16,
-                child: TourBookmarkButton(),
-              ),
-              const Positioned(
-                top: 16,
-                left: 16,
-                child: TourArrowIcon(),
-              ),
+              const Positioned(top: 16, right: 16, child: TourBookmarkButton()),
+              const Positioned(top: 16, left: 16, child: TourArrowIcon()),
               Positioned(
                 bottom: 16,
                 left: 16,

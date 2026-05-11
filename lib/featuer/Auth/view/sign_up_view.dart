@@ -107,11 +107,6 @@ class _SignUpViewState extends State<SignUpView> {
                     controller: passwordController,
                     isObscureText: true,
                     validator: AuthValidator.validatePassword,
-                    rightIcon: Icon(
-                      Icons.visibility_off_outlined,
-                      color: const Color(0xff959595).withOpacity(0.5),
-                      size: 20.sp,
-                    ),
                   ),
                   SizedBox(height: 32.h),
 

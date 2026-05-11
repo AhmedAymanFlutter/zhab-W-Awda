@@ -3,7 +3,7 @@ import 'package:flutter_application_1/core/theme/app_color.dart';
 import 'package:flutter_application_1/core/theme/app_text_style.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
-class CustomTextField extends StatelessWidget {
+class CustomTextField extends StatefulWidget {
   final String hintText;
   final Widget? leftIcon;
   final Widget? rightIcon;
@@ -24,6 +24,19 @@ class CustomTextField extends StatelessWidget {
   });
 
   @override
+  State<CustomTextField> createState() => _CustomTextFieldState();
+}
+
+class _CustomTextFieldState extends State<CustomTextField> {
+  late bool _isObscured;
+
+  @override
+  void initState() {
+    super.initState();
+    _isObscured = widget.isObscureText;
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       width: 295.w,
@@ -41,10 +54,10 @@ class CustomTextField extends StatelessWidget {
         ],
       ),
       child: TextFormField(
-        controller: controller,
-        obscureText: isObscureText,
-        keyboardType: keyboardType,
-        validator: validator,
+        controller: widget.controller,
+        obscureText: _isObscured,
+        keyboardType: widget.keyboardType,
+        validator: widget.validator,
         textAlign: TextAlign.right,
         style: AppTextStyle.setelMessiriBlack(
           fontSize: 14,
@@ -52,13 +65,28 @@ class CustomTextField extends StatelessWidget {
         ),
         decoration: InputDecoration(
           isDense: true,
-          hintText: hintText,
+          hintText: widget.hintText,
           hintStyle: AppTextStyle.setelMessirisecondaryGery(
             fontSize: 14,
             fontWeight: FontWeight.w500,
           ).copyWith(color: const Color(0xff1A1C1E)),
-          suffixIcon: leftIcon,
-          prefixIcon: rightIcon,
+          prefixIcon: widget.isObscureText
+              ? IconButton(
+                  icon: Icon(
+                    _isObscured
+                        ? Icons.visibility_off_outlined
+                        : Icons.visibility_outlined,
+                    color: const Color(0xff959595).withOpacity(0.5),
+                    size: 18.sp,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _isObscured = !_isObscured;
+                    });
+                  },
+                )
+              : widget.rightIcon,
+          suffixIcon: widget.leftIcon,
           border: InputBorder.none,
           contentPadding: EdgeInsets.symmetric(
             horizontal: 14.w,

@@ -42,7 +42,7 @@ class ToursPaginationWidget extends StatelessWidget {
             isEnabled: pagination.hasPrevPage ?? false,
             onTap: () => onPageChanged((pagination.currentPage ?? 1) - 1),
           ),
-          
+
           SizedBox(width: 12.w),
 
           // Page Numbers
@@ -50,16 +50,20 @@ class ToursPaginationWidget extends StatelessWidget {
             children: List.generate(pagination.totalPages!, (index) {
               final page = index + 1;
               final isSelected = page == pagination.currentPage;
-              
+
               // Only show first, last, current, and pages around current
-              if (page == 1 || 
-                  page == pagination.totalPages || 
-                  (page >= (pagination.currentPage! - 1) && page <= (pagination.currentPage! + 1))) {
+              if (page == 1 ||
+                  page == pagination.totalPages ||
+                  (page >= (pagination.currentPage! - 1) &&
+                      page <= (pagination.currentPage! + 1))) {
                 return _buildPageNumber(page, isSelected);
               } else if (page == 2 || page == pagination.totalPages! - 1) {
                 return Padding(
                   padding: EdgeInsets.symmetric(horizontal: 4.w),
-                  child: Text("...", style: TextStyle(color: Colors.grey, fontSize: 14.sp)),
+                  child: Text(
+                    "...",
+                    style: TextStyle(color: Colors.grey, fontSize: 14.sp),
+                  ),
                 );
               }
               return const SizedBox.shrink();
@@ -92,7 +96,9 @@ class ToursPaginationWidget extends StatelessWidget {
           color: isSelected ? AppColor.primaryBlue : Colors.transparent,
           borderRadius: BorderRadius.circular(10.r),
           border: Border.all(
-            color: isSelected ? AppColor.primaryBlue : Colors.grey.withOpacity(0.2),
+            color: isSelected
+                ? AppColor.primaryBlue
+                : Colors.grey.withOpacity(0.2),
           ),
         ),
         child: Center(

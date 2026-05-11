@@ -45,11 +45,7 @@ class TourBottomContent extends StatelessWidget {
             // Left side (in RTL, this is the right edge visually) -> Days
             Row(
               children: [
-                Icon(
-                  FontAwesomeIcons.clock,
-                  color: Colors.white,
-                  size: 12.sp,
-                ),
+                Icon(FontAwesomeIcons.clock, color: Colors.white, size: 12.sp),
                 SizedBox(width: 4.w),
                 Text(
                   "${tour.header?.days ?? '4'} أيام",

@@ -7,7 +7,9 @@ import '../model/get_tour_id_model.dart';
 class ToursRepository {
   final APIHelper _apiHelper = APIHelper();
 
-  Future<GetAllToursModel> getTours({Map<String, dynamic>? queryParameters}) async {
+  Future<GetAllToursModel> getTours({
+    Map<String, dynamic>? queryParameters,
+  }) async {
     try {
       final response = await _apiHelper.getRequest(
         endPoint: EndPoints.tours,

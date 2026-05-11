@@ -88,11 +88,6 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 controller: passwordController,
                 isObscureText: true,
                 validator: AuthValidator.validatePassword,
-                leftIcon: Icon(
-                  Icons.visibility_off_outlined,
-                  color: const Color(0xff959595).withOpacity(0.5),
-                  size: 20.sp,
-                ),
               ),
               SizedBox(height: 16.h),
 
@@ -115,11 +110,6 @@ class _ResetPasswordViewState extends State<ResetPasswordView> {
                 validator: (value) => AuthValidator.validateConfirmPassword(
                   value,
                   passwordController.text,
-                ),
-                leftIcon: Icon(
-                  Icons.visibility_off_outlined,
-                  color: const Color(0xff959595).withOpacity(0.5),
-                  size: 20.sp,
                 ),
               ),
               SizedBox(height: 40.h),

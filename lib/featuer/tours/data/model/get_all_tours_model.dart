@@ -7,8 +7,10 @@ class GetAllToursModel {
 
   GetAllToursModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    success = json['success'] ?? json['status'] == 'success' || json['status'] == true;
-    
+    success =
+        json['success'] ??
+        json['status'] == 'success' || json['status'] == true;
+
     if (json['data'] != null) {
       if (json['data'] is List) {
         data = ToursDataWrapper(tours: []);
@@ -29,7 +31,8 @@ class ToursDataWrapper {
   ToursDataWrapper({this.tours, this.pagination});
 
   ToursDataWrapper.fromJson(Map<String, dynamic> json) {
-    final toursList = json['data'] ?? json['tours'] ?? (json is List ? json : null);
+    final toursList =
+        json['data'] ?? json['tours'] ?? (json is List ? json : null);
     if (toursList != null && toursList is List) {
       tours = <TourItem>[];
       for (var v in toursList) {
@@ -127,7 +130,7 @@ class TourItem {
     description = json['description'];
     descText = json['descText'];
     duration = json['duration'];
-    
+
     // Handle complex price object {amount: 100, currency: AED}
     if (json['price'] != null) {
       if (json['price'] is Map) {
@@ -154,7 +157,7 @@ class TourItem {
         : [];
 
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
-    
+
     // If duration is provided but header is null, sync duration to header.days for backward compatibility with UI
     if (duration != null && header == null) {
       header = Header(days: duration.toString());
