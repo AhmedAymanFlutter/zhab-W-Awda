@@ -12,15 +12,14 @@ class LayoutCubit extends Cubit<LayoutState> {
 
   static LayoutCubit get(context) => BlocProvider.of(context);
 
-  int currentIndex = 0;
+  int currentIndex = 4;
 
-  // قائمة الصفحات بـ 5 عناصر حسب طلب المستخدم
   List<Widget> screens = [
-    const HomeView(),
-    const ToursView(),
-    const BookFlightView(), // Airplane tab
-    const PackageTypesView(),
     const MoreView(),
+    const PackageTypesView(),
+    const BookFlightView(),
+    const ToursView(),
+    const HomeView(),
   ];
 
   void changeBottomNav(int index) {

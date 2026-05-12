@@ -5,11 +5,34 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import '../../../../core/theme/app_color.dart';
 import '../../../../core/theme/app_text_style.dart';
+import 'package:flutter_application_1/core/utils/whatsapp_helper.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class HotelRoomsSection extends StatelessWidget {
   final List<Rooms>? rooms;
+  final String? hotelName;
 
-  const HotelRoomsSection({super.key, this.rooms});
+  const HotelRoomsSection({super.key, this.rooms, this.hotelName});
+
+  void _launchWhatsAppRoom(BuildContext context, Rooms room) {
+    final settingsState = context.read<SettingsCubit>().state;
+    String phoneNumber = "+201090124803"; // Default fallback
+
+    if (settingsState is SettingsSuccess) {
+      final whatsAppSetting = settingsState.settings.socialMedia?.whatsApp;
+      if (whatsAppSetting != null && whatsAppSetting.url != null) {
+        phoneNumber = whatsAppSetting.url!.replaceAll(RegExp(r'[^0-9+]'), '');
+      }
+    }
+
+    WhatsAppHelper.launchWhatsApp(
+      phone: phoneNumber,
+      message:
+          "مرحباً، أود الاستفسار عن حجز غرفة: ${room.title ?? 'غير محدد'} في فندق: ${hotelName ?? 'غير محدد'}",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -74,13 +97,13 @@ class HotelRoomsSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: rooms!.length,
           separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) => _buildRoomCard(rooms![index]),
+          itemBuilder: (context, index) => _buildRoomCard(context, rooms![index]),
         ),
       ],
     );
   }
 
-  Widget _buildRoomCard(Rooms room) {
+  Widget _buildRoomCard(BuildContext context, Rooms room) {
     return Container(
       padding: EdgeInsets.only(
         top: 6.h,
@@ -216,20 +239,24 @@ class HotelRoomsSection extends StatelessWidget {
                   ),
                 ),
                 SizedBox(height: 8.h),
-                Container(
-                  width: double.infinity,
-                  padding: EdgeInsets.symmetric(vertical: 8.h),
-                  decoration: BoxDecoration(
-                    color: AppColor.primaryBlue,
-                    borderRadius: BorderRadius.circular(25.r),
-                  ),
-                  child: Center(
-                    child: Text(
-                      "احجز الآن",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 13.sp,
-                        fontWeight: FontWeight.bold,
+                InkWell(
+                  onTap: () => _launchWhatsAppRoom(context, room),
+                  borderRadius: BorderRadius.circular(25.r),
+                  child: Container(
+                    width: double.infinity,
+                    padding: EdgeInsets.symmetric(vertical: 8.h),
+                    decoration: BoxDecoration(
+                      color: AppColor.primaryBlue,
+                      borderRadius: BorderRadius.circular(25.r),
+                    ),
+                    child: Center(
+                      child: Text(
+                        "احجز الآن",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 13.sp,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
                     ),
                   ),

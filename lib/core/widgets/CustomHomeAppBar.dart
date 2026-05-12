@@ -22,22 +22,29 @@ class CustomHomeAppBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 60.h,
-      padding: EdgeInsets.only(top: 8.h, right: 16.w, bottom: 16.h, left: 16.w),
-      decoration: BoxDecoration(
-        color: backgroundColor,
-        border: Border(bottom: BorderSide(color: borderColor, width: 2)),
-      ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          leading ?? const SizedBox(),
+    return SafeArea(
+      child: Container(
+        height: 60.h,
+        padding: EdgeInsets.only(
+          top: 8.h,
+          right: 16.w,
+          bottom: 16.h,
+          left: 16.w,
+        ),
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          border: Border(bottom: BorderSide(color: borderColor, width: 2)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            leading ?? const SizedBox(),
 
-          Expanded(child: Center(child: title ?? const SizedBox())),
+            Expanded(child: Center(child: title ?? const SizedBox())),
 
-          Row(mainAxisSize: MainAxisSize.min, children: actions ?? []),
-        ],
+            Row(mainAxisSize: MainAxisSize.min, children: actions ?? []),
+          ],
+        ),
       ),
     );
   }

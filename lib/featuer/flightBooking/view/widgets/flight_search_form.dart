@@ -6,6 +6,7 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:flutter_svg/flutter_svg.dart';
 import 'custom_flight_input.dart';
+import 'destination_search_input.dart';
 
 class FlightSearchForm extends StatelessWidget {
   const FlightSearchForm({super.key});
@@ -186,46 +187,51 @@ class FlightSearchForm extends StatelessWidget {
                         textDirection: TextDirection.rtl,
                         children: [
                           Expanded(
-                            child: CustomFlightInput(
+                            child: DestinationSearchInput(
                               label: "المغادرة من",
                               labelIcon: Icons.location_on_outlined,
                               hint: "نقطة المغادرة",
                               controller: cubit.fromCityController,
-                              trailing: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.grey,
-                                size: 18.sp,
-                              ),
+                              isFromCity: true,
                             ),
                           ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(horizontal: 4.w),
-                            child: Container(
-                              padding: EdgeInsets.all(6.w),
-                              margin: EdgeInsets.only(top: 24.h),
-                              decoration: BoxDecoration(
-                                color: Colors.white,
-                                borderRadius: BorderRadius.circular(8.r),
-                                border: Border.all(color: Colors.grey.shade200),
-                              ),
-                              child: Icon(
-                                Icons.swap_horiz,
-                                color: Colors.black87,
-                                size: 18.sp,
+                          GestureDetector(
+                            onTap: () {
+                              final fromText = cubit.fromCityController.text;
+                              final toText = cubit.toCityController.text;
+                              final fromId = cubit.fromId;
+                              final toId = cubit.toId;
+
+                              cubit.fromCityController.text = toText;
+                              cubit.toCityController.text = fromText;
+                              cubit.fromId = toId;
+                              cubit.toId = fromId;
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(horizontal: 4.w),
+                              child: Container(
+                                padding: EdgeInsets.all(6.w),
+                                margin: EdgeInsets.only(top: 24.h),
+                                decoration: BoxDecoration(
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(8.r),
+                                  border: Border.all(color: Colors.grey.shade200),
+                                ),
+                                child: Icon(
+                                  Icons.swap_horiz,
+                                  color: Colors.black87,
+                                  size: 18.sp,
+                                ),
                               ),
                             ),
                           ),
                           Expanded(
-                            child: CustomFlightInput(
+                            child: DestinationSearchInput(
                               label: "الوصول الي",
                               labelIcon: Icons.location_on_outlined,
                               hint: "نقطة الوصول",
                               controller: cubit.toCityController,
-                              trailing: Icon(
-                                Icons.keyboard_arrow_down,
-                                color: Colors.grey,
-                                size: 18.sp,
-                              ),
+                              isFromCity: false,
                             ),
                           ),
                         ],
@@ -243,9 +249,9 @@ class FlightSearchForm extends StatelessWidget {
                                 labelIcon: Icons.calendar_today_outlined,
                                 hint: cubit.departureDate != null
                                     ? intl.DateFormat(
-                                        'mm-dd-yyyy',
+                                        'MM-dd-yyyy',
                                       ).format(cubit.departureDate!)
-                                    : "mm-dd-yyyy",
+                                    : "MM-dd-yyyy",
                                 readOnly: true,
                                 trailing: Icon(
                                   Icons.calendar_month_outlined,
@@ -277,9 +283,9 @@ class FlightSearchForm extends StatelessWidget {
                                     ? "لا يوجد"
                                     : cubit.returnDate != null
                                     ? intl.DateFormat(
-                                        'mm-dd-yyyy',
+                                        'MM-dd-yyyy',
                                       ).format(cubit.returnDate!)
-                                    : "mm-dd-yyyy",
+                                    : "MM-dd-yyyy",
                                 readOnly: true,
                                 trailing: Icon(
                                   Icons.calendar_month_outlined,
@@ -352,21 +358,7 @@ class FlightSearchForm extends StatelessWidget {
                                   onPressed: submitState is BookFlightLoading
                                       ? null
                                       : () {
-                                          if (cubit
-                                              .nameController
-                                              .text
-                                              .isEmpty) {
-                                            cubit.nameController.text =
-                                                "Guest User";
-                                          }
-                                          if (cubit
-                                              .emailController
-                                              .text
-                                              .isEmpty) {
-                                            cubit.emailController.text =
-                                                "guest@test.com";
-                                          }
-                                          cubit.submitBooking();
+                                          cubit.searchFlights();
                                         },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: const Color(0xFF00276C),
@@ -392,19 +384,14 @@ class FlightSearchForm extends StatelessWidget {
                                           mainAxisAlignment:
                                               MainAxisAlignment.center,
                                           children: [
-                                            SvgPicture.asset(
-                                              'assets/icon/sent.svg',
-                                              height: 20.sp,
-                                              width: 20.sp,
-                                              colorFilter:
-                                                  const ColorFilter.mode(
-                                                    Colors.white,
-                                                    BlendMode.srcIn,
-                                                  ),
+                                            Icon(
+                                              Icons.search,
+                                              color: Colors.white,
+                                              size: 20.sp,
                                             ),
                                             SizedBox(width: 8.w),
                                             Text(
-                                              "تأكيد الطلب",
+                                              "بحث عن رحلات",
                                               style: TextStyle(
                                                 color: Colors.white,
                                                 fontSize: 14.sp,

@@ -36,4 +36,5 @@ class Routes {
   static const String notificationsView = '/NotificationsView';
   static const String termsView = '/TermsView';
   static const String privacyView = '/PrivacyView';
+  static const String flightResultsView = '/FlightResultsView';
 }

@@ -146,7 +146,7 @@ class RecommendedHotelCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            "${hotel.price ?? 1500}",
+                            "${hotel.price ?? '0'}",
                             style: AppTextStyle.setelMessiriBlack(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

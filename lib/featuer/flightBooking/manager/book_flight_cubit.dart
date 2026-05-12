@@ -21,6 +21,9 @@ class BookFlightCubit extends Cubit<BookFlightState> {
     text: '1',
   );
 
+  String? fromId;
+  String? toId;
+
   // Date Variables
   DateTime? departureDate;
   DateTime? returnDate;
@@ -34,10 +37,57 @@ class BookFlightCubit extends Cubit<BookFlightState> {
     emit(BookFlightTripTypeChanged());
   }
 
+  void searchDestinations(String query, bool isFromCity) async {
+    if (query.isEmpty) {
+      emit(BookFlightSearchSuccess([], isFromCity));
+      return;
+    }
+
+    emit(BookFlightSearchLoading());
+    try {
+      final results = await _repository.searchDestinations(query);
+      emit(BookFlightSearchSuccess(results, isFromCity));
+    } catch (e) {
+      emit(BookFlightSearchSuccess([], isFromCity));
+    }
+  }
+
+  void searchFlights() async {
+    if (fromId == null) {
+      emit(BookFlightError("يرجى اختيار مدينة المغادرة من القائمة"));
+      return;
+    }
+    if (toId == null) {
+      emit(BookFlightError("يرجى اختيار مدينة الوصول من القائمة"));
+      return;
+    }
+    if (departureDate == null) {
+      emit(BookFlightError("يرجى اختيار تاريخ السفر"));
+      return;
+    }
+
+    emit(BookFlightLoading());
+    try {
+      final results = await _repository.searchFlights(
+        fromId: fromId!,
+        toId: toId!,
+        departDate: departureDate!.toIso8601String().split('T')[0],
+        adults: int.tryParse(passengersController.text) ?? 1,
+      );
+      emit(BookFlightSearchFlightsSuccess(results));
+    } catch (e) {
+      emit(BookFlightError(e.toString()));
+    }
+  }
+
   Future<void> submitBooking() async {
     if (!formKey.currentState!.validate()) return;
     if (departureDate == null || (isRoundTrip && returnDate == null)) {
-      emit(BookFlightError("يرجى تحديد تواريخ السفر" + (isRoundTrip ? " والعودة" : "")));
+      emit(
+        BookFlightError(
+          "يرجى تحديد تواريخ السفر" + (isRoundTrip ? " والعودة" : ""),
+        ),
+      );
       return;
     }
 
@@ -52,7 +102,10 @@ class BookFlightCubit extends Cubit<BookFlightState> {
         toCity: toCityController.text,
         // Formatting to ISO 8601 string as requested (e.g., 2025-12-19T15:51)
         departureDate: departureDate!.toIso8601String(),
-        returnDate: isRoundTrip && returnDate != null ? returnDate!.toIso8601String() : departureDate!.toIso8601String(), // Or another logic for one way flight
+        returnDate: isRoundTrip && returnDate != null
+            ? returnDate!.toIso8601String()
+            : departureDate!
+                  .toIso8601String(), // Or another logic for one way flight
         passengers: int.parse(passengersController.text),
       );
 

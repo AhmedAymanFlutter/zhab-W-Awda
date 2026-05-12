@@ -24,7 +24,7 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _motionTabBarController = MotionTabBarController(
-      initialIndex: 0,
+      initialIndex: 4,
       length: 5,
       vsync: this,
     );
@@ -57,21 +57,20 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
               controller: _motionTabBarController,
               initialSelectedTab: "الرئيسية",
               labels: const [
-                "الرئيسية",
-                "الجولات",
-                "طيران",
-                "الباقات",
                 "المزيد",
+                "الباقات",
+                "طيران",
+                "الجولات",
+                "الرئيسية",
               ],
               iconWidgets: [
                 _buildSvgIcon(
-                  asset: 'assets/icon/home_unslect.svg',
-                  unselectedAsset: 'assets/icon/home_unslect.svg',
+                  asset: 'assets/icon/services-svgrepo-com.svg',
                   index: 0,
                 ),
                 _buildSvgIcon(
-                  asset: 'assets/icon/maps.svg',
-                  unselectedAsset: 'assets/icon/maps_unselect.svg',
+                  asset: 'assets/icon/package-open.svg',
+                  unselectedAsset: 'assets/icon/package_unselected.svg',
                   index: 1,
                 ),
                 _buildSvgIcon(
@@ -79,12 +78,13 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
                   index: 2,
                 ),
                 _buildSvgIcon(
-                  asset: 'assets/icon/package-open.svg',
-                  unselectedAsset: 'assets/icon/package_unselected.svg',
+                  asset: 'assets/icon/maps.svg',
+                  unselectedAsset: 'assets/icon/maps_unselect.svg',
                   index: 3,
                 ),
                 _buildSvgIcon(
-                  asset: 'assets/icon/services-svgrepo-com.svg',
+                  asset: 'assets/icon/home_unslect.svg',
+                  unselectedAsset: 'assets/icon/home_unslect.svg',
                   index: 4,
                 ),
               ],

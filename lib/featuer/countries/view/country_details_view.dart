@@ -48,7 +48,11 @@ class CountryDetailsView extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new, color: Colors.white, size: 20),
+                        icon: const Icon(
+                          Icons.arrow_back_ios_new,
+                          color: Colors.white,
+                          size: 20,
+                        ),
                         onPressed: () => Navigator.pop(context),
                       ),
                     ),
@@ -61,10 +65,14 @@ class CountryDetailsView extends StatelessWidget {
                         fit: StackFit.expand,
                         children: [
                           CachedNetworkImage(
-                            imageUrl: country.imageCover ?? "https://via.placeholder.com/800",
+                            imageUrl:
+                                country.imageCover ??
+                                "https://via.placeholder.com/800",
                             fit: BoxFit.cover,
-                            placeholder: (context, url) => Container(color: Colors.grey[200]),
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                            placeholder: (context, url) =>
+                                Container(color: Colors.grey[200]),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                           DecoratedBox(
                             decoration: BoxDecoration(
@@ -87,7 +95,10 @@ class CountryDetailsView extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                                  padding: EdgeInsets.symmetric(
+                                    horizontal: 12.w,
+                                    vertical: 6.h,
+                                  ),
                                   decoration: BoxDecoration(
                                     color: AppColor.primaryBlue,
                                     borderRadius: BorderRadius.circular(20.r),
@@ -132,7 +143,9 @@ class CountryDetailsView extends StatelessWidget {
                     child: Container(
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.vertical(top: Radius.circular(30.r)),
+                        borderRadius: BorderRadius.vertical(
+                          top: Radius.circular(30.r),
+                        ),
                       ),
                       child: Padding(
                         padding: EdgeInsets.all(24.w),
@@ -147,19 +160,34 @@ class CountryDetailsView extends StatelessWidget {
                                 borderRadius: BorderRadius.circular(24.r),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
                                 children: [
-                                  _buildModernInfoItem(Icons.language_rounded, "اللغة", country.language ?? "-"),
+                                  _buildModernInfoItem(
+                                    Icons.language_rounded,
+                                    "اللغة",
+                                    country.language ?? "-",
+                                  ),
                                   _buildDivider(),
-                                  _buildModernInfoItem(Icons.currency_exchange_rounded, "العملة", country.currency ?? "-"),
+                                  _buildModernInfoItem(
+                                    Icons.currency_exchange_rounded,
+                                    "العملة",
+                                    country.currency ?? "-",
+                                  ),
                                   _buildDivider(),
-                                  _buildModernInfoItem(Icons.calendar_month_rounded, "أفضل شهر", country.favMonth?.isNotEmpty == true ? country.favMonth!.first : "-"),
+                                  _buildModernInfoItem(
+                                    Icons.calendar_month_rounded,
+                                    "أفضل شهر",
+                                    country.favMonth?.isNotEmpty == true
+                                        ? country.favMonth!.first
+                                        : "-",
+                                  ),
                                 ],
                               ),
                             ),
-                            
+
                             SizedBox(height: 32.h),
-                            
+
                             // Description Section
                             Text(
                               "عن الدولة",
@@ -170,12 +198,15 @@ class CountryDetailsView extends StatelessWidget {
                             ),
                             SizedBox(height: 12.h),
                             HtmlContentWidget(
-                              htmlContent: country.description ?? country.descText ?? "لا يوجد وصف متاح حالياً لهذه الدولة.",
+                              htmlContent:
+                                  country.description ??
+                                  country.descText ??
+                                  "لا يوجد وصف متاح حالياً لهذه الدولة.",
                               fontSize: 15.sp,
                             ),
-                            
+
                             SizedBox(height: 32.h),
-                            
+
                             // Best Time to Visit Chips
                             if (country.favTime?.isNotEmpty == true) ...[
                               Text(
@@ -189,25 +220,38 @@ class CountryDetailsView extends StatelessWidget {
                               Wrap(
                                 spacing: 10.w,
                                 runSpacing: 10.h,
-                                children: country.favTime!.map((time) => Container(
-                                  padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
-                                  decoration: BoxDecoration(
-                                    color: AppColor.primaryBlue.withOpacity(0.05),
-                                    borderRadius: BorderRadius.circular(12.r),
-                                    border: Border.all(color: AppColor.primaryBlue.withOpacity(0.1)),
-                                  ),
-                                  child: Text(
-                                    time,
-                                    style: TextStyle(
-                                      color: AppColor.primaryBlue,
-                                      fontWeight: FontWeight.w600,
-                                      fontSize: 14.sp,
-                                    ),
-                                  ),
-                                )).toList(),
+                                children: country.favTime!
+                                    .map(
+                                      (time) => Container(
+                                        padding: EdgeInsets.symmetric(
+                                          horizontal: 16.w,
+                                          vertical: 8.h,
+                                        ),
+                                        decoration: BoxDecoration(
+                                          color: AppColor.primaryBlue
+                                              .withOpacity(0.05),
+                                          borderRadius: BorderRadius.circular(
+                                            12.r,
+                                          ),
+                                          border: Border.all(
+                                            color: AppColor.primaryBlue
+                                                .withOpacity(0.1),
+                                          ),
+                                        ),
+                                        child: Text(
+                                          time,
+                                          style: TextStyle(
+                                            color: AppColor.primaryBlue,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 14.sp,
+                                          ),
+                                        ),
+                                      ),
+                                    )
+                                    .toList(),
                               ),
                             ],
-                            
+
                             SizedBox(height: 100.h), // Space for bottom bar
                           ],
                         ),

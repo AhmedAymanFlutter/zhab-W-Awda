@@ -2,13 +2,36 @@ import 'package:flutter/material.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_application_1/core/utils/whatsapp_helper.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_color.dart';
 
 class HotelBookingBottomBar extends StatelessWidget {
   final int? price;
   final String? currency;
 
-  const HotelBookingBottomBar({super.key, this.price, this.currency});
+  final String? hotelName;
+
+  const HotelBookingBottomBar({super.key, this.price, this.currency, this.hotelName});
+
+  void _launchWhatsApp(BuildContext context) {
+    final settingsState = context.read<SettingsCubit>().state;
+    String phoneNumber = "+201090124803"; // Default fallback
+
+    if (settingsState is SettingsSuccess) {
+      final whatsAppSetting = settingsState.settings.socialMedia?.whatsApp;
+      if (whatsAppSetting != null && whatsAppSetting.url != null) {
+        phoneNumber = whatsAppSetting.url!.replaceAll(RegExp(r'[^0-9+]'), '');
+      }
+    }
+
+    WhatsAppHelper.launchWhatsApp(
+      phone: phoneNumber,
+      message: "مرحباً، أود الاستفسار عن حجز في فندق: ${hotelName ?? 'غير محدد'}",
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,7 +91,7 @@ class HotelBookingBottomBar extends StatelessWidget {
             SizedBox(height: 16.h),
             // --- WhatsApp Button ---
             InkWell(
-              onTap: () {},
+              onTap: () => _launchWhatsApp(context),
               borderRadius: BorderRadius.circular(76.r),
               child: Container(
                 width: 343.w,

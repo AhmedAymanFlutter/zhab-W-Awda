@@ -32,30 +32,7 @@ class TourHeaderBanner extends StatelessWidget {
           ),
         ),
 
-        // 2. Navigation Buttons Over Image
-        Positioned(
-          top: 40.h,
-          left: 20.w,
-          right: 20.w,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              // Left buttons: Share & Bookmark
-              Row(
-                children: [
-                  _buildCircularButton(Icons.share_outlined, () {}),
-                  SizedBox(width: 12.w),
-                  _buildCircularButton(Icons.bookmark_border, () {}),
-                ],
-              ),
-              // Right button: Back
-              _buildCircularButton(
-                Icons.arrow_forward,
-                () => Navigator.pop(context),
-              ),
-            ],
-          ),
-        ),
+        // 2. Navigation Buttons removed from here to be placed on top of stack in TourDetailsView
 
         // 3. Image Counter
         Positioned(
@@ -74,21 +51,6 @@ class TourHeaderBanner extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-
-  Widget _buildCircularButton(IconData icon, VoidCallback onTap) {
-    return InkWell(
-      onTap: onTap,
-      child: Container(
-        width: 40.h,
-        height: 40.h,
-        decoration: BoxDecoration(
-          color: Colors.black.withOpacity(0.3),
-          shape: BoxShape.circle,
-        ),
-        child: Icon(icon, color: Colors.white, size: 20.sp),
-      ),
     );
   }
 }

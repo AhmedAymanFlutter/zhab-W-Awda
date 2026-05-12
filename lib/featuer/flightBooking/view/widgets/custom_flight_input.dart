@@ -9,6 +9,7 @@ class CustomFlightInput extends StatelessWidget {
   final TextEditingController? controller;
   final bool readOnly;
   final VoidCallback? onTap;
+  final ValueChanged<String>? onChanged;
 
   const CustomFlightInput({
     Key? key,
@@ -19,6 +20,7 @@ class CustomFlightInput extends StatelessWidget {
     this.controller,
     this.readOnly = false,
     this.onTap,
+    this.onChanged,
   }) : super(key: key);
 
   @override
@@ -75,6 +77,7 @@ class CustomFlightInput extends StatelessWidget {
                         isDense: true,
                         contentPadding: EdgeInsets.zero,
                       ),
+                      onChanged: onChanged,
                     ),
                   ),
                 ),

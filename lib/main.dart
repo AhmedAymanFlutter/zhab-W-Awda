@@ -52,7 +52,10 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   PackagesCubit(PackagesRepository())..fetchPackages(),
             ),
-            BlocProvider(create: (context) => UserCubit()..loadUser()),
+            BlocProvider(
+              create: (context) => UserCubit()..loadUser(),
+              lazy: false,
+            ),
             BlocProvider(
               create: (context) =>
                   SettingsCubit(SettingsRepository())..fetchSettings(),

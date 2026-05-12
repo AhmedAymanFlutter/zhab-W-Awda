@@ -4,7 +4,6 @@ import '../../../../core/theme/app_color.dart';
 import 'home_header_profile_pill.dart';
 import 'home_header_notification_icon.dart';
 import 'home_header_center_text.dart';
-import 'home_header_search_bar.dart';
 
 class HomeHeader extends StatelessWidget {
   const HomeHeader({super.key});
@@ -16,9 +15,8 @@ class HomeHeader extends StatelessWidget {
         bottomLeft: Radius.circular(24.r),
         bottomRight: Radius.circular(24.r),
       ),
-      child: ClipPath(
-        child: Container(
-          height: 320.h,
+      child: Container(
+        height: 260.h,
           width: double.infinity,
           decoration: BoxDecoration(
             color: AppColor.primaryBlue4,
@@ -59,23 +57,14 @@ class HomeHeader extends StatelessWidget {
 
               // Center Content
               Positioned(
-                top: 140.h,
+                top: 110.h,
                 left: 30.w,
                 right: 30.w,
                 child: const HomeHeaderCenterText(),
               ),
-
-              // Bottom Search Bar
-              Positioned(
-                bottom: 24.h,
-                left: 20.w,
-                right: 20.w,
-                child: const HomeHeaderSearchBar(),
-              ),
             ],
           ),
         ),
-      ),
     );
   }
 }

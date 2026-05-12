@@ -18,6 +18,7 @@ class _SplashscreenState extends State<Splashscreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
   late Animation<double> _fadeAnimation;
+  bool _navigated = false;
 
   @override
   void initState() {
@@ -35,16 +36,22 @@ class _SplashscreenState extends State<Splashscreen>
 
     _animationController.forward();
 
-    _checkUserSession();
+    // Safety check: if the state is already determined after the animation
+    Future.delayed(const Duration(seconds: 2), () {
+      if (mounted && !_navigated) {
+        final state = context.read<UserCubit>().state;
+        if (state is! AuthLoading) {
+          _navigateToNext(state);
+        }
+      }
+    });
   }
 
-  Future<void> _checkUserSession() async {
-    await Future.delayed(const Duration(seconds: 3));
-
-    if (!mounted) return;
-
-    final userCubit = context.read<UserCubit>();
-    if (userCubit.state is AuthVerifySuccess) {
+  void _navigateToNext(AuthState state) {
+    if (!mounted || _navigated) return;
+    _navigated = true;
+    
+    if (state is AuthVerifySuccess) {
       Navigator.pushReplacementNamed(context, Routes.layout);
     } else {
       Navigator.pushReplacementNamed(context, Routes.loginView);
@@ -59,16 +66,26 @@ class _SplashscreenState extends State<Splashscreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColor.mainWhite,
-      body: Center(
-        child: FadeTransition(
-          opacity: _fadeAnimation,
-          child: Image.asset(
-            'assets/photo/mainLogo.webp',
-            width: 250.w,
-            height: 250.h,
-            fit: BoxFit.contain,
+    return BlocListener<UserCubit, AuthState>(
+      listener: (context, state) {
+        if (state is! AuthLoading) {
+          // Wait for animation to finish or at least 2 seconds
+          Future.delayed(const Duration(seconds: 2), () {
+            _navigateToNext(state);
+          });
+        }
+      },
+      child: Scaffold(
+        backgroundColor: AppColor.mainWhite,
+        body: Center(
+          child: FadeTransition(
+            opacity: _fadeAnimation,
+            child: Image.asset(
+              'assets/photo/mainLogo.webp',
+              width: 250.w,
+              height: 250.h,
+              fit: BoxFit.contain,
+            ),
           ),
         ),
       ),

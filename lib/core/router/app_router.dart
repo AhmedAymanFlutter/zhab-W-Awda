@@ -14,7 +14,9 @@ import 'package:flutter_application_1/featuer/countries/view/countries_view.dart
 import 'package:flutter_application_1/featuer/hotels/view/hotel_countries_view.dart';
 import 'package:flutter_application_1/featuer/flightBooking/view/book_flight_view.dart';
 import 'package:flutter_application_1/featuer/flightBooking/view/flight_booking_success_view.dart';
+import 'package:flutter_application_1/featuer/flightBooking/view/flight_results_view.dart';
 import 'package:flutter_application_1/featuer/flightBooking/data/model/book_flight_request_model.dart';
+import 'package:flutter_application_1/featuer/flightBooking/data/model/flight_search_model.dart';
 import 'package:flutter_application_1/featuer/global_setting/view/contact_us_view.dart';
 import 'package:flutter_application_1/featuer/home/view/home_view.dart';
 import 'package:flutter_application_1/featuer/home/view/offer/view/offer_details_view.dart';
@@ -204,6 +206,15 @@ class AppRouter {
 
       case Routes.privacyView:
         return RouterTransitions.buildFade(const PrivacyView());
+      case Routes.flightResultsView:
+        final args = settings.arguments as Map<String, dynamic>;
+        return RouterTransitions.buildFade(
+          FlightResultsView(
+            itineraries: args['itineraries'] as List<FlightItinerary>,
+            fromCity: args['fromCity'] as String,
+            toCity: args['toCity'] as String,
+          ),
+        );
 
       default:
         return RouterTransitions.build(

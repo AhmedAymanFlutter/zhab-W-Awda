@@ -49,30 +49,48 @@ class ModernCountryCardV2 extends StatelessWidget {
                 child: Stack(
                   children: [
                     CachedNetworkImage(
-                      imageUrl: country.imageCover ?? "https://via.placeholder.com/246x180",
+                      imageUrl:
+                          country.imageCover ??
+                          "https://via.placeholder.com/246x180",
                       height: 180.h,
                       width: double.infinity,
                       fit: BoxFit.cover,
                       placeholder: (context, url) => Container(
                         height: 180.h,
                         color: Colors.grey[200],
-                        child: const Center(child: Icon(FontAwesomeIcons.image, color: Colors.grey)),
+                        child: const Center(
+                          child: Icon(
+                            FontAwesomeIcons.image,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                       errorWidget: (context, url, error) => Container(
                         height: 180.h,
                         color: Colors.grey[200],
-                        child: const Center(child: Icon(FontAwesomeIcons.circleExclamation, color: Colors.grey)),
+                        child: const Center(
+                          child: Icon(
+                            FontAwesomeIcons.circleExclamation,
+                            color: Colors.grey,
+                          ),
+                        ),
                       ),
                     ),
                     // Trending Badge
-                    if (country.isTrending == true || true) // Hardcoded true for now to match screenshot demo
+                    if (country.isTrending == true ||
+                        true) // Hardcoded true for now to match screenshot demo
                       Positioned(
                         top: 12.h,
                         right: 12.w,
                         child: Container(
-                          padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 6.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 12.w,
+                            vertical: 6.h,
+                          ),
                           decoration: BoxDecoration(
-                            color: const Color(0xFF002868), // Dark Blue from screenshot
+                            color: const Color(
+                              0xFF002868,
+                            ), // Dark Blue from screenshot
                             borderRadius: BorderRadius.circular(20.r),
                           ),
                           child: Text(
@@ -103,7 +121,10 @@ class ModernCountryCardV2 extends StatelessWidget {
                       height: 40.h,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        border: Border.all(color: const Color(0xFF002868), width: 1.5),
+                        border: Border.all(
+                          color: const Color(0xFF002868),
+                          width: 1.5,
+                        ),
                       ),
                       child: Center(
                         child: Icon(
@@ -129,7 +150,9 @@ class ModernCountryCardV2 extends StatelessWidget {
                           ),
                           SizedBox(height: 4.h),
                           Text(
-                            country.descText ?? country.description ?? "استكشف جمال هذه الوجهة السياحية المميزة والمعالم الخلابة.",
+                            country.descText ??
+                                country.description ??
+                                "استكشف جمال هذه الوجهة السياحية المميزة والمعالم الخلابة.",
                             maxLines: 3,
                             overflow: TextOverflow.ellipsis,
                             textAlign: TextAlign.right,

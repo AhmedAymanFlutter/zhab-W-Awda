@@ -166,6 +166,7 @@ class UserCubit extends Cubit<AuthState> {
 
   // ─── Load user on app start ───────────────────────────────────────────
   Future<void> loadUser() async {
+    emit(AuthLoading());
     // Load token from SecureStorage
     await LocalData.loadTokens();
 
@@ -188,6 +189,8 @@ class UserCubit extends Cubit<AuthState> {
         isActive: true,
       );
       emit(AuthVerifySuccess(user));
+    } else {
+      emit(AuthInitial());
     }
   }
 

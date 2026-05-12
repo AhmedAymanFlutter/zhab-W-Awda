@@ -29,10 +29,9 @@ class _ServicesViewState extends State<ServicesView> {
         leading: GestureDetector(
           onTap: () => Navigator.pop(context),
           child: Row(
+            mainAxisAlignment: MainAxisAlignment.start,
             mainAxisSize: MainAxisSize.min,
             children: [
-              Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.black),
-              SizedBox(width: 8.w),
               Text(
                 "خدماتنا",
                 style: AppTextStyle.setelMessiriBlack(
@@ -40,6 +39,8 @@ class _ServicesViewState extends State<ServicesView> {
                   fontWeight: FontWeight.bold,
                 ),
               ),
+              SizedBox(width: 8.w),
+              Icon(Icons.arrow_forward_ios, size: 16.sp, color: Colors.black),
             ],
           ),
         ),

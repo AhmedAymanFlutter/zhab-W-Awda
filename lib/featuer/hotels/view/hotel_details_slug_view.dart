@@ -212,7 +212,10 @@ class HotelDetailsSlugView extends StatelessWidget {
                                 SizedBox(height: 32.h),
 
                                 // Rooms
-                                HotelRoomsSection(rooms: hotel.rooms),
+                                HotelRoomsSection(
+                                  rooms: hotel.rooms,
+                                  hotelName: hotel.hotelTranslatedName ?? hotel.hotelName,
+                                ),
                                 SizedBox(height: 32.h),
 
                                 // Location
@@ -253,6 +256,7 @@ class HotelDetailsSlugView extends StatelessWidget {
                       child: HotelBookingBottomBar(
                         price: hotel.price?.amount,
                         currency: hotel.price?.currency,
+                        hotelName: hotel.hotelTranslatedName ?? hotel.hotelName,
                       ),
                     ),
                   ],

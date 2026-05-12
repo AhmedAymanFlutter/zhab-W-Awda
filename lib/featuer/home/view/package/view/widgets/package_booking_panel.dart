@@ -3,7 +3,10 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../../../../core/theme/app_color.dart';
 import '../../../../../../core/theme/app_text_style.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:flutter_application_1/core/utils/whatsapp_helper.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
+import 'package:flutter_application_1/featuer/global_setting/manager/settings_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class PackageBookingPanel extends StatelessWidget {
   final num? price;
@@ -17,14 +20,21 @@ class PackageBookingPanel extends StatelessWidget {
     this.packageName,
   });
 
-  Future<void> _launchWhatsApp() async {
-    final String phoneNumber = "+201012345678"; // Placeholder, can be dynamic
-    final String message = "مرحباً، أريد الاستفسار عن باقة: ${packageName ?? 'غير محدد'}";
-    final Uri url = Uri.parse("https://wa.me/$phoneNumber?text=${Uri.encodeComponent(message)}");
-    
-    if (!await launchUrl(url, mode: LaunchMode.externalApplication)) {
-      throw Exception('Could not launch $url');
+  void _launchWhatsApp(BuildContext context) {
+    final settingsState = context.read<SettingsCubit>().state;
+    String phoneNumber = "+201090124803"; // Default fallback
+
+    if (settingsState is SettingsSuccess) {
+      final whatsAppSetting = settingsState.settings.socialMedia?.whatsApp;
+      if (whatsAppSetting != null && whatsAppSetting.url != null) {
+        phoneNumber = whatsAppSetting.url!.replaceAll(RegExp(r'[^0-9+]'), '');
+      }
     }
+
+    WhatsAppHelper.launchWhatsApp(
+      phone: phoneNumber,
+      message: "مرحباً، أريد الاستفسار عن باقة: ${packageName ?? 'غير محدد'}",
+    );
   }
 
   @override
@@ -96,7 +106,7 @@ class PackageBookingPanel extends StatelessWidget {
             _buildInstallmentInfo(),
             SizedBox(height: 16.h),
             GestureDetector(
-              onTap: _launchWhatsApp,
+              onTap: () => _launchWhatsApp(context),
               child: _buildWhatsAppButton(),
             ),
           ],
@@ -117,10 +127,7 @@ class PackageBookingPanel extends StatelessWidget {
         children: [
           Text(
             "التقسيط متاح",
-            style: TextStyle(
-              fontSize: 12.sp,
-              color: Colors.grey[600],
-            ),
+            style: TextStyle(fontSize: 12.sp, color: Colors.grey[600]),
           ),
           SizedBox(width: 12.w),
           Text(

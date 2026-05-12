@@ -1,3 +1,5 @@
+import 'package:flutter_application_1/featuer/flightBooking/data/model/flight_destination_model.dart';
+
 import '../data/model/book_flight_request_model.dart';
 
 abstract class BookFlightState {}
@@ -17,3 +19,16 @@ class BookFlightError extends BookFlightState {
 }
 
 class BookFlightTripTypeChanged extends BookFlightState {}
+
+class BookFlightSearchLoading extends BookFlightState {}
+
+class BookFlightSearchSuccess extends BookFlightState {
+  final List<FlightDestination> results;
+  final bool isFromCity;
+  BookFlightSearchSuccess(this.results, this.isFromCity);
+}
+
+class BookFlightSearchFlightsSuccess extends BookFlightState {
+  final dynamic results;
+  BookFlightSearchFlightsSuccess(this.results);
+}

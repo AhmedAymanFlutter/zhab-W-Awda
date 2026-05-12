@@ -13,7 +13,7 @@ class HomeHeaderCenterText extends StatelessWidget {
           "اكتشف العالم بطريقتك",
           textAlign: TextAlign.center,
           style: AppTextStyle.setelMessiriWhite(
-            fontSize: 20,
+            fontSize: 24.sp,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -22,7 +22,7 @@ class HomeHeaderCenterText extends StatelessWidget {
           "استمتع بأفضل الوجهات والباقات السياحية المصممة خصيصًا لك.",
           textAlign: TextAlign.center,
           style: AppTextStyle.setelMessiriWhite(
-            fontSize: 12,
+            fontSize: 14.sp,
             fontWeight: FontWeight.w400,
           ),
         ),

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/featuer/flightBooking/manager/book_flight_cubit.dart';
 import 'package:flutter_application_1/featuer/flightBooking/manager/book_flight_state.dart';
+import 'package:flutter_application_1/featuer/flightBooking/data/model/flight_search_model.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/widgets/main_app_header.dart';
@@ -29,6 +30,29 @@ class BookFlightView extends StatelessWidget {
                 Routes.flightBookingSuccessView,
                 arguments: state.requestModel,
               );
+            } else if (state is BookFlightSearchFlightsSuccess) {
+              final cubit = context.read<BookFlightCubit>();
+              final response = FlightSearchResponse.fromJson(state.results);
+              final itineraries = response.data?.itineraries ?? [];
+
+              if (itineraries.isEmpty) {
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(
+                    content: Text("عذراً، لا توجد رحلات متوفرة لهذا البحث"),
+                    backgroundColor: Colors.orange,
+                  ),
+                );
+              } else {
+                Navigator.pushNamed(
+                  context,
+                  Routes.flightResultsView,
+                  arguments: {
+                    'itineraries': itineraries,
+                    'fromCity': cubit.fromCityController.text,
+                    'toCity': cubit.toCityController.text,
+                  },
+                );
+              }
             } else if (state is BookFlightError) {
               ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(

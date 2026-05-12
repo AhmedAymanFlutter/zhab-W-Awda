@@ -19,6 +19,7 @@ class GetHotelModel {
 
 class HotelItem {
   num? price;
+  String? currency;
   String? sId;
   String? hotelId;
   String? name;
@@ -49,6 +50,7 @@ class HotelItem {
 
   HotelItem({
     this.price,
+    this.currency,
     this.sId,
     this.hotelId,
     this.name,
@@ -79,7 +81,14 @@ class HotelItem {
       if (json['price'] is num) {
         price = json['price'];
       } else if (json['price'] is Map) {
-        price = num.tryParse(json['price']['min']?.toString() ?? '0');
+        final priceMap = json['price'] as Map;
+        final rawAmount = priceMap['amount'] ?? priceMap['min'];
+        if (rawAmount is num) {
+          price = rawAmount;
+        } else {
+          price = num.tryParse(rawAmount?.toString() ?? '0');
+        }
+        currency = priceMap['currency']?.toString();
       }
       sId = json['_id'];
       hotelId = json['hotel_id']?.toString();
@@ -87,9 +96,6 @@ class HotelItem {
       // Handle naming mismatch
       name = json['hotel_name'] ?? json['name'];
       translatedName = json['hotel_translated_name'];
-
-      // Handle country: API returns string, model wants object?
-      // Parsing simple string into Country object for compatibility
       if (json['country'] is String) {
         country = Country(name: json['country']);
       } else if (json['country'] != null) {
