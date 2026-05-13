@@ -1,5 +1,5 @@
 abstract class EndPoints {
-  static const String baseUrl = 'http://192.168.1.230:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
 
   // ─── Mobile Content Endpoints (Protected) ───────────────────────────
   static const String offers = 'mobile/offers/';
@@ -16,6 +16,8 @@ abstract class EndPoints {
   static const String hotelsCountries = 'mobile/hotels/countries';
   static const String tourGuides = 'mobile/tourguides';
   static const String reviews = 'mobile/reviews';
+  static const String savedTours = 'mobile/saved-tours';
+  static const String myBookings = 'mobile/package-bookings/my';
 
   // ─── Auth Endpoints (Public) ─────────────────────────────────────────
   static const String authRegister = 'mobile/auth/register';

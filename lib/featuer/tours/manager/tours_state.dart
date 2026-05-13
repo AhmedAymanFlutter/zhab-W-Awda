@@ -30,3 +30,20 @@ class TourDetailsError extends ToursState {
   final String message;
   TourDetailsError(this.message);
 }
+
+class SavedToursLoading extends ToursState {}
+
+class SavedToursSuccess extends ToursState {
+  final List<TourItem> tours;
+  SavedToursSuccess(this.tours);
+}
+
+class SavedToursError extends ToursState {
+  final String message;
+  SavedToursError(this.message);
+}
+
+class ToggleSaveTourSuccess extends ToursState {
+  final String message;
+  ToggleSaveTourSuccess(this.message);
+}

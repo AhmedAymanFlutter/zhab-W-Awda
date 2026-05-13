@@ -43,6 +43,7 @@ class TourIdData {
   int? duration;
   List<String>? tags;
   List<ProductOption>? productOptions;
+  bool? isSaved;
 
   TourIdData({
     this.seo,
@@ -137,6 +138,7 @@ class TourIdData {
     iV = json['__v'];
     updatedBy = json['updatedBy'];
     id = json['id'];
+    isSaved = json['isSaved'] ?? json['isSavedByUser'];
   }
 }
 

@@ -23,6 +23,9 @@ import 'package:flutter_application_1/featuer/reviews/data/repositories/review_r
 import 'package:flutter_application_1/featuer/reviews/presentation/manager/reviews_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/data/repo/tours_repository.dart';
 import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
+import 'package:flutter_application_1/featuer/bookings/data/repo/bookings_repository.dart';
+import 'package:flutter_application_1/featuer/bookings/manager/bookings_cubit.dart';
+import 'package:flutter_application_1/featuer/bookings/manager/booking_details_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -83,6 +86,12 @@ class MyApp extends StatelessWidget {
               create: (context) =>
                   ReviewsCubit(ReviewsRepositoryImpl(LocalReviewsDataSource()))
                     ..fetchReviews(),
+            ),
+            BlocProvider(
+              create: (context) => BookingsCubit(BookingsRepository()),
+            ),
+            BlocProvider(
+              create: (context) => BookingDetailsCubit(BookingsRepository()),
             ),
           ],
           child: MaterialApp(

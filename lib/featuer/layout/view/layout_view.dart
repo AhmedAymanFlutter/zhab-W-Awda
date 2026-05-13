@@ -9,6 +9,12 @@ import '../../../core/theme/app_text_style.dart';
 import '../logic/layout_cubit.dart';
 import '../logic/layout_state.dart';
 import 'widgets/custom_drawer.dart';
+import '../../home/view/offer/manager/offers_cubit.dart';
+import '../../home/view/package/manager/packages_cubit.dart';
+import '../../hotels/manager/hotels_cubit.dart';
+import '../../countries/manager/countries_cubit.dart';
+import '../../Cities/manager/cities_cubit.dart';
+import '../../tours/manager/tours_cubit.dart';
 
 class LayoutView extends StatefulWidget {
   const LayoutView({super.key});
@@ -100,6 +106,15 @@ class _LayoutViewState extends State<LayoutView> with TickerProviderStateMixin {
               tabSelectedColor: AppColor.primaryBlue3,
               onTabItemSelected: (index) {
                 cubit.changeBottomNav(index);
+                if (index == 4) {
+                  // Refresh Home Data
+                  context.read<ToursCubit>().fetchTours();
+                  context.read<HotelsCubit>().fetchHotels();
+                  context.read<PackagesCubit>().fetchPackages();
+                  context.read<OffersCubit>().fetchOffers();
+                  context.read<CitiesCubit>().fetchCities();
+                  context.read<CountriesCubit>().fetchCountries();
+                }
               },
             ),
           );

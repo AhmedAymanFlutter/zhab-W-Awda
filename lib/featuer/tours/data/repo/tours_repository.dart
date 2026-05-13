@@ -60,4 +60,41 @@ class ToursRepository {
       rethrow;
     }
   }
+
+  Future<GetAllToursModel> getSavedTours({String? query}) async {
+    try {
+      final response = await _apiHelper.getRequest(
+        endPoint: EndPoints.savedTours,
+        queryParameters: query != null ? {'q': query} : null,
+        isProtected: true,
+      );
+
+      if (response.status == true && response.data != null) {
+        return GetAllToursModel.fromJson(response.data);
+      } else {
+        throw Exception(response.message);
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
+
+  Future<ApiResponse> toggleSaveTour(String id, bool isSaving) async {
+    try {
+      if (isSaving) {
+        return await _apiHelper.postRequest(
+          endPoint: "${EndPoints.savedTours}/$id",
+          data: {},
+          isAuthorized: true,
+        );
+      } else {
+        return await _apiHelper.deleteRequest(
+          endPoint: "${EndPoints.savedTours}/$id",
+          isAuthorized: true,
+        );
+      }
+    } catch (e) {
+      rethrow;
+    }
+  }
 }

@@ -2,15 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../../core/theme/app_text_style.dart';
+import '../../../../../core/theme/app_color.dart';
 import '../data/repo/package_repo.dart';
 import '../manager/packages_cubit.dart';
 import '../manager/packages_state.dart';
-import 'widgets/glass_button.dart';
 import 'widgets/package_content_view.dart';
 import 'widgets/package_header_image.dart';
 import 'widgets/package_branch_card.dart';
 import 'widgets/package_booking_panel.dart';
-import 'widgets/rate_package/rate_package_dialog.dart';
 
 class PackageDetailsView extends StatefulWidget {
   final Map<String, dynamic> arguments;
@@ -21,30 +20,8 @@ class PackageDetailsView extends StatefulWidget {
   State<PackageDetailsView> createState() => _PackageDetailsViewState();
 }
 
-class _PackageDetailsViewState extends State<PackageDetailsView>
-    with TickerProviderStateMixin {
+class _PackageDetailsViewState extends State<PackageDetailsView> {
   int _selectedBranchIndex = 0;
-  TabController? _tabController;
-
-  @override
-  void dispose() {
-    _tabController?.dispose();
-    super.dispose();
-  }
-
-  void _showRateDialog(String? packageId) {
-    if (packageId == null) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Cannot rate: Package ID not found")),
-      );
-      return;
-    }
-
-    showDialog(
-      context: context,
-      builder: (context) => RatePackageDialog(packageId: packageId),
-    );
-  }
 
   PackageArguments _extractPackageArguments() {
     if (widget.arguments.containsKey('packageSlug')) {
@@ -78,32 +55,26 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
     return BlocProvider(
       create: (context) => _createCubit(packageArgs),
       child: Scaffold(
-        backgroundColor: Colors.white,
+        backgroundColor: AppColor.primaryWhite,
         body: BlocBuilder<PackagesCubit, PackagesState>(
-          builder: (context, state) => _buildBody(context, state, packageArgs),
+          builder: (context, state) {
+            if (state is PackageDetailsLoading) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            if (state is PackageDetailsError) {
+              return _buildErrorView(state.message);
+            }
+
+            if (state is PackageDetailsSuccess) {
+              return _buildSuccessView(context, state.package);
+            }
+
+            return const SizedBox.shrink();
+          },
         ),
       ),
     );
-  }
-
-  Widget _buildBody(
-    BuildContext context,
-    PackagesState state,
-    PackageArguments args,
-  ) {
-    if (state is PackageDetailsLoading) {
-      return const Center(child: CircularProgressIndicator());
-    }
-
-    if (state is PackageDetailsError) {
-      return _buildErrorView(state.message);
-    }
-
-    if (state is PackageDetailsSuccess) {
-      return _buildSuccessView(context, state, args);
-    }
-
-    return const SizedBox.shrink();
   }
 
   Widget _buildErrorView(String message) {
@@ -126,143 +97,167 @@ class _PackageDetailsViewState extends State<PackageDetailsView>
     );
   }
 
-  Widget _buildSuccessView(
-    BuildContext context,
-    PackageDetailsSuccess state,
-    PackageArguments args,
-  ) {
-    final packageData = state.package;
+  Widget _buildSuccessView(BuildContext context, dynamic packageData) {
     final pkg = packageData.pkg;
     final branches = packageData.branches ?? [];
-
-    final currentBranch = branches.isNotEmpty
-        ? branches[_selectedBranchIndex]
-        : null;
+    final currentBranch = branches.isNotEmpty ? branches[_selectedBranchIndex] : null;
 
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Stack(
         children: [
-          // 1. Content
-          Scaffold(
-            backgroundColor: Colors.white,
-            body: CustomScrollView(
-              slivers: [
-                // Header Image
-                SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 300.h,
-                    child: PackageHeaderImage(imageUrl: pkg?.imageCover),
-                  ),
-                ),
-
-                // Package Info & Branches
-                SliverToBoxAdapter(
+          Column(
+            children: [
+              _buildAppBar(context),
+              Expanded(
+                child: SingleChildScrollView(
                   child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Padding(
-                        padding: EdgeInsets.all(24.w),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              pkg?.name ?? "",
-                              style: AppTextStyle.setelMessiriBlack(
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SizedBox(height: 8.h),
-                            Text(
-                              pkg?.cities?.map((c) => c.name).join('، ') ?? "",
-                              style: TextStyle(
-                                fontSize: 14.sp,
-                                color: Colors.grey[600],
-                              ),
-                            ),
-                          ],
-                        ),
+                      SizedBox(height: 16.h),
+                      PackageHeaderImage(
+                        imageUrl: pkg?.imageCover,
+                        rating: pkg?.ratingsAverage,
                       ),
-
-                      // Branches List
+                      SizedBox(height: 24.h),
+                      _buildPackageInfo(pkg),
+                      SizedBox(height: 24.h),
+                      
+                      // Branches
                       if (branches.isNotEmpty) ...[
                         Padding(
                           padding: EdgeInsets.symmetric(horizontal: 24.w),
-                          child: Text(
-                            "اختر الفرع المناسب",
-                            style: AppTextStyle.setelMessiriBlack(
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                          child: Align(
+                            alignment: Alignment.centerRight,
+                            child: Text(
+                              "الباقات المتاحة",
+                              style: AppTextStyle.setelMessiriBlack(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                        SizedBox(height: 16.h),
+                        SizedBox(height: 12.h),
                         SizedBox(
-                          height: 300.h,
+                          height: 360.h,
                           child: ListView.separated(
                             scrollDirection: Axis.horizontal,
                             padding: EdgeInsets.symmetric(horizontal: 24.w),
                             itemCount: branches.length,
-                            separatorBuilder: (context, index) =>
-                                SizedBox(width: 16.w),
-                            itemBuilder: (context, index) {
-                              return PackageBranchCard(
-                                branch: branches[index],
-                                isSelected: _selectedBranchIndex == index,
-                                onTap: () {
-                                  setState(() {
-                                    _selectedBranchIndex = index;
-                                  });
-                                },
-                              );
-                            },
+                            separatorBuilder: (_, __) => SizedBox(width: 16.w),
+                            itemBuilder: (context, index) => PackageBranchCard(
+                              branch: branches[index],
+                              isSelected: _selectedBranchIndex == index,
+                              onTap: () => setState(() => _selectedBranchIndex = index),
+                            ),
                           ),
                         ),
-                        SizedBox(height: 24.h),
                       ],
-
-                      // Branch Details Content
+                      
+                      SizedBox(height: 32.h),
+                      
+                      // Content
                       PackageContentView(pkg: pkg, branch: currentBranch),
+                      
+                      SizedBox(height: 300.h),
                     ],
                   ),
                 ),
-              ],
+              ),
+            ],
+          ),
+          
+          // Sticky Bottom Bar
+          if (currentBranch != null)
+            Positioned(
+              bottom: 0,
+              child: PackageBookingPanel(
+                price: currentBranch.price,
+                packageName: pkg?.name,
+                onBookTap: () {
+                  // Booking logic
+                },
+              ),
             ),
-            bottomNavigationBar: PackageBookingPanel(
-              price: currentBranch?.price,
-              packageName: pkg?.name,
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAppBar(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.only(
+        top: MediaQuery.of(context).padding.top + 10.h,
+        bottom: 10.h,
+        left: 16.w,
+        right: 16.w,
+      ),
+      color: Colors.white,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(Icons.arrow_back_ios_new),
+          ),
+          Text(
+            "تفاصيل الباقة",
+            style: AppTextStyle.setelMessiriBlack(
+              fontSize: 18,
+              fontWeight: FontWeight.bold,
             ),
           ),
+          const SizedBox(width: 40),
+        ],
+      ),
+    );
+  }
 
-          // 2. Overlay Buttons (Back, Rate)
-          Positioned(
-            top: MediaQuery.of(context).padding.top + 10.h,
-            left: 20.w,
-            right: 20.w,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                GlassButton(
-                  icon: Icons.arrow_back_ios_new,
-                  onPressed: () => Navigator.pop(context),
-                  iconColor: Colors.white,
-                ),
-                GlassButton(
-                  icon: Icons.star_border,
-                  onPressed: () => _showRateDialog(pkg?.sId),
-                  iconColor: Colors.white,
-                ),
-              ],
+  Widget _buildPackageInfo(dynamic pkg) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 24.w),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            pkg?.name ?? "",
+            style: AppTextStyle.setelMessiriBlack(
+              fontSize: 22,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+          SizedBox(height: 12.h),
+          Row(
+            children: [
+              _buildStatItem(Icons.access_time_outlined, "6 أيام"),
+              SizedBox(width: 16.w),
+              _buildStatItem(Icons.hotel_outlined, "4 فنادق"),
+              SizedBox(width: 16.w),
+              _buildStatItem(Icons.location_on_outlined, "3 مدن"),
+            ],
           ),
         ],
       ),
     );
   }
+
+  Widget _buildStatItem(IconData icon, String label) {
+    return Row(
+      children: [
+        Icon(icon, size: 14.sp, color: Colors.grey),
+        SizedBox(width: 4.w),
+        Text(
+          label,
+          style: AppTextStyle.setelMessiriSecondlightGrey(
+            fontSize: 12,
+            fontWeight: FontWeight.normal,
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-// Helper class for package arguments
 class PackageArguments {
   final String? packageSlug;
   final String? packageTypeSlug;

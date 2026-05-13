@@ -13,6 +13,8 @@ import 'package:flutter_application_1/featuer/home/view/widgets/home_reviews_sec
 import 'package:flutter_application_1/featuer/home/view/widgets/home_tours_section.dart';
 import 'widgets/recommended_hotel_card.dart';
 import 'package:flutter_application_1/featuer/home/view/widgets/home_destinations_section.dart';
+import 'package:skeletonizer/skeletonizer.dart';
+import 'package:flutter_application_1/featuer/hotels/data/model/getHotel_model.dart';
 
 class HomeView extends StatelessWidget {
   const HomeView({super.key});
@@ -69,7 +71,32 @@ class HomeView extends StatelessWidget {
             child: BlocBuilder<HotelsCubit, HotelsState>(
               builder: (context, state) {
                 if (state is HotelsLoading) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Skeletonizer(
+                    enabled: true,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 16.w),
+                      child: Column(
+                        children: [
+                          ListView.separated(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            itemCount: 3,
+                            separatorBuilder: (_, __) => SizedBox(height: 16.h),
+                            itemBuilder: (context, index) {
+                              return RecommendedHotelCard(
+                                hotel: HotelItem(
+                                  name: "اسم الفندق يظهر هنا",
+                                  price: 500,
+                                  description: "عنوان الفندق يظهر هنا",
+                                  images: [],
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  );
                 } else if (state is HotelsSuccess) {
                   if (state.hotels.isEmpty) {
                     return const Center(child: Text("لا توجد فنادق متاحة"));

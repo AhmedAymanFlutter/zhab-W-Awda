@@ -83,7 +83,10 @@ class TourDetailsContentSection extends StatelessWidget {
 
           // Packages Section
           if (tour.productOptions != null && tour.productOptions!.isNotEmpty)
-            TourPremiumOptions(options: tour.productOptions!),
+            TourPremiumOptions(
+              options: tour.productOptions!,
+              tourDescription: tour.descText ?? tour.description,
+            ),
 
           SizedBox(height: 120.h), // Space for bottom bar
         ],

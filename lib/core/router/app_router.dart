@@ -32,6 +32,9 @@ import 'package:flutter_application_1/featuer/seeAllPage/AllpackageView.dart';
 import 'package:flutter_application_1/featuer/services/view/service_details_view.dart';
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
+import 'package:flutter_application_1/featuer/tours/view/saved_tours_view.dart';
+import 'package:flutter_application_1/featuer/bookings/view/my_bookings_view.dart';
+import 'package:flutter_application_1/featuer/bookings/view/booking_details_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
 import 'package:flutter_application_1/featuer/splash/view/splash_screen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
@@ -215,6 +218,13 @@ class AppRouter {
             toCity: args['toCity'] as String,
           ),
         );
+      case Routes.savedToursView:
+        return RouterTransitions.buildFade(const SavedToursView());
+      case Routes.myBookingsView:
+        return RouterTransitions.buildFade(const MyBookingsView());
+      case Routes.bookingDetailsView:
+        final bookingId = settings.arguments as String;
+        return RouterTransitions.buildFade(BookingDetailsView(bookingId: bookingId));
 
       default:
         return RouterTransitions.build(

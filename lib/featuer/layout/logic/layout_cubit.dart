@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_application_1/featuer/flightBooking/view/book_flight_view.dart';
+import 'package:flutter_application_1/featuer/packageType/view/package_types_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../packages/packages_view.dart';
 import '../../home/view/home_view.dart';
 import '../../more/presentation/view/more_view.dart';
 import 'layout_state.dart';

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../data/repo/tours_repository.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'widgets/tour_header_banner.dart';
 import 'widgets/tour_details_content_section.dart';
 import 'widgets/tour_booking_bottom_bar.dart';
@@ -80,15 +81,30 @@ class TourDetailsView extends StatelessWidget {
                         // Left buttons: Share & Bookmark
                         Row(
                           children: [
-                            _buildCircularButton(Icons.share_outlined, () {}),
+                            _buildCircularButton(
+                              () {},
+                              icon: Icons.share_outlined,
+                            ),
                             SizedBox(width: 12.w),
-                            _buildCircularButton(Icons.bookmark_border, () {}),
+                            _buildCircularButton(
+                              () {
+                                context
+                                    .read<ToursCubit>()
+                                    .toggleSaveTour(tour.sId ?? tour.id ?? "");
+                              },
+                              svgAsset: (tour.isSaved ?? false)
+                                  ? 'assets/icon/filled.svg'
+                                  : 'assets/icon/bookmark-02 (1).svg',
+                              color: (tour.isSaved ?? false)
+                                  ? Colors.red
+                                  : Colors.white,
+                            ),
                           ],
                         ),
                         // Right button: Back
                         _buildCircularButton(
-                          Icons.arrow_back,
                           () => Navigator.pop(context),
+                          icon: Icons.arrow_back,
                         ),
                       ],
                     ),
@@ -103,7 +119,8 @@ class TourDetailsView extends StatelessWidget {
     );
   }
 
-  Widget _buildCircularButton(IconData icon, VoidCallback onTap) {
+  Widget _buildCircularButton(VoidCallback onTap,
+      {IconData? icon, String? svgAsset, Color color = Colors.white}) {
     return InkWell(
       onTap: onTap,
       child: Container(
@@ -113,7 +130,15 @@ class TourDetailsView extends StatelessWidget {
           color: Colors.black.withOpacity(0.3),
           shape: BoxShape.circle,
         ),
-        child: Icon(icon, color: Colors.white, size: 20.sp),
+        child: Center(
+          child: svgAsset != null
+              ? SvgPicture.asset(
+                  svgAsset,
+                  width: 20.sp,
+                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                )
+              : Icon(icon, color: color, size: 20.sp),
+        ),
       ),
     );
   }

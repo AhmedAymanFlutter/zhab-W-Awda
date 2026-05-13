@@ -75,6 +75,24 @@ class MoreView extends StatelessWidget {
                           ),
                           const Divider(height: 1),
                           MoreMenuItem(
+                            title: "الجولات المحفوظة",
+                            iconData: Icons.bookmark_added_outlined,
+                            iconColor: Colors.amber,
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.savedToursView);
+                            },
+                          ),
+                          const Divider(height: 1),
+                          MoreMenuItem(
+                            title: "حجوزاتي",
+                            iconPath: "assets/icon/bag.svg",
+                            iconColor: Colors.deepPurple,
+                            onTap: () {
+                              Navigator.pushNamed(context, Routes.myBookingsView);
+                            },
+                          ),
+                          const Divider(height: 1),
+                          MoreMenuItem(
                             title: "الباقات",
                             iconPath: "assets/icon/package-open.svg",
                             iconColor: Colors.indigo,

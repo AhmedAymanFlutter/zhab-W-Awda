@@ -20,11 +20,9 @@ class ToursCubit extends Cubit<ToursState> {
     String? priceRange,
     int page = 1,
   }) async {
-    // If we are calling for a specific page without changing filters
     if (cityId == null && priceRange == null && page != 1) {
       currentPage = page;
     } else {
-      // If we are changing filters or resetting to "All"
       selectedCityId = cityId;
       selectedPriceRange = priceRange;
       currentPage = page;
@@ -90,5 +88,115 @@ class ToursCubit extends Cubit<ToursState> {
 
     // ✅ وهنا
     if (!isClosed) emit(ToursSuccess(filteredTours, pagination: null));
+  }
+
+  Future<void> fetchSavedTours({String? query}) async {
+    emit(SavedToursLoading());
+    try {
+      final response = await _repository.getSavedTours(query: query);
+      if (!isClosed) {
+        if (response.data?.tours != null) {
+          final savedTours = response.data!.tours!;
+          for (var tour in savedTours) {
+            tour.isSaved = true;
+          }
+          emit(SavedToursSuccess(savedTours));
+        } else {
+          emit(SavedToursError("لا توجد جولات محفوظة"));
+        }
+      }
+    } catch (e) {
+      if (!isClosed) {
+        emit(SavedToursError(e.toString()));
+      }
+    }
+  }
+
+  Future<void> toggleSaveTour(String id) async {
+    final currentState = state;
+    TourItem? mainTour;
+    int? mainTourIndex;
+
+    // 1. Local update for main tours list (Optimistic)
+    mainTourIndex = tours.indexWhere((t) => (t.sId ?? t.id) == id);
+    if (mainTourIndex != -1) {
+      mainTour = tours[mainTourIndex];
+      mainTour.isSaved = !(mainTour.isSaved ?? false);
+    }
+
+    // 2. Local update for SavedToursSuccess state (Optimistic)
+    List<TourItem>? updatedSavedTours;
+    TourItem? removedTour;
+    int? removedTourIndex;
+
+    bool isSaving = true;
+    if (currentState is SavedToursSuccess) {
+      isSaving = false;
+      updatedSavedTours = List.from(currentState.tours);
+      removedTourIndex = updatedSavedTours.indexWhere(
+        (t) => (t.sId ?? t.id) == id,
+      );
+      if (removedTourIndex != -1) {
+        removedTour = updatedSavedTours.removeAt(removedTourIndex);
+      }
+      emit(SavedToursSuccess(updatedSavedTours));
+    } else if (currentState is TourDetailsSuccess) {
+      currentState.tour.isSaved = !(currentState.tour.isSaved ?? false);
+      emit(TourDetailsSuccess(currentState.tour));
+    } else if (currentState is ToursSuccess) {
+      if (mainTour != null) {
+        isSaving = mainTour.isSaved ?? false;
+      }
+      emit(ToursSuccess(List.from(tours), pagination: pagination));
+    }
+
+    try {
+      final response = await _repository.toggleSaveTour(id, isSaving);
+
+      if (response.status != true) {
+        // Rollback
+        _rollbackToggle(
+          id,
+          mainTourIndex,
+          currentState,
+          removedTour,
+          removedTourIndex,
+        );
+        if (!isClosed) emit(ToursError(response.message));
+      }
+    } catch (e) {
+      // Rollback
+      _rollbackToggle(
+        id,
+        mainTourIndex,
+        currentState,
+        removedTour,
+        removedTourIndex,
+      );
+      if (!isClosed) emit(ToursError(e.toString()));
+    }
+  }
+
+  void _rollbackToggle(
+    String id,
+    int? mainTourIndex,
+    ToursState previousState,
+    TourItem? removedTour,
+    int? removedTourIndex,
+  ) {
+    // Rollback main list
+    if (mainTourIndex != null && mainTourIndex != -1) {
+      tours[mainTourIndex].isSaved = !(tours[mainTourIndex].isSaved ?? false);
+    }
+
+    // Rollback state
+    if (previousState is SavedToursSuccess &&
+        removedTour != null &&
+        removedTourIndex != null) {
+      final list = List<TourItem>.from(previousState.tours);
+      emit(SavedToursSuccess(list));
+    } else if (previousState is ToursSuccess) {
+      emit(ToursSuccess(List.from(tours), pagination: pagination));
+    }
   }
 }

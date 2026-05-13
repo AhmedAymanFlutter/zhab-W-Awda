@@ -6,8 +6,9 @@ import 'tour_package_card.dart';
 
 class TourPremiumOptions extends StatelessWidget {
   final List<ProductOption> options;
+  final String? tourDescription;
 
-  const TourPremiumOptions({super.key, required this.options});
+  const TourPremiumOptions({super.key, required this.options, this.tourDescription});
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +34,10 @@ class TourPremiumOptions extends StatelessWidget {
           separatorBuilder: (context, index) => SizedBox(height: 16.h),
           itemBuilder: (context, index) {
             return Center(
-              child: TourPackageCard(option: options[index]),
+              child: TourPackageCard(
+                option: options[index],
+                tourDescription: tourDescription,
+              ),
             );
           },
         ),

@@ -37,4 +37,7 @@ class Routes {
   static const String termsView = '/TermsView';
   static const String privacyView = '/PrivacyView';
   static const String flightResultsView = '/FlightResultsView';
+  static const String savedToursView = '/SavedToursView';
+  static const String myBookingsView = '/MyBookingsView';
+  static const String bookingDetailsView = '/BookingDetailsView';
 }

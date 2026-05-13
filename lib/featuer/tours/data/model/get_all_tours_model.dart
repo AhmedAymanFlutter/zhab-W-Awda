@@ -7,18 +7,36 @@ class GetAllToursModel {
 
   GetAllToursModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    success =
-        json['success'] ??
-        json['status'] == 'success' || json['status'] == true;
+    success = json['success'] ??
+        (json['status'] == 'success' || json['status'] == true);
+
+    // Initialize data wrapper
+    data = ToursDataWrapper(tours: []);
+
+    // Handle pagination at root level (common in saved tours response)
+    if (json['pagination'] != null) {
+      data!.pagination = Pagination.fromJson(json['pagination']);
+    }
 
     if (json['data'] != null) {
       if (json['data'] is List) {
-        data = ToursDataWrapper(tours: []);
+        // Direct list of tours (or wrapped objects like in saved tours)
         for (var v in (json['data'] as List)) {
-          data!.tours!.add(TourItem.fromJson(v));
+          if (v is Map && v.containsKey('tour') && v['tour'] is Map) {
+            // Handle saved tours wrapper { _id, user, tour: { ... } }
+            data!.tours!.add(TourItem.fromJson(v['tour']));
+          } else {
+            data!.tours!.add(TourItem.fromJson(v));
+          }
         }
-      } else {
-        data = ToursDataWrapper.fromJson(json['data']);
+      } else if (json['data'] is Map) {
+        // data is an object containing tours and maybe pagination
+        final Map<String, dynamic> dataMap = json['data'] as Map<String, dynamic>;
+        final nestedData = ToursDataWrapper.fromJson(dataMap);
+        data!.tours = nestedData.tours;
+        if (nestedData.pagination != null) {
+          data!.pagination = nestedData.pagination;
+        }
       }
     }
   }
@@ -36,7 +54,12 @@ class ToursDataWrapper {
     if (toursList != null && toursList is List) {
       tours = <TourItem>[];
       for (var v in toursList) {
-        tours!.add(TourItem.fromJson(v));
+        if (v is Map && v.containsKey('tour') && v['tour'] is Map) {
+          // Handle saved tours wrapper { tour: { ... } }
+          tours!.add(TourItem.fromJson(v['tour']));
+        } else {
+          tours!.add(TourItem.fromJson(v));
+        }
       }
     }
     if (json['pagination'] != null) {
@@ -96,6 +119,7 @@ class TourItem {
   String? price;
   String? originPrice;
   int? duration;
+  bool? isSaved;
 
   TourItem({
     this.seo,
@@ -121,6 +145,7 @@ class TourItem {
     this.price,
     this.originPrice,
     this.duration,
+    this.isSaved,
   });
 
   TourItem.fromJson(Map<String, dynamic> json) {
@@ -130,6 +155,7 @@ class TourItem {
     description = json['description'];
     descText = json['descText'];
     duration = json['duration'];
+    isSaved = json['isSaved'] ?? json['isSavedByUser'];
 
     // Handle complex price object {amount: 100, currency: AED}
     if (json['price'] != null) {
@@ -169,8 +195,13 @@ class TourItem {
         paths!.add(Paths.fromJson(v));
       });
     }
-    imageCover = json['imageCover'];
     images = json['images'] != null ? List<String>.from(json['images']) : [];
+    imageCover = json['imageCover'];
+    if ((imageCover == null || imageCover!.isEmpty) &&
+        images != null &&
+        images!.isNotEmpty) {
+      imageCover = images![0];
+    }
     slug = json['slug'];
     createdBy = json['createdBy'];
     createdAt = json['createdAt'];

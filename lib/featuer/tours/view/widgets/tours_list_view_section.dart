@@ -15,6 +15,10 @@ class ToursListViewSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocBuilder<ToursCubit, ToursState>(
+      buildWhen: (previous, current) =>
+          current is ToursLoading ||
+          current is ToursError ||
+          current is ToursSuccess,
       builder: (context, state) {
         if (state is ToursLoading) {
           return Skeletonizer(
