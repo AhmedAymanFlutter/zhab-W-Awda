@@ -43,6 +43,7 @@ import 'package:flutter_application_1/featuer/tour_guide/view/tour_guide_details
 import 'package:flutter_application_1/featuer/notifications/view/notifications_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/terms_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/privacy_view.dart';
+import 'package:flutter_application_1/featuer/rewards/view/rewards_view.dart';
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -225,6 +226,9 @@ class AppRouter {
       case Routes.bookingDetailsView:
         final bookingId = settings.arguments as String;
         return RouterTransitions.buildFade(BookingDetailsView(bookingId: bookingId));
+
+      case Routes.rewardsView:
+        return RouterTransitions.buildFade(const RewardsView());
 
       default:
         return RouterTransitions.build(

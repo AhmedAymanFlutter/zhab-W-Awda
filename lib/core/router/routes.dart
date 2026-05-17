@@ -40,4 +40,5 @@ class Routes {
   static const String savedToursView = '/SavedToursView';
   static const String myBookingsView = '/MyBookingsView';
   static const String bookingDetailsView = '/BookingDetailsView';
+  static const String rewardsView = '/RewardsView';
 }

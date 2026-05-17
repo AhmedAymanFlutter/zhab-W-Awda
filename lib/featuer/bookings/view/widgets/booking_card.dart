@@ -35,7 +35,7 @@ class BookingCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          // 1. Header (Status & Booking Number)
+          // 1. Header
           BookingCardHeader(
             status: booking.status ?? "تم التأكيد",
             bookingNumber: booking.bookingNumber ?? "",
@@ -43,7 +43,7 @@ class BookingCard extends StatelessWidget {
 
           SizedBox(height: 4.h),
 
-          // 2. Content (Trip Info & Image)
+          // 2. Content
           Expanded(
             child: BookingCardContent(
               description:
@@ -59,7 +59,7 @@ class BookingCard extends StatelessWidget {
 
           SizedBox(height: 8.h),
 
-          // 3. Actions (Buttons)
+          // 3. Actions
           BookingCardActions(
             onDetailsTap: () {
               Navigator.pushNamed(
@@ -68,9 +68,7 @@ class BookingCard extends StatelessWidget {
                 arguments: booking.id,
               );
             },
-            onReceiptTap: () {
-              // TODO: Implement receipt download
-            },
+            onReceiptTap: () {},
           ),
         ],
       ),

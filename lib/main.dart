@@ -26,6 +26,11 @@ import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_application_1/featuer/bookings/data/repo/bookings_repository.dart';
 import 'package:flutter_application_1/featuer/bookings/manager/bookings_cubit.dart';
 import 'package:flutter_application_1/featuer/bookings/manager/booking_details_cubit.dart';
+import 'package:flutter_application_1/featuer/rewards/data/repo/reward_repository_impl.dart';
+import 'package:flutter_application_1/featuer/rewards/data/source/reward_remote_data_source.dart';
+import 'package:flutter_application_1/featuer/rewards/domain/usecase/get_reward_packages_usecase.dart';
+import 'package:flutter_application_1/featuer/rewards/manager/reward_cubit.dart';
+import 'package:flutter_application_1/core/network/api_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 
@@ -92,6 +97,15 @@ class MyApp extends StatelessWidget {
             ),
             BlocProvider(
               create: (context) => BookingDetailsCubit(BookingsRepository()),
+            ),
+            BlocProvider(
+              create: (context) => RewardCubit(
+                GetRewardPackagesUseCase(
+                  RewardRepositoryImpl(
+                    RewardRemoteDataSourceImpl(APIHelper()),
+                  ),
+                ),
+              ),
             ),
           ],
           child: MaterialApp(

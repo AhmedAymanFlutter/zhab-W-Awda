@@ -18,8 +18,8 @@ abstract class EndPoints {
   static const String reviews = 'mobile/reviews';
   static const String savedTours = 'mobile/saved-tours';
   static const String myBookings = 'mobile/package-bookings/my';
+  static const String rewardPackages = 'mobile/reward-packages';
 
-  // ─── Auth Endpoints (Public) ─────────────────────────────────────────
   static const String authRegister = 'mobile/auth/register';
   static const String authLogin = 'mobile/auth/login';
   static const String authVerifyOtp = 'mobile/auth/verify-otp';

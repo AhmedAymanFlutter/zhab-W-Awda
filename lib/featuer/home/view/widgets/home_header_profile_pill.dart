@@ -14,7 +14,7 @@ class HomeHeaderProfilePill extends StatelessWidget {
         filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
         child: Container(
           width: 207.w,
-          height: 50.h,
+          height: 56.h,
           padding: EdgeInsets.only(
             top: 4.h,
             bottom: 4.h,

@@ -18,7 +18,8 @@ class OptionDetailsBottomSheet extends StatefulWidget {
   });
 
   @override
-  State<OptionDetailsBottomSheet> createState() => _OptionDetailsBottomSheetState();
+  State<OptionDetailsBottomSheet> createState() =>
+      _OptionDetailsBottomSheetState();
 }
 
 class _OptionDetailsBottomSheetState extends State<OptionDetailsBottomSheet> {
@@ -49,9 +50,7 @@ class _OptionDetailsBottomSheetState extends State<OptionDetailsBottomSheet> {
             },
           ),
           SizedBox(height: 24.h),
-          Expanded(
-            child: _buildTabContent(),
-          ),
+          Expanded(child: _buildTabContent()),
           SizedBox(height: 20.h),
           ElevatedButton(
             onPressed: () {

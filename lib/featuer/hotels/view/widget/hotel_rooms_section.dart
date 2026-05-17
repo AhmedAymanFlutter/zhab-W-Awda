@@ -72,11 +72,7 @@ class HotelRoomsSection extends StatelessWidget {
               ),
               child: Row(
                 children: [
-                  Icon(
-                    Icons.sort,
-                    color: AppColor.primaryBlue,
-                    size: 16.sp,
-                  ),
+                  Icon(Icons.sort, color: AppColor.primaryBlue, size: 16.sp),
                   SizedBox(width: 4.w),
                   Text(
                     "ترتيب حسب السعر",
@@ -97,7 +93,8 @@ class HotelRoomsSection extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           itemCount: rooms!.length,
           separatorBuilder: (context, index) => SizedBox(height: 12.h),
-          itemBuilder: (context, index) => _buildRoomCard(context, rooms![index]),
+          itemBuilder: (context, index) =>
+              _buildRoomCard(context, rooms![index]),
         ),
       ],
     );
@@ -105,12 +102,7 @@ class HotelRoomsSection extends StatelessWidget {
 
   Widget _buildRoomCard(BuildContext context, Rooms room) {
     return Container(
-      padding: EdgeInsets.only(
-        top: 6.h,
-        bottom: 6.h,
-        right: 4.w,
-        left: 4.w,
-      ),
+      padding: EdgeInsets.only(top: 6.h, bottom: 6.h, right: 4.w, left: 4.w),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(8.r),
@@ -159,10 +151,7 @@ class HotelRoomsSection extends StatelessWidget {
                 ),
                 Text(
                   "جناح فاخر على البحر",
-                  style: TextStyle(
-                    fontSize: 11.sp,
-                    color: Colors.grey[600],
-                  ),
+                  style: TextStyle(fontSize: 11.sp, color: Colors.grey[600]),
                 ),
                 SizedBox(height: 4.h),
                 Row(
@@ -184,11 +173,7 @@ class HotelRoomsSection extends StatelessWidget {
                 ),
                 Row(
                   children: [
-                    Icon(
-                      Icons.money_off,
-                      size: 12.sp,
-                      color: Colors.green,
-                    ),
+                    Icon(Icons.money_off, size: 12.sp, color: Colors.green),
                     SizedBox(width: 2.w),
                     Text(
                       "مستردة",
