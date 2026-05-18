@@ -16,53 +16,56 @@ class PackageTypesView extends StatelessWidget {
     return BlocProvider(
       create: (context) =>
           PackageTypesCubit(PackageTypesRepository())..fetchPackageTypes(),
-      child: Scaffold(
-        backgroundColor: AppColor.primaryWhite,
+      child: SafeArea(
+        child: Scaffold(
+          backgroundColor: AppColor.primaryWhite,
 
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.w),
-          child: Column(
-            children: [
-              ReusableSearchBar(
-                hintText: "Search package types (e.g. Cairo, Luxury...)",
-                useDebounce: true,
-                onFilterTap: () {},
-                onSearchChanged: (value) {
-                  // PackageTypesCubit.get(context).searchLocalPackageTypes(value);
-                },
-              ),
-              SizedBox(height: 10.h),
-              Expanded(
-                child: BlocBuilder<PackageTypesCubit, PackageTypesState>(
-                  builder: (context, state) {
-                    if (state is PackageTypesLoading) {
-                      return const Center(child: CircularProgressIndicator());
-                    } else if (state is PackageTypesError) {
-                      return Center(child: Text(state.message));
-                    } else if (state is PackageTypesSuccess) {
-                      return GridView.builder(
-                        physics: const BouncingScrollPhysics(),
-                        itemCount: state.types.length,
-                        padding: EdgeInsets.only(bottom: 20.h),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12.w,
-                          mainAxisSpacing: 12.h,
-                          childAspectRatio: 284 / 343,
-                        ),
-                        itemBuilder: (context, index) {
-                          return ModernPackageTypeCard(
-                            packageType: state.types[index],
-                            variant: PackageTypeCardVariant.tall,
-                          );
-                        },
-                      );
-                    }
-                    return const SizedBox();
+          body: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 16.w),
+            child: Column(
+              children: [
+                ReusableSearchBar(
+                  hintText: "Search package types (e.g. Cairo, Luxury...)",
+                  useDebounce: true,
+                  onFilterTap: () {},
+                  onSearchChanged: (value) {
+                    // PackageTypesCubit.get(context).searchLocalPackageTypes(value);
                   },
                 ),
-              ),
-            ],
+                SizedBox(height: 10.h),
+                Expanded(
+                  child: BlocBuilder<PackageTypesCubit, PackageTypesState>(
+                    builder: (context, state) {
+                      if (state is PackageTypesLoading) {
+                        return const Center(child: CircularProgressIndicator());
+                      } else if (state is PackageTypesError) {
+                        return Center(child: Text(state.message));
+                      } else if (state is PackageTypesSuccess) {
+                        return GridView.builder(
+                          physics: const BouncingScrollPhysics(),
+                          itemCount: state.types.length,
+                          padding: EdgeInsets.only(bottom: 20.h),
+                          gridDelegate:
+                              SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 12.w,
+                                mainAxisSpacing: 12.h,
+                                childAspectRatio: 284 / 343,
+                              ),
+                          itemBuilder: (context, index) {
+                            return ModernPackageTypeCard(
+                              packageType: state.types[index],
+                              variant: PackageTypeCardVariant.tall,
+                            );
+                          },
+                        );
+                      }
+                      return const SizedBox();
+                    },
+                  ),
+                ),
+              ],
+            ),
           ),
         ),
       ),

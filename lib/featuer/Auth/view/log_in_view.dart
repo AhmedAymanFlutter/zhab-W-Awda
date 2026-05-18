@@ -180,7 +180,12 @@ class _LogInViewState extends State<LogInView> {
                         icon: 'assets/icon/2021_Facebook_icon 1.svg',
                         onTap: () {},
                       ),
-                      SocialLoginButton(icon: 'assets/icon/google.svg', onTap: () {}),
+                      SocialLoginButton(
+                        icon: 'assets/icon/google.svg',
+                        onTap: () {
+                          context.read<UserCubit>().loginWithGoogle();
+                        },
+                      ),
                     ],
                   ),
                   SizedBox(height: 12.h), // Reduced from 16

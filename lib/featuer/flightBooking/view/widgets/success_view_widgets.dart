@@ -131,11 +131,7 @@ class SuccessInfoRow extends StatelessWidget {
   final String label;
   final String value;
 
-  const SuccessInfoRow({
-    super.key,
-    required this.label,
-    required this.value,
-  });
+  const SuccessInfoRow({super.key, required this.label, required this.value});
 
   @override
   Widget build(BuildContext context) {

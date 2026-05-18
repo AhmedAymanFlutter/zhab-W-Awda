@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_application_1/core/network/api_endpoiont.dart';
 import 'package:flutter_application_1/core/network/local_data.dart';
 import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
@@ -33,10 +35,17 @@ import 'package:flutter_application_1/featuer/rewards/manager/reward_cubit.dart'
 import 'package:flutter_application_1/core/network/api_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalData.loadTokens();
+  await GoogleSignIn.instance.initialize(
+    clientId: defaultTargetPlatform == TargetPlatform.android
+        ? null
+        : EndPoints.clientId,
+    serverClientId: EndPoints.clientId,
+  );
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -101,9 +110,7 @@ class MyApp extends StatelessWidget {
             BlocProvider(
               create: (context) => RewardCubit(
                 GetRewardPackagesUseCase(
-                  RewardRepositoryImpl(
-                    RewardRemoteDataSourceImpl(APIHelper()),
-                  ),
+                  RewardRepositoryImpl(RewardRemoteDataSourceImpl(APIHelper())),
                 ),
               ),
             ),

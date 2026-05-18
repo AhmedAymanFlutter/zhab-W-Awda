@@ -3,6 +3,7 @@ import 'package:flutter_application_1/core/network/local_data.dart';
 import 'package:flutter_application_1/featuer/Auth/data/auth_repository.dart';
 import 'package:flutter_application_1/featuer/Auth/data/user_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 import 'auth_state.dart';
 
 class UserCubit extends Cubit<AuthState> {
@@ -48,6 +49,35 @@ class UserCubit extends Cubit<AuthState> {
       emit(AuthVerifySuccess(user));
     } else {
       emit(AuthError(response.message));
+    }
+  }
+
+  Future<void> loginWithGoogle() async {
+    emit(AuthLoading());
+    try {
+      final GoogleSignInAccount googleUser = await GoogleSignIn.instance
+          .authenticate();
+
+      final GoogleSignInAuthentication googleAuth = googleUser.authentication;
+      final String? idToken = googleAuth.idToken;
+
+      if (idToken == null) {
+        emit(AuthError("فشل في الحصول على التوكن من جوجل"));
+        return;
+      }
+
+      final response = await _authRepository.loginWithGoogle(idToken: idToken);
+
+      if (response.status) {
+        final user = UserModel.fromJson(response.data['data']);
+        await _saveUser(user);
+        emit(AuthVerifySuccess(user));
+      } else {
+        await GoogleSignIn.instance.signOut();
+        emit(AuthError("خطأ من السيرفر: ${response.message}"));
+      }
+    } catch (error) {
+      emit(AuthError("خطأ في تسجيل الدخول: $error"));
     }
   }
 
@@ -196,10 +226,7 @@ class UserCubit extends Cubit<AuthState> {
 
   // ─── Logout ───────────────────────────────────────────────────────────
   Future<void> logout() async {
-    // Clear token from SecureStorage
     await LocalData.clearTokens();
-
-    // Clear profile data from SharedPreferences
     final prefs = await SharedPreferences.getInstance();
     await prefs.clear();
 

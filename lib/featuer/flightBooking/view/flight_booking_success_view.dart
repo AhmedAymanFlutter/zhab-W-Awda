@@ -25,7 +25,8 @@ class FlightBookingSuccessView extends StatelessWidget {
               children: [
                 const BookingSuccessHeader(
                   title: "تم إرسال طلبك بنجاح!",
-                  subtitle: "سيتواصل معك فريقنا في أقرب وقت لتأكيد الحجز وتقديم أفضل العروض.",
+                  subtitle:
+                      "سيتواصل معك فريقنا في أقرب وقت لتأكيد الحجز وتقديم أفضل العروض.",
                 ),
 
                 SizedBox(height: 32.h),
@@ -41,7 +42,8 @@ class FlightBookingSuccessView extends StatelessWidget {
                       label: "تاريخ المغادرة",
                       value: _formatDate(bookingDetails.departureDate),
                     ),
-                    if (bookingDetails.departureDate != bookingDetails.returnDate)
+                    if (bookingDetails.departureDate !=
+                        bookingDetails.returnDate)
                       SuccessInfoRow(
                         label: "تاريخ العودة",
                         value: _formatDate(bookingDetails.returnDate),
@@ -59,8 +61,14 @@ class FlightBookingSuccessView extends StatelessWidget {
                   icon: Icons.person_outline,
                   children: [
                     SuccessInfoRow(label: "الاسم", value: bookingDetails.name),
-                    SuccessInfoRow(label: "رقم الجوال", value: bookingDetails.phone),
-                    SuccessInfoRow(label: "البريد الإلكتروني", value: bookingDetails.email),
+                    SuccessInfoRow(
+                      label: "رقم الجوال",
+                      value: bookingDetails.phone,
+                    ),
+                    SuccessInfoRow(
+                      label: "البريد الإلكتروني",
+                      value: bookingDetails.email,
+                    ),
                   ],
                 ),
 

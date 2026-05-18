@@ -114,4 +114,13 @@ class AuthRepository {
       isAuthorized: true,
     );
   }
+
+  Future<ApiResponse> loginWithGoogle({required String idToken}) async {
+    return await _apiHelper.postRequest(
+      endPoint: EndPoints.authGoogleLogin,
+      data: {"idToken": idToken},
+      isFormData: false,
+      isAuthorized: false,
+    );
+  }
 }

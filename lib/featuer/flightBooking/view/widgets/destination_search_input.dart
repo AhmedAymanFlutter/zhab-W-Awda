@@ -182,10 +182,7 @@ class _DestinationSearchInputState extends State<DestinationSearchInput> {
 
               if (value.length > 1) {
                 _isSearching = true;
-                cubit.searchDestinations(
-                  value,
-                  widget.isFromCity,
-                );
+                cubit.searchDestinations(value, widget.isFromCity);
               } else {
                 _isSearching = false;
                 _removeOverlay();

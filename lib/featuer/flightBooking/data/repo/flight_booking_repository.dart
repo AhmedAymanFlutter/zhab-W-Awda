@@ -41,6 +41,7 @@ class FlightBookingRepository {
       return [];
     }
   }
+
   Future<dynamic> searchFlights({
     required String fromId,
     required String toId,
@@ -52,7 +53,8 @@ class FlightBookingRepository {
     String currencyCode = 'SAR',
   }) async {
     try {
-      String url = 'flights/search?fromId=$fromId&toId=$toId&departDate=$departDate&adults=$adults&sort=$sort&cabinClass=$cabinClass&currency_code=$currencyCode';
+      String url =
+          'flights/search?fromId=$fromId&toId=$toId&departDate=$departDate&adults=$adults&sort=$sort&cabinClass=$cabinClass&currency_code=$currencyCode';
       if (childrenAges != null && childrenAges.isNotEmpty) {
         url += '&children_ages=$childrenAges';
       }
@@ -60,7 +62,8 @@ class FlightBookingRepository {
       final response = await _apiHelper.getRequest(endPoint: url);
 
       if (response.status == true) {
-        return response.data; // Return raw data for now, or map to a model if we had one
+        return response
+            .data; // Return raw data for now, or map to a model if we had one
       } else {
         throw Exception(response.message);
       }

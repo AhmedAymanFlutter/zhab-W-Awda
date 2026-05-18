@@ -20,7 +20,10 @@ abstract class EndPoints {
   static const String myBookings = 'mobile/package-bookings/my';
   static const String rewardPackages = 'mobile/reward-packages';
 
+  static const String clientId =
+      '827532130086-0sbv2mndpb6p8d5ptnkfqm3en7ducqnt.apps.googleusercontent.com';
   static const String authRegister = 'mobile/auth/register';
+  static const String authGoogleLogin = 'mobile/auth/google';
   static const String authLogin = 'mobile/auth/login';
   static const String authVerifyOtp = 'mobile/auth/verify-otp';
   static const String authForgotPassword = 'mobile/auth/forgot-password';
