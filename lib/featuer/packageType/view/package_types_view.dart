@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_application_1/featuer/packageType/data/repo/package_types_repository.dart';
 import 'package:flutter_application_1/featuer/packageType/manager/package_types_cubit.dart';
 import 'package:flutter_application_1/featuer/packageType/manager/package_types_state.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -13,59 +12,54 @@ class PackageTypesView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) =>
-          PackageTypesCubit(PackageTypesRepository())..fetchPackageTypes(),
-      child: SafeArea(
-        child: Scaffold(
-          backgroundColor: AppColor.primaryWhite,
+    return SafeArea(
+      child: Scaffold(
+        backgroundColor: AppColor.primaryWhite,
 
-          body: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16.w),
-            child: Column(
-              children: [
-                ReusableSearchBar(
-                  hintText: "Search package types (e.g. Cairo, Luxury...)",
-                  useDebounce: true,
-                  onFilterTap: () {},
-                  onSearchChanged: (value) {
-                    // PackageTypesCubit.get(context).searchLocalPackageTypes(value);
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 16.w),
+          child: Column(
+            children: [
+              ReusableSearchBar(
+                hintText: "Search package types (e.g. Cairo, Luxury...)",
+                useDebounce: true,
+                onFilterTap: () {},
+                onSearchChanged: (value) {
+                  // PackageTypesCubit.get(context).searchLocalPackageTypes(value);
+                },
+              ),
+              SizedBox(height: 10.h),
+              Expanded(
+                child: BlocBuilder<PackageTypesCubit, PackageTypesState>(
+                  builder: (context, state) {
+                    if (state is PackageTypesLoading) {
+                      return const Center(child: CircularProgressIndicator());
+                    } else if (state is PackageTypesError) {
+                      return Center(child: Text(state.message));
+                    } else if (state is PackageTypesSuccess) {
+                      return GridView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: state.types.length,
+                        padding: EdgeInsets.only(bottom: 20.h),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 12.w,
+                          mainAxisSpacing: 12.h,
+                          childAspectRatio: 284 / 343,
+                        ),
+                        itemBuilder: (context, index) {
+                          return ModernPackageTypeCard(
+                            packageType: state.types[index],
+                            variant: PackageTypeCardVariant.tall,
+                          );
+                        },
+                      );
+                    }
+                    return const SizedBox();
                   },
                 ),
-                SizedBox(height: 10.h),
-                Expanded(
-                  child: BlocBuilder<PackageTypesCubit, PackageTypesState>(
-                    builder: (context, state) {
-                      if (state is PackageTypesLoading) {
-                        return const Center(child: CircularProgressIndicator());
-                      } else if (state is PackageTypesError) {
-                        return Center(child: Text(state.message));
-                      } else if (state is PackageTypesSuccess) {
-                        return GridView.builder(
-                          physics: const BouncingScrollPhysics(),
-                          itemCount: state.types.length,
-                          padding: EdgeInsets.only(bottom: 20.h),
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 12.w,
-                                mainAxisSpacing: 12.h,
-                                childAspectRatio: 284 / 343,
-                              ),
-                          itemBuilder: (context, index) {
-                            return ModernPackageTypeCard(
-                              packageType: state.types[index],
-                              variant: PackageTypeCardVariant.tall,
-                            );
-                          },
-                        );
-                      }
-                      return const SizedBox();
-                    },
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

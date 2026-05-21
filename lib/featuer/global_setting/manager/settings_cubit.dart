@@ -15,7 +15,6 @@ class SettingsCubit extends Cubit<SettingsState> {
     try {
       final response = await _repository.getSettings();
 
-      // ✅ التحقق قبل إصدار الحالة بعد انتظار الرد
       if (!isClosed) {
         if (response.data != null) {
           emit(SettingsSuccess(response.data!));

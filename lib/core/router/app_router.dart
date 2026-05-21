@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_application_1/core/di/dependency_injection.dart';
 import 'package:flutter_application_1/core/router/router_transation.dart'; // Check spelling: router_transation vs router_transition
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/widgets/ExitConfirmWrapper_widget.dart';
@@ -26,16 +28,19 @@ import 'package:flutter_application_1/featuer/hotels/view/hotels_view.dart';
 import 'package:flutter_application_1/featuer/layout/view/layout_view.dart';
 import 'package:flutter_application_1/featuer/packageType/view/package_type_details_view.dart';
 import 'package:flutter_application_1/featuer/packageType/view/packages_in_country_view.dart';
-import 'package:flutter_application_1/featuer/profile/profile_view.dart';
 import 'package:flutter_application_1/featuer/seeAllPage/AllOffersView.dart';
 import 'package:flutter_application_1/featuer/seeAllPage/AllpackageView.dart';
 import 'package:flutter_application_1/featuer/services/view/service_details_view.dart';
 import 'package:flutter_application_1/featuer/services/view/services_view.dart';
+import 'package:flutter_application_1/featuer/services/manager/services_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/view/tour_details_view.dart';
 import 'package:flutter_application_1/featuer/tours/view/saved_tours_view.dart';
 import 'package:flutter_application_1/featuer/bookings/view/my_bookings_view.dart';
 import 'package:flutter_application_1/featuer/bookings/view/booking_details_view.dart';
+import 'package:flutter_application_1/featuer/bookings/manager/bookings_cubit.dart';
+import 'package:flutter_application_1/featuer/bookings/manager/booking_details_cubit.dart';
 import 'package:flutter_application_1/featuer/tours/view/tours_view.dart';
+import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
 import 'package:flutter_application_1/featuer/splash/view/splash_screen.dart';
 import 'package:flutter_application_1/featuer/reviews/view/reviews_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/more_view.dart';
@@ -44,6 +49,7 @@ import 'package:flutter_application_1/featuer/notifications/view/notifications_v
 import 'package:flutter_application_1/featuer/more/presentation/view/terms_view.dart';
 import 'package:flutter_application_1/featuer/more/presentation/view/privacy_view.dart';
 import 'package:flutter_application_1/featuer/rewards/view/rewards_view.dart';
+import 'package:flutter_application_1/featuer/rewards/manager/reward_cubit.dart';
 
 class AppRouter {
   Route<dynamic> onGenerateRoute(RouteSettings settings) {
@@ -108,7 +114,12 @@ class AppRouter {
         return RouterTransitions.buildFade(const BookFlightView());
 
       case Routes.servicesView:
-        return RouterTransitions.buildFade(const ServicesView());
+        return RouterTransitions.buildFade(
+          BlocProvider(
+            create: (context) => getIt<ServicesCubit>()..fetchServices(),
+            child: const ServicesView(),
+          ),
+        );
 
       case Routes.serviceDetailsView:
         final serviceId = settings.arguments as String;
@@ -173,8 +184,7 @@ class AppRouter {
       case Routes.packagesView:
         return RouterTransitions.buildFade(PackagesView());
 
-      case Routes.profileView:
-        return RouterTransitions.buildFade(const ProfileView());
+    
 
       case Routes.hotelsView:
         final countryName = settings.arguments as String?;
@@ -186,7 +196,12 @@ class AppRouter {
         return RouterTransitions.buildFade(const ReviewsView());
 
       case Routes.toursView:
-        return RouterTransitions.buildFade(const ToursView());
+        return RouterTransitions.buildFade(
+          BlocProvider(
+            create: (context) => getIt<ToursCubit>()..fetchTours(),
+            child: const ToursView(),
+          ),
+        );
 
       case Routes.moreView:
         return RouterTransitions.buildFade(const MoreView());
@@ -222,13 +237,28 @@ class AppRouter {
       case Routes.savedToursView:
         return RouterTransitions.buildFade(const SavedToursView());
       case Routes.myBookingsView:
-        return RouterTransitions.buildFade(const MyBookingsView());
+        return RouterTransitions.buildFade(
+          BlocProvider(
+            create: (context) => getIt<BookingsCubit>(),
+            child: const MyBookingsView(),
+          ),
+        );
       case Routes.bookingDetailsView:
         final bookingId = settings.arguments as String;
-        return RouterTransitions.buildFade(BookingDetailsView(bookingId: bookingId));
+        return RouterTransitions.buildFade(
+          BlocProvider(
+            create: (context) => getIt<BookingDetailsCubit>(),
+            child: BookingDetailsView(bookingId: bookingId),
+          ),
+        );
 
       case Routes.rewardsView:
-        return RouterTransitions.buildFade(const RewardsView());
+        return RouterTransitions.buildFade(
+          BlocProvider(
+            create: (context) => getIt<RewardCubit>(),
+            child: const RewardsView(),
+          ),
+        );
 
       default:
         return RouterTransitions.build(

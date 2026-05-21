@@ -3,6 +3,7 @@ import 'package:flutter_application_1/core/network/local_data.dart';
 
 import 'api_endpoiont.dart';
 import 'api_response.dart';
+import 'network_error_manager.dart';
 
 class APIHelper {
   // singleton
@@ -13,15 +14,14 @@ class APIHelper {
   }
 
   APIHelper._internal() {
-    // 👇👇 أضف هذا الجزء هنا لتفعيل اللوجات الكاملة
     dio.interceptors.add(
       LogInterceptor(
-        request: true, // يظهر تفاصيل الطلب
-        requestHeader: true, // يظهر الهيدر المرسل
-        requestBody: true, // يظهر البيانات المرسلة (في الـ POST/PUT)
-        responseHeader: true, // يظهر هيدر الاستجابة
-        responseBody: true, // 🔥 يظهر الـ JSON الكامل القادم من السيرفر
-        error: true, // يظهر تفاصيل الأخطاء
+        request: true,
+        requestHeader: true,
+        requestBody: true,
+        responseHeader: true,
+        responseBody: true,
+        error: true,
       ),
     );
   }
@@ -66,9 +66,15 @@ class APIHelper {
         ),
       );
 
-      return ApiResponse.fromResponse(response);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.status) {
+        NetworkErrorManager.reportError(apiResponse.message);
+      }
+      return apiResponse;
     } catch (e) {
-      return ApiResponse.fromError(e);
+      final apiResponse = ApiResponse.fromError(e);
+      NetworkErrorManager.reportError(apiResponse.message);
+      return apiResponse;
     }
   }
 
@@ -90,9 +96,15 @@ class APIHelper {
           },
         ),
       );
-      return ApiResponse.fromResponse(response);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.status) {
+        NetworkErrorManager.reportError(apiResponse.message);
+      }
+      return apiResponse;
     } catch (e) {
-      return ApiResponse.fromError(e);
+      final apiResponse = ApiResponse.fromError(e);
+      NetworkErrorManager.reportError(apiResponse.message);
+      return apiResponse;
     }
   }
 
@@ -114,9 +126,15 @@ class APIHelper {
           },
         ),
       );
-      return ApiResponse.fromResponse(response);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.status) {
+        NetworkErrorManager.reportError(apiResponse.message);
+      }
+      return apiResponse;
     } catch (e) {
-      return ApiResponse.fromError(e);
+      final apiResponse = ApiResponse.fromError(e);
+      NetworkErrorManager.reportError(apiResponse.message);
+      return apiResponse;
     }
   }
 
@@ -141,9 +159,15 @@ class APIHelper {
           },
         ),
       );
-      return ApiResponse.fromResponse(response);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.status) {
+        NetworkErrorManager.reportError(apiResponse.message);
+      }
+      return apiResponse;
     } catch (e) {
-      return ApiResponse.fromError(e);
+      final apiResponse = ApiResponse.fromError(e);
+      NetworkErrorManager.reportError(apiResponse.message);
+      return apiResponse;
     }
   }
 
@@ -165,9 +189,15 @@ class APIHelper {
           },
         ),
       );
-      return ApiResponse.fromResponse(response);
+      final apiResponse = ApiResponse.fromResponse(response);
+      if (!apiResponse.status) {
+        NetworkErrorManager.reportError(apiResponse.message);
+      }
+      return apiResponse;
     } catch (e) {
-      return ApiResponse.fromError(e);
+      final apiResponse = ApiResponse.fromError(e);
+      NetworkErrorManager.reportError(apiResponse.message);
+      return apiResponse;
     }
   }
 }

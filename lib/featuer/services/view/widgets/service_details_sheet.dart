@@ -21,11 +21,7 @@ class ServiceDetailsSheet extends StatefulWidget {
 }
 
 class _ServiceDetailsSheetState extends State<ServiceDetailsSheet> {
-  @override
-  void initState() {
-    super.initState();
-    context.read<ServicesCubit>().getServiceDetails(widget.serviceId);
-  }
+
 
   Future<void> _launchWhatsApp(String? phone) async {
     final number = phone ?? "201000000000";

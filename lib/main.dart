@@ -5,34 +5,9 @@ import 'package:flutter_application_1/core/network/local_data.dart';
 import 'package:flutter_application_1/core/router/app_router.dart';
 import 'package:flutter_application_1/core/router/routes.dart';
 import 'package:flutter_application_1/core/theme/app_color.dart';
+import 'package:flutter_application_1/core/di/dependency_injection.dart';
 import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
-import 'package:flutter_application_1/featuer/global_setting/data/repo/settings_repository.dart';
 import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
-import 'package:flutter_application_1/featuer/home/view/offer/data/repo/offers_repository.dart.dart';
-import 'package:flutter_application_1/featuer/home/view/offer/manager/offers_cubit.dart';
-import 'package:flutter_application_1/featuer/home/view/package/data/repo/package_repo.dart';
-import 'package:flutter_application_1/featuer/home/view/package/manager/packages_cubit.dart';
-import 'package:flutter_application_1/featuer/hotels/data/repo/hotels_repository.dart';
-import 'package:flutter_application_1/featuer/hotels/manager/hotels_cubit.dart';
-import 'package:flutter_application_1/featuer/countries/data/repo/countries_repository.dart';
-import 'package:flutter_application_1/featuer/countries/manager/countries_cubit.dart';
-import 'package:flutter_application_1/featuer/services/data/repo/services_repository.dart';
-import 'package:flutter_application_1/featuer/services/manager/services_cubit.dart';
-import 'package:flutter_application_1/featuer/Cities/data/repo/cities_repo.dart';
-import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
-import 'package:flutter_application_1/featuer/reviews/data/datasources/reviews_datasource.dart';
-import 'package:flutter_application_1/featuer/reviews/data/repositories/review_repository_impl.dart';
-import 'package:flutter_application_1/featuer/reviews/presentation/manager/reviews_cubit.dart';
-import 'package:flutter_application_1/featuer/tours/data/repo/tours_repository.dart';
-import 'package:flutter_application_1/featuer/tours/manager/tours_cubit.dart';
-import 'package:flutter_application_1/featuer/bookings/data/repo/bookings_repository.dart';
-import 'package:flutter_application_1/featuer/bookings/manager/bookings_cubit.dart';
-import 'package:flutter_application_1/featuer/bookings/manager/booking_details_cubit.dart';
-import 'package:flutter_application_1/featuer/rewards/data/repo/reward_repository_impl.dart';
-import 'package:flutter_application_1/featuer/rewards/data/source/reward_remote_data_source.dart';
-import 'package:flutter_application_1/featuer/rewards/domain/usecase/get_reward_packages_usecase.dart';
-import 'package:flutter_application_1/featuer/rewards/manager/reward_cubit.dart';
-import 'package:flutter_application_1/core/network/api_helper.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -46,6 +21,7 @@ void main() async {
         : EndPoints.clientId,
     serverClientId: EndPoints.clientId,
   );
+  setupDI();
   runApp(MyApp(appRouter: AppRouter()));
 }
 
@@ -62,57 +38,11 @@ class MyApp extends StatelessWidget {
         return MultiBlocProvider(
           providers: [
             BlocProvider(
-              create: (context) =>
-                  OffersCubit(OffersRepository())..fetchOffers(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  PackagesCubit(PackagesRepository())..fetchPackages(),
-            ),
-            BlocProvider(
-              create: (context) => UserCubit()..loadUser(),
+              create: (context) => getIt<UserCubit>(),
               lazy: false,
             ),
             BlocProvider(
-              create: (context) =>
-                  SettingsCubit(SettingsRepository())..fetchSettings(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  HotelsCubit(HotelsRepository())..fetchHotels(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  CountriesCubit(CountriesRepository())..fetchCountries(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  ServicesCubit(ServicesRepository())..fetchServices(),
-            ),
-            BlocProvider(
-              create: (context) => ToursCubit(ToursRepository())..fetchTours(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  CitiesCubit(CitiesRepository())..fetchCities(),
-            ),
-            BlocProvider(
-              create: (context) =>
-                  ReviewsCubit(ReviewsRepositoryImpl(LocalReviewsDataSource()))
-                    ..fetchReviews(),
-            ),
-            BlocProvider(
-              create: (context) => BookingsCubit(BookingsRepository()),
-            ),
-            BlocProvider(
-              create: (context) => BookingDetailsCubit(BookingsRepository()),
-            ),
-            BlocProvider(
-              create: (context) => RewardCubit(
-                GetRewardPackagesUseCase(
-                  RewardRepositoryImpl(RewardRemoteDataSourceImpl(APIHelper())),
-                ),
-              ),
+              create: (context) => getIt<SettingsCubit>(),
             ),
           ],
           child: MaterialApp(
