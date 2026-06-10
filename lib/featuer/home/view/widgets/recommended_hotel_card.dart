@@ -19,7 +19,7 @@ class RecommendedHotelCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routes.hotelDetailsSlugView,
-          arguments: hotel.slug,
+          arguments: hotel.slug ?? hotel.hotelId ?? hotel.sId ?? '',
         );
       },
       child: Container(
@@ -146,7 +146,7 @@ class RecommendedHotelCard extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            "${hotel.price ?? '0'}",
+                            "${hotel.price?.toInt() ?? '0'}",
                             style: AppTextStyle.setelMessiriBlack(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,

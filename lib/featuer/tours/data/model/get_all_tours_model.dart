@@ -38,6 +38,13 @@ class GetAllToursModel {
           data!.pagination = nestedData.pagination;
         }
       }
+    } else if (json['tours'] != null) {
+      // tours are at the root level instead of inside data
+      final nestedData = ToursDataWrapper.fromJson(json);
+      data!.tours = nestedData.tours;
+      if (nestedData.pagination != null) {
+        data!.pagination = nestedData.pagination;
+      }
     }
   }
 }
@@ -54,11 +61,16 @@ class ToursDataWrapper {
     if (toursList != null && toursList is List) {
       tours = <TourItem>[];
       for (var v in toursList) {
-        if (v is Map && v.containsKey('tour') && v['tour'] is Map) {
-          // Handle saved tours wrapper { tour: { ... } }
-          tours!.add(TourItem.fromJson(v['tour']));
-        } else {
-          tours!.add(TourItem.fromJson(v));
+        try {
+          if (v is Map && v.containsKey('tour') && v['tour'] is Map) {
+            tours!.add(TourItem.fromJson(v['tour'] as Map<String, dynamic>));
+          } else if (v is Map) {
+            tours!.add(TourItem.fromJson(v as Map<String, dynamic>));
+          }
+        } catch (e) {
+          print('Error parsing TourItem: $e');
+          // Add a dummy tour so we know it failed here instead of an empty list
+          tours!.add(TourItem(title: "خطأ في تحميل الجولة: $e"));
         }
       }
     }
@@ -118,7 +130,7 @@ class TourItem {
   String? alt;
   String? price;
   String? originPrice;
-  int? duration;
+  dynamic duration;
   bool? isSaved;
 
   TourItem({
@@ -195,8 +207,39 @@ class TourItem {
         paths!.add(Paths.fromJson(v));
       });
     }
-    images = json['images'] != null ? List<String>.from(json['images']) : [];
-    imageCover = json['imageCover'];
+    if (json['images'] is List) {
+      images = [];
+      for (var img in json['images']) {
+        if (img is String) {
+          images!.add(img);
+        } else if (img is Map && img['url'] != null) {
+          images!.add(img['url'].toString());
+        }
+      }
+    } else if (json['images'] is Map) {
+      images = [];
+      var imgMap = json['images'] as Map;
+      if (imgMap['all'] is List) {
+        for (var img in imgMap['all']) {
+          if (img is String) {
+            images!.add(img);
+          } else if (img is Map && img['url'] != null) {
+            images!.add(img['url'].toString());
+          }
+        }
+      }
+    } else {
+      images = [];
+    }
+
+    // imageCover can be a String or a Map, key can be 'imageCover' or 'coverImage'
+    final coverMapOrString = json['imageCover'] ?? json['coverImage'];
+    if (coverMapOrString is String) {
+      imageCover = coverMapOrString;
+    } else if (coverMapOrString is Map) {
+      imageCover = coverMapOrString['url']?.toString();
+    }
+
     if ((imageCover == null || imageCover!.isEmpty) &&
         images != null &&
         images!.isNotEmpty) {
@@ -256,6 +299,7 @@ class City {
       name = json['name'];
     } else if (json is String) {
       sId = json;
+      name = json;
     }
   }
 }
@@ -272,6 +316,7 @@ class Country {
       id = json['id'];
     } else if (json is String) {
       sId = json;
+      name = json;
     }
   }
 }

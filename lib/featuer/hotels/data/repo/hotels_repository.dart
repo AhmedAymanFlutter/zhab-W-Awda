@@ -66,7 +66,7 @@ class HotelsRepository {
   Future<GetHotelDetailsModel> getHotelBySlug(String slug) async {
     try {
       final response = await _apiHelper.getRequest(
-        endPoint: '${EndPoints.hotels}/slug/$slug',
+        endPoint: '${EndPoints.hotels}/$slug',
         isProtected: true,
       );
 

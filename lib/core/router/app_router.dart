@@ -12,6 +12,7 @@ import 'package:flutter_application_1/featuer/Auth/view/reset_password_view.dart
 import 'package:flutter_application_1/featuer/Auth/view/change_password_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/cities_view.dart';
 import 'package:flutter_application_1/featuer/Cities/view/city_details_view.dart';
+import 'package:flutter_application_1/featuer/Cities/manager/cities_cubit.dart';
 import 'package:flutter_application_1/featuer/countries/view/countries_view.dart';
 import 'package:flutter_application_1/featuer/hotels/view/hotel_countries_view.dart';
 import 'package:flutter_application_1/featuer/flightBooking/view/book_flight_view.dart';
@@ -197,8 +198,15 @@ class AppRouter {
 
       case Routes.toursView:
         return RouterTransitions.buildFade(
-          BlocProvider(
-            create: (context) => getIt<ToursCubit>()..fetchTours(),
+          MultiBlocProvider(
+            providers: [
+              BlocProvider(
+                create: (context) => getIt<ToursCubit>()..fetchTours(),
+              ),
+              BlocProvider(
+                create: (context) => getIt<CitiesCubit>()..fetchCities(),
+              ),
+            ],
             child: const ToursView(),
           ),
         );

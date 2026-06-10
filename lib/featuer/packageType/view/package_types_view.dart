@@ -6,14 +6,17 @@ import 'package:flutter_screenutil/flutter_screenutil.dart';
 import '../../../../core/theme/app_color.dart';
 import 'package:flutter_application_1/featuer/packageType/view/widgets/modern_package_type_card.dart';
 import '../../../../core/widgets/cusstom_search_bar.dart';
+import '../../../../core/di/dependency_injection.dart';
 
 class PackageTypesView extends StatelessWidget {
   const PackageTypesView({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return SafeArea(
-      child: Scaffold(
+    return BlocProvider(
+      create: (context) => getIt<PackageTypesCubit>()..fetchPackageTypes(),
+      child: SafeArea(
+        child: Scaffold(
         backgroundColor: AppColor.primaryWhite,
 
         body: Padding(
@@ -37,20 +40,15 @@ class PackageTypesView extends StatelessWidget {
                     } else if (state is PackageTypesError) {
                       return Center(child: Text(state.message));
                     } else if (state is PackageTypesSuccess) {
-                      return GridView.builder(
+                      return ListView.separated(
                         physics: const BouncingScrollPhysics(),
                         itemCount: state.types.length,
                         padding: EdgeInsets.only(bottom: 20.h),
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                          crossAxisCount: 2,
-                          crossAxisSpacing: 12.w,
-                          mainAxisSpacing: 12.h,
-                          childAspectRatio: 284 / 343,
-                        ),
+                        separatorBuilder: (context, index) => SizedBox(height: 16.h),
                         itemBuilder: (context, index) {
                           return ModernPackageTypeCard(
                             packageType: state.types[index],
-                            variant: PackageTypeCardVariant.tall,
+                            variant: PackageTypeCardVariant.wide,
                           );
                         },
                       );
@@ -62,6 +60,7 @@ class PackageTypesView extends StatelessWidget {
             ],
           ),
         ),
+      ),
       ),
     );
   }

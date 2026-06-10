@@ -6,18 +6,33 @@ class MyBookingsModel {
 
   MyBookingsModel({this.success, this.message, this.data, this.pagination});
 
-  MyBookingsModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    message = json['message'];
-    if (json['data'] != null) {
+  MyBookingsModel.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      success = json['success'] == true || json['success'] == 'true';
+      message = json['message']?.toString();
+      if (json['data'] != null) {
+        data = <BookingItem>[];
+        if (json['data'] is List) {
+          json['data'].forEach((v) {
+            if (v is Map<String, dynamic>) {
+              data!.add(BookingItem.fromJson(v));
+            }
+          });
+        }
+      }
+      pagination = json['pagination'] != null && json['pagination'] is Map<String, dynamic>
+          ? Pagination.fromJson(json['pagination'])
+          : null;
+    } else if (json is List) {
+      success = true;
+      message = 'Success';
       data = <BookingItem>[];
-      json['data'].forEach((v) {
-        data!.add(BookingItem.fromJson(v));
-      });
+      for (var v in json) {
+        if (v is Map<String, dynamic>) {
+          data!.add(BookingItem.fromJson(v));
+        }
+      }
     }
-    pagination = json['pagination'] != null
-        ? Pagination.fromJson(json['pagination'])
-        : null;
   }
 }
 
@@ -47,17 +62,19 @@ class BookingItem {
   });
 
   BookingItem.fromJson(Map<String, dynamic> json) {
-    id = json['id'];
-    startDate = json['startDate'];
-    endDate = json['endDate'];
-    imageCover = json['imageCover'];
-    adultsCount = json['adultsCount'];
-    description = json['description'];
-    city = json['city'];
-    country = json['country'];
+    id = json['id']?.toString() ?? json['_id']?.toString();
+    startDate = json['startDate']?.toString();
+    endDate = json['endDate']?.toString();
+    imageCover = json['imageCover']?.toString();
+    if (json['adultsCount'] != null) {
+      adultsCount = int.tryParse(json['adultsCount'].toString());
+    }
+    description = json['description']?.toString();
+    city = json['city']?.toString();
+    country = json['country']?.toString();
     // Mock values for UI fields if not in JSON
-    bookingNumber = json['bookingNumber'] ?? "TR2458";
-    status = json['status'] ?? "تم التأكيد";
+    bookingNumber = json['bookingNumber']?.toString() ?? "TR2458";
+    status = json['status']?.toString() ?? "تم التأكيد";
   }
 }
 

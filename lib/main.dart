@@ -10,7 +10,7 @@ import 'package:flutter_application_1/featuer/Auth/manager/user_cubit.dart';
 import 'package:flutter_application_1/featuer/global_setting/manager/settings_cubit.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_sign_in/google_sign_in.dart'; 
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

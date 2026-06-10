@@ -157,10 +157,27 @@ class HotelIdData {
         images = [json['photo1']];
         imageCover = json['photo1'];
       } else if (json['images'] != null) {
-        images = List<String>.from(
-          json['images'].where((i) => i != null).map((i) => i.toString()),
-        );
-        if (images!.isNotEmpty) imageCover = images![0];
+        if (json['images'] is List) {
+          images = List<String>.from(
+            json['images'].where((i) => i != null).map((i) => i.toString()),
+          );
+        } else if (json['images'] is Map) {
+          images = <String>[];
+          if (json['images']['all'] != null && json['images']['all'] is List) {
+            for (var item in json['images']['all']) {
+              if (item is Map && item['url'] != null) {
+                images!.add(item['url'].toString());
+              } else if (item is String) {
+                images!.add(item);
+              }
+            }
+          } else {
+            try {
+              images = List<String>.from(json['images'].values.whereType<String>());
+            } catch (_) {}
+          }
+        }
+        if (images != null && images!.isNotEmpty) imageCover = images![0];
       }
 
       if (json['imageCover'] != null) {

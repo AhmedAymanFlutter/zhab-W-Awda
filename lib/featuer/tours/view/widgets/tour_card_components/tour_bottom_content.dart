@@ -58,34 +58,40 @@ class TourBottomContent extends StatelessWidget {
               ],
             ),
             // Right side (in RTL, this is the left edge visually) -> Price Pill
-            Container(
-              padding: EdgeInsets.symmetric(horizontal: 12.w, vertical: 4.h),
-              decoration: BoxDecoration(
-                color: const Color(0xFF1D1B20).withOpacity(0.8),
-                borderRadius: BorderRadius.circular(20.r),
-                border: Border.all(color: Colors.white.withOpacity(0.3)),
-              ),
-              child: Row(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    tour.originPrice ?? tour.price ?? "3000",
-                    style: AppTextStyle.setelMessiriTextStyle(
-                      fontSize: 14.sp,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white,
+            Flexible(
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: 8.w, vertical: 4.h),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF1D1B20).withOpacity(0.8),
+                  borderRadius: BorderRadius.circular(20.r),
+                  border: Border.all(color: Colors.white.withOpacity(0.3)),
+                ),
+                child: Row(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        tour.originPrice ?? tour.price ?? "3000",
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                        style: AppTextStyle.setelMessiriTextStyle(
+                          fontSize: 14.sp,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
-                  ),
-                  SizedBox(width: 4.w),
-                  SvgPicture.asset(
-                    'assets/icon/RSA.svg',
-                    height: 14.h,
-                    colorFilter: const ColorFilter.mode(
-                      Colors.white,
-                      BlendMode.srcIn,
+                    SizedBox(width: 4.w),
+                    SvgPicture.asset(
+                      'assets/icon/RSA.svg',
+                      height: 14.h,
+                      colorFilter: const ColorFilter.mode(
+                        Colors.white,
+                        BlendMode.srcIn,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
           ],

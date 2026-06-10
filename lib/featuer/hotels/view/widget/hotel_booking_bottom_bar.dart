@@ -9,7 +9,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../../../core/theme/app_color.dart';
 
 class HotelBookingBottomBar extends StatelessWidget {
-  final int? price;
+  final num? price;
   final String? currency;
 
   final String? hotelName;
@@ -64,7 +64,7 @@ class HotelBookingBottomBar extends StatelessWidget {
                       style: TextStyle(fontSize: 12.sp, color: Colors.black),
                     ),
                     Text(
-                      "${price ?? 2300}",
+                      "${price?.toInt() ?? 2300}",
                       style: TextStyle(
                         fontSize: 22.sp,
                         fontWeight: FontWeight.bold,

@@ -41,8 +41,13 @@ class ToursCubit extends Cubit<ToursState> {
         if (response.data != null && response.data!.tours != null) {
           tours = response.data!.tours!;
           pagination = response.data!.pagination;
+          print("========= TOURS PARSED SUCCESSFULLY =========");
+          print("Tours count: ${tours.length}");
           emit(ToursSuccess(tours, pagination: pagination));
         } else {
+          print("========= TOURS PARSING FAILED or EMPTY =========");
+          print("response.data: ${response.data}");
+          print("response.data!.tours: ${response.data?.tours}");
           emit(ToursError("لا توجد جولات متاحة حالياً"));
         }
       }

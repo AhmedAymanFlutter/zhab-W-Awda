@@ -6,13 +6,27 @@ class GetHotelModel {
   GetHotelModel({this.success, this.count, this.data});
 
   GetHotelModel.fromJson(Map<String, dynamic> json) {
-    success = json['success'];
-    count = (json['count'] as num?)?.toInt();
+    success = json['success'] ?? (json['status'] == 'success');
+    count = (json['count'] as num?)?.toInt() ?? (json['results'] as num?)?.toInt();
     if (json['data'] != null) {
       data = <HotelItem>[];
-      json['data'].forEach((v) {
-        data!.add(HotelItem.fromJson(v));
-      });
+      var rawData = json['data'];
+      List<dynamic> listData = [];
+      if (rawData is List) {
+        listData = rawData;
+      } else if (rawData is Map) {
+        if (rawData['hotels'] is List) {
+          listData = rawData['hotels'];
+        } else if (rawData['data'] is List) {
+          listData = rawData['data'];
+        }
+      }
+      
+      for (var v in listData) {
+        if (v is Map) {
+          data!.add(HotelItem.fromJson(Map<String, dynamic>.from(v)));
+        }
+      }
     }
   }
 }
@@ -91,7 +105,7 @@ class HotelItem {
         currency = priceMap['currency']?.toString();
       }
       sId = json['_id'];
-      hotelId = json['hotel_id']?.toString();
+      hotelId = json['hotel_id']?.toString() ?? json['hotelId']?.toString();
 
       // Handle naming mismatch
       name = json['hotel_name'] ?? json['name'];
@@ -118,7 +132,8 @@ class HotelItem {
       }
 
       category = json['category'];
-      description = json['description'] ?? json['addressline1']; // Fallback
+      addressline1 = json['addressline1'] ?? json['address'];
+      description = json['description'] ?? addressline1; // Fallback
       descText = json['descText'];
       isActive = json['isActive'];
       phone = json['phone'];
@@ -138,6 +153,8 @@ class HotelItem {
       // specific image cover field
       if (json['imageCover'] != null) {
         imageCover = json['imageCover'];
+      } else if (json['image'] != null) {
+        imageCover = json['image'];
       }
 
       slug = json['slug'];

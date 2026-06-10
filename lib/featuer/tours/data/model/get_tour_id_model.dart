@@ -40,7 +40,7 @@ class TourIdData {
   String? id;
   TourPrice? price;
   TourRating? rating;
-  int? duration;
+  dynamic duration;
   List<String>? tags;
   List<ProductOption>? productOptions;
   bool? isSaved;
@@ -92,7 +92,7 @@ class TourIdData {
       rating = TourRating.fromJson(json['rating']);
     }
 
-    duration = (json['duration'] as num?)?.toInt();
+    duration = json['duration'];
     tags = json['tags'] != null ? List<String>.from(json['tags']) : [];
 
     // Handle dynamic types just in case
@@ -110,25 +110,57 @@ class TourIdData {
 
     header = json['header'] != null ? Header.fromJson(json['header']) : null;
 
-    if (json['paths'] != null) {
+    final pathsList = json['paths'] ?? json['program'];
+    if (pathsList != null && pathsList is List) {
       paths = <Paths>[];
-      json['paths'].forEach((v) {
+      pathsList.forEach((v) {
         paths!.add(Paths.fromJson(v));
       });
     }
 
-    if (json['productOptions'] != null) {
+    final optionsList = json['productOptions'] ?? json['packages'];
+    if (optionsList != null && optionsList is List) {
       productOptions = <ProductOption>[];
-      json['productOptions'].forEach((v) {
+      optionsList.forEach((v) {
         productOptions!.add(ProductOption.fromJson(v));
       });
     }
 
-    imageCover = json['imageCover'];
-    if (json['images'] != null) {
-      images = List<String>.from(
-        json['images'].where((i) => i != null).map((i) => i.toString()),
-      );
+    // imageCover can be a String or a Map, key can be 'imageCover' or 'coverImage'
+    final coverMapOrString = json['imageCover'] ?? json['coverImage'];
+    if (coverMapOrString is String) {
+      imageCover = coverMapOrString;
+    } else if (coverMapOrString is Map) {
+      imageCover = coverMapOrString['url']?.toString();
+    }
+
+    if (json['images'] is List) {
+      images = [];
+      for (var img in json['images']) {
+        if (img is String) {
+          images!.add(img);
+        } else if (img is Map && img['url'] != null) {
+          images!.add(img['url'].toString());
+        }
+      }
+    } else if (json['images'] is Map) {
+      images = [];
+      var imgMap = json['images'] as Map;
+      if (imgMap['all'] is List) {
+        for (var img in imgMap['all']) {
+          if (img is String) {
+            images!.add(img);
+          } else if (img is Map && img['url'] != null) {
+            images!.add(img['url'].toString());
+          }
+        }
+      }
+    }
+
+    if ((imageCover == null || imageCover!.isEmpty) &&
+        images != null &&
+        images!.isNotEmpty) {
+      imageCover = images![0];
     }
 
     slug = json['slug'];
@@ -188,8 +220,8 @@ class ProductOption {
   });
 
   ProductOption.fromJson(Map<String, dynamic> json) {
-    optionCode = json['optionCode'];
-    title = json['title'];
+    optionCode = json['optionCode'] ?? json['slug'];
+    title = json['title'] ?? json['name'];
     packageDescription = json['packageDescription'] != null
         ? List<String>.from(json['packageDescription'])
         : [];
@@ -201,7 +233,7 @@ class ProductOption {
         : [];
     price = (json['price'] as num?)?.toDouble();
     currency = json['currency'];
-    id = json['id'];
+    id = json['id'] ?? json['_id'];
   }
 }
 
@@ -244,11 +276,21 @@ class Paths {
   String? descText;
   String? sId;
 
-  Paths.fromJson(Map<String, dynamic> json) {
-    title = json['title'];
-    duration = json['duration'];
-    description = json['description'];
-    descText = json['descText'];
-    sId = json['_id'];
+  Paths.fromJson(dynamic json) {
+    if (json is Map<String, dynamic>) {
+      title = json['title'];
+      
+      // Handle new duration format {fixedDurationInMinutes: 60}
+      if (json['duration'] is Map) {
+        final mins = json['duration']['fixedDurationInMinutes']?.toString();
+        duration = (mins != null && mins.isNotEmpty) ? "$mins دقيقة" : null;
+      } else {
+        duration = json['duration']?.toString();
+      }
+      
+      description = json['description'];
+      descText = json['descText'];
+      sId = json['_id'];
+    }
   }
 }

@@ -1,5 +1,5 @@
 abstract class EndPoints {
-  static const String baseUrl = 'http://192.168.1.2:3000/api/v1/';
+  static const String baseUrl = 'http://192.168.1.230:3000/api/v1/';
 
   // ─── Mobile Content Endpoints (Protected) ───────────────────────────
   static const String offers = 'mobile/offers/';

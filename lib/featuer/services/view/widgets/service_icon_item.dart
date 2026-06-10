@@ -38,23 +38,11 @@ class ServiceIconItem extends StatelessWidget {
       child: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: 56.w,
-            height: 56.h,
-            padding: EdgeInsets.all(8.w), // Slightly less padding for images
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(12.r),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.05),
-                  blurRadius: 10,
-                  offset: const Offset(0, 4),
-                ),
-              ],
-            ),
+          SizedBox(
+            width: 40.w,
+            height: 40.h,
             child: ClipRRect(
-              borderRadius: BorderRadius.circular(8.r),
+              borderRadius: BorderRadius.circular(16.r),
               child: _buildIcon(),
             ),
           ),
@@ -76,12 +64,8 @@ class ServiceIconItem extends StatelessWidget {
 
   Widget _buildIcon() {
     if (iconUrl != null && iconUrl!.isNotEmpty) {
-       // Check if it's a relative path and prepend baseUrl if needed
        String fullUrl = iconUrl!;
        if (!fullUrl.startsWith('http')) {
-         // Fallback to local if it's just a placeholder or broken
-         // For now, assume if it's not a URL, it might be an asset or needs base URL
-         // But usually imageCover is a full URL or a path from server
          return Image.network(
           fullUrl,
           fit: BoxFit.cover,

@@ -20,7 +20,7 @@ class HotelCard extends StatelessWidget {
         Navigator.pushNamed(
           context,
           Routes.hotelDetailsSlugView,
-          arguments: hotel.slug,
+          arguments: hotel.slug ?? hotel.hotelId ?? hotel.sId ?? '',
         );
       },
       child: Container(
@@ -147,7 +147,7 @@ class HotelCard extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "${hotel.price}",
+                              "${hotel.price?.toInt()}",
                               style: TextStyle(
                                 fontSize: 14.sp,
                                 fontWeight: FontWeight.bold,

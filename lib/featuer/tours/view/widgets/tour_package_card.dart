@@ -33,7 +33,6 @@ class TourPackageCard extends StatelessWidget {
       },
       child: Container(
         width: 336.w,
-        height: 198.h,
         padding: EdgeInsets.all(16.w),
         decoration: BoxDecoration(
           color: Colors.white,
@@ -48,6 +47,7 @@ class TourPackageCard extends StatelessWidget {
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.end,
+          mainAxisSize: MainAxisSize.min, // Wrap content vertically
           children: [
             // Header Icons
             Row(
@@ -70,7 +70,7 @@ class TourPackageCard extends StatelessWidget {
               ],
             ),
 
-            const Spacer(),
+            SizedBox(height: 12.h), // Replaced Spacer
 
             // Title
             Text(
@@ -106,7 +106,7 @@ class TourPackageCard extends StatelessWidget {
               overflow: TextOverflow.ellipsis,
             ),
 
-            const Spacer(),
+            SizedBox(height: 16.h), // Replaced Spacer
 
             // Price Pill & VAT
             Row(
@@ -114,14 +114,20 @@ class TourPackageCard extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 // VAT Text (Left)
-                Text(
-                  "(شامل ضريبة القيمة المضافة)",
-                  style: AppTextStyle.setelMessiriTextStyle(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w400,
-                    color: AppColor.secondeLightGrey,
+                Flexible(
+                  child: Text(
+                    "(شامل ضريبة القيمة المضافة)",
+                    style: AppTextStyle.setelMessiriTextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                      color: AppColor.secondeLightGrey,
+                    ),
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ),
+                
+                SizedBox(width: 8.w),
 
                 // Price Pill (Right)
                 Container(
@@ -136,13 +142,17 @@ class TourPackageCard extends StatelessWidget {
                   child: Row(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      Text(
-                        "${option.price?.toInt() ?? 2500}",
-                        style: TextStyle(
-                          fontSize: 20.sp,
-                          fontWeight: FontWeight.bold,
-                          color: AppColor.primaryBlue3,
-                          fontFamily: 'ElMessiri',
+                      Flexible(
+                        child: Text(
+                          "${option.price?.toInt() ?? 2500}",
+                          style: TextStyle(
+                            fontSize: 20.sp,
+                            fontWeight: FontWeight.bold,
+                            color: AppColor.primaryBlue3,
+                            fontFamily: 'ElMessiri',
+                          ),
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
                         ),
                       ),
                       SizedBox(width: 8.w),

@@ -89,11 +89,42 @@ class CountryItem {
     isTrending = json['isTrending'] ?? false;
 
     // Safety check for Lists
-    favTime = json['favTime'] != null ? List<String>.from(json['favTime']) : [];
-    favMonth = json['favMonth'] != null
-        ? List<String>.from(json['favMonth'])
-        : [];
-    images = json['images'] != null ? List<String>.from(json['images']) : [];
+    if (json['favTime'] is List) {
+      favTime = (json['favTime'] as List).map((e) => e.toString()).toList();
+    } else {
+      favTime = [];
+    }
+
+    if (json['favMonth'] is List) {
+      favMonth = (json['favMonth'] as List).map((e) => e.toString()).toList();
+    } else {
+      favMonth = [];
+    }
+
+    if (json['images'] is List) {
+      images = [];
+      for (var img in json['images']) {
+        if (img is String) {
+          images!.add(img);
+        } else if (img is Map && img['url'] != null) {
+          images!.add(img['url'].toString());
+        }
+      }
+    } else if (json['images'] is Map) {
+      images = [];
+      var imgMap = json['images'] as Map;
+      if (imgMap['all'] is List) {
+        for (var img in imgMap['all']) {
+          if (img is String) {
+            images!.add(img);
+          } else if (img is Map && img['url'] != null) {
+            images!.add(img['url'].toString());
+          }
+        }
+      }
+    } else {
+      images = [];
+    }
 
     isActive = json['isActive'];
     slug = json['slug'];
@@ -102,7 +133,17 @@ class CountryItem {
     updatedAt = json['updatedAt'];
     alt = json['alt'];
     id = json['id'];
-    imageCover = json['imageCover'];
+    
+    // imageCover can be a String or a Map
+    if (json['imageCover'] is String) {
+      imageCover = json['imageCover'];
+    } else if (json['imageCover'] is Map) {
+      imageCover = json['imageCover']['url']?.toString();
+    }
+    
+    if ((imageCover == null || imageCover!.isEmpty) && images != null && images!.isNotEmpty) {
+      imageCover = images!.first;
+    }
     updatedBy = json['updatedBy'];
   }
 }

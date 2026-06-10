@@ -46,10 +46,12 @@ class HotelsCubit extends Cubit<HotelsState> {
               final translatedName = _normalize(hotel.translatedName ?? '');
               final cityName = _normalize(hotel.city?.name ?? '');
               final cityTrans = _normalize(hotel.cityTranslated ?? '');
+              final address = _normalize(hotel.addressline1 ?? '');
               return name.contains(queryNorm) ||
                   translatedName.contains(queryNorm) ||
                   cityName.contains(queryNorm) ||
-                  cityTrans.contains(queryNorm);
+                  cityTrans.contains(queryNorm) ||
+                  address.contains(queryNorm);
             }).toList();
           }
 
@@ -58,8 +60,10 @@ class HotelsCubit extends Cubit<HotelsState> {
             hotels = hotels.where((hotel) {
               final cityName = _normalize(hotel.city?.name ?? '');
               final cityTrans = _normalize(hotel.cityTranslated ?? '');
+              final address = _normalize(hotel.addressline1 ?? '');
               return cityName.contains(cityNorm) ||
-                  cityTrans.contains(cityNorm);
+                  cityTrans.contains(cityNorm) ||
+                  address.contains(cityNorm);
             }).toList();
           }
 
@@ -145,12 +149,14 @@ class HotelsCubit extends Cubit<HotelsState> {
       final title = hotel.name?.toLowerCase() ?? '';
       final city = hotel.city?.name?.toLowerCase() ?? '';
       final country = hotel.country?.name?.toLowerCase() ?? ''; // Added country
+      final address = hotel.addressline1?.toLowerCase() ?? '';
       final searchLower = query.toLowerCase();
 
-      // Check if query matches title, city, OR country
+      // Check if query matches title, city, OR country OR address
       return title.contains(searchLower) ||
           city.contains(searchLower) ||
-          country.contains(searchLower);
+          country.contains(searchLower) ||
+          address.contains(searchLower);
     }).toList();
 
     // ✅ وهنا

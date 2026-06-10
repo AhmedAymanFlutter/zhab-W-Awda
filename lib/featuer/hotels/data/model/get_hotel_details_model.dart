@@ -97,48 +97,85 @@ class Hotel {
   });
 
   Hotel.fromJson(Map<String, dynamic> json) {
-    price = json['price'] != null ? Price.fromJson(json['price']) : null;
+    if (json['price'] is num) {
+      price = Price(amount: json['price']);
+    } else if (json['price'] is Map) {
+      price = Price.fromJson(json['price'] as Map<String, dynamic>);
+    }
     sId = json['_id'];
-    hotelId = json['hotel_id'];
-    hotelName = json['hotel_name'];
+    hotelId = json['hotel_id']?.toString() ?? json['hotelId']?.toString();
+    hotelName = json['hotel_name'] ?? json['name'];
     hotelTranslatedName = json['hotel_translated_name'];
     addressline1 = json['addressline1'];
-    zipcode = json['zipcode'];
-    city = json['city'] != null ? City.fromJson(json['city']) : null;
-    country = json['country'] != null ? Country.fromJson(json['country']) : null;
+    zipcode = json['zipcode']?.toString();
+    
+    if (json['city'] is Map) {
+      city = City.fromJson(json['city'] as Map<String, dynamic>);
+    } else if (json['city'] is String) {
+      city = City(name: json['city']);
+    }
+
+    if (json['country'] is Map) {
+      country = Country.fromJson(json['country'] as Map<String, dynamic>);
+    } else if (json['country'] is String) {
+      country = Country(name: json['country']);
+    }
     continentName = json['continent_name'];
     longitude = (json['longitude'] as num?)?.toDouble();
     latitude = (json['latitude'] as num?)?.toDouble();
-    starRating = json['star_rating'];
-    numberOfReviews = json['number_of_reviews'];
-    ratingAverage = (json['rating_average'] as num?)?.toDouble();
-    numberrooms = json['numberrooms'];
-    numberfloors = json['numberfloors'];
+    starRating = int.tryParse(json['star_rating']?.toString() ?? json['stars']?.toString() ?? '');
+    numberOfReviews = int.tryParse(json['number_of_reviews']?.toString() ?? '');
+    ratingAverage = num.tryParse(json['rating_average']?.toString() ?? '')?.toDouble();
+    numberrooms = int.tryParse(json['numberrooms']?.toString() ?? '');
+    numberfloors = int.tryParse(json['numberfloors']?.toString() ?? '');
     checkin = json['checkin'];
     checkout = json['checkout'];
     url = json['url'];
-    images = json['images']?.cast<String>();
-    if (json['includes'] != null) {
+    if (json['images'] is List) {
+      images = List<String>.from(json['images'].map((x) => x.toString()));
+    } else if (json['images'] is Map) {
+      images = <String>[];
+      if (json['images']['all'] != null && json['images']['all'] is List) {
+        for (var item in json['images']['all']) {
+          if (item is Map && item['url'] != null) {
+            images!.add(item['url'].toString());
+          } else if (item is String) {
+            images!.add(item);
+          }
+        }
+      } else {
+        // Fallback if it's a different map structure
+        try {
+          images = List<String>.from(json['images'].values.whereType<String>());
+        } catch (_) {}
+      }
+    } else if (json['photo1'] != null) {
+      images = [json['photo1'].toString()];
+    }
+
+    if (json['includes'] is List) {
       includes = <Includes>[];
-      json['includes'].forEach((v) {
+      for (var v in json['includes']) {
         includes!.add(Includes.fromJson(v));
-      });
+      }
     }
     description = json['description'];
     overview = json['overview'];
     seo = json['seo'] != null ? Seo.fromJson(json['seo']) : null;
     createdBy = json['createdBy'];
-    if (json['policies'] != null) {
+    
+    if (json['policies'] is List) {
       policies = <Policies>[];
-      json['policies'].forEach((v) {
+      for (var v in json['policies']) {
         policies!.add(Policies.fromJson(v));
-      });
+      }
     }
-    if (json['rooms'] != null) {
+    
+    if (json['rooms'] is List) {
       rooms = <Rooms>[];
-      json['rooms'].forEach((v) {
+      for (var v in json['rooms']) {
         rooms!.add(Rooms.fromJson(v));
-      });
+      }
     }
     createdAt = json['createdAt'];
     updatedAt = json['updatedAt'];
@@ -148,13 +185,13 @@ class Hotel {
 
 class Price {
   String? currency;
-  int? amount;
+  num? amount;
 
   Price({this.currency, this.amount});
 
   Price.fromJson(Map<String, dynamic> json) {
     currency = json['currency'];
-    amount = json['amount'];
+    amount = json['amount'] ?? json['min'];
   }
 }
 
@@ -266,10 +303,10 @@ class Rooms {
     title = json['title'];
     description = json['description'];
     image = json['image'];
-    price = json['price'];
+    price = int.tryParse(json['price']?.toString() ?? '');
     currency = json['currency'];
-    area = json['area'];
-    maxAdults = json['maxAdults'];
+    area = int.tryParse(json['area']?.toString() ?? '');
+    maxAdults = int.tryParse(json['maxAdults']?.toString() ?? '');
     sId = json['_id'];
   }
 }
